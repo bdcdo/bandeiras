@@ -10,6 +10,9 @@
   "engines": {
     "node": ">=24 <25"
   },
+  "scripts": {
+    "gerar:dados": "node scripts/baixar-commons.ts && node scripts/similaridade.ts && node scripts/gerar.ts"
+  },
   "dependencies": {
     "@bandeiras/nucleo": "workspace:*"
   },
