@@ -8,7 +8,9 @@ const envLocal = fileURLToPath(new URL('./.env.local', import.meta.url))
 if (existsSync(envLocal)) process.loadEnvFile(envLocal)
 
 // O e2e roda sobre o build de produção servido pelo vite preview, com a mesma base do GitHub Pages.
-const BASE_URL = 'http://localhost:4173/bandeiras/'
+// Duas worktrees rodando o e2e ao mesmo tempo colidiriam na porta fixa; a variável separa uma da outra.
+const PORTA = process.env['PORTA_E2E'] ?? '4173'
+const BASE_URL = `http://localhost:${PORTA}/bandeiras/`
 
 export default defineConfig({
   testDir: './e2e',
@@ -21,7 +23,7 @@ export default defineConfig({
   reporter: 'list',
   use: { baseURL: BASE_URL, trace: 'retain-on-failure' },
   webServer: {
-    command: 'pnpm exec vite preview --port 4173 --strictPort',
+    command: `pnpm exec vite preview --port ${PORTA} --strictPort`,
     url: BASE_URL,
     reuseExistingServer: false,
     timeout: 60_000,
