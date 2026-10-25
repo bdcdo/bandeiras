@@ -1,3 +1,5 @@
+export * from './carregar-catalogo'
+export type * from './dominio'
 export * from './normalizacao'
 export * from './tecnicas'
 export * from './tipos'
