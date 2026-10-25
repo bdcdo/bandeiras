@@ -1,0 +1,5057 @@
+{
+  "geradoEm": "2026-10-25T05:02:17.795Z",
+  "versoes": {
+    "node": "24.12.0",
+    "icu": "77.1",
+    "cldr": "47.0",
+    "svgo": "4.1.0",
+    "sharp": "0.35.5",
+    "resvg": "2.6.2"
+  },
+  "regioes": [
+    {
+      "codigo": "002",
+      "nome": "África",
+      "subRegioes": [
+        {
+          "codigo": "011",
+          "nome": "África Ocidental"
+        },
+        {
+          "codigo": "014",
+          "nome": "África Oriental"
+        },
+        {
+          "codigo": "015",
+          "nome": "África Setentrional"
+        },
+        {
+          "codigo": "017",
+          "nome": "África Central"
+        },
+        {
+          "codigo": "018",
+          "nome": "África Meridional"
+        }
+      ]
+    },
+    {
+      "codigo": "009",
+      "nome": "Oceania",
+      "subRegioes": [
+        {
+          "codigo": "053",
+          "nome": "Australásia"
+        },
+        {
+          "codigo": "054",
+          "nome": "Melanésia"
+        },
+        {
+          "codigo": "057",
+          "nome": "Região da Micronésia"
+        },
+        {
+          "codigo": "061",
+          "nome": "Polinésia"
+        }
+      ]
+    },
+    {
+      "codigo": "019",
+      "nome": "Américas",
+      "subRegioes": [
+        {
+          "codigo": "005",
+          "nome": "América do Sul"
+        },
+        {
+          "codigo": "013",
+          "nome": "América Central"
+        },
+        {
+          "codigo": "021",
+          "nome": "América Setentrional"
+        },
+        {
+          "codigo": "029",
+          "nome": "Caribe"
+        }
+      ]
+    },
+    {
+      "codigo": "142",
+      "nome": "Ásia",
+      "subRegioes": [
+        {
+          "codigo": "030",
+          "nome": "Ásia Oriental"
+        },
+        {
+          "codigo": "034",
+          "nome": "Ásia Meridional"
+        },
+        {
+          "codigo": "035",
+          "nome": "Sudeste Asiático"
+        },
+        {
+          "codigo": "143",
+          "nome": "Ásia Central"
+        },
+        {
+          "codigo": "145",
+          "nome": "Ásia Ocidental"
+        }
+      ]
+    },
+    {
+      "codigo": "150",
+      "nome": "Europa",
+      "subRegioes": [
+        {
+          "codigo": "039",
+          "nome": "Europa Meridional"
+        },
+        {
+          "codigo": "151",
+          "nome": "Europa Oriental"
+        },
+        {
+          "codigo": "154",
+          "nome": "Europa Setentrional"
+        },
+        {
+          "codigo": "155",
+          "nome": "Europa Ocidental"
+        }
+      ]
+    }
+  ],
+  "bandeiras": [
+    {
+      "codigo": "ad",
+      "nome": "Andorra",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [
+        "azul-amarelo-vermelho-vertical"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas verticais, azul, amarelo e vermelho, a central mais larga, com um brasão de mitra e vacas no centro.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "md",
+        "ro",
+        "td",
+        "be",
+        "fr",
+        "bb"
+      ],
+      "proporcao": 1.429,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ae",
+      "nome": "Emirados Árabes Unidos",
+      "aliases": [
+        "Emirados"
+      ],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "pan-arabe-com-triangulo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, verde, branco e preto, com uma faixa vertical vermelha junto ao mastro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sy",
+        "gy",
+        "jo",
+        "er",
+        "tg",
+        "np"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "af",
+      "nome": "Afeganistão",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "034",
+      "grupos": [
+        "preto-vermelho-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas verticais, preto, vermelho e verde, com um emblema branco de mesquita entre feixes de trigo no centro.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "vc",
+        "cm",
+        "ng",
+        "tm",
+        "bd",
+        "gn"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "webp",
+        "larguras": [
+          480,
+          960
+        ]
+      }
+    },
+    {
+      "codigo": "ag",
+      "nome": "Antígua e Barbuda",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com um grande V de faixas preta, azul e branca, e um sol amarelo nascendo sobre o preto.",
+      "classe": "outro",
+      "vizinhos": [
+        "mk",
+        "na",
+        "kg",
+        "ki",
+        "mw",
+        "uy"
+      ],
+      "tracoVizinhanca": "nascente em preto",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "al",
+      "nome": "Albânia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [
+        "vermelho-e-preto",
+        "aguia-em-vermelho"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Vermelho com uma águia preta de duas cabeças no centro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "kg",
+        "tn",
+        "ch",
+        "cn",
+        "tr",
+        "me"
+      ],
+      "tracoVizinhanca": "águia preta",
+      "proporcao": 1.4,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "am",
+      "nome": "Armênia",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Três faixas horizontais iguais: vermelho, azul e laranja.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "gm",
+        "la",
+        "rs",
+        "ru",
+        "ve",
+        "ly"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ao",
+      "nome": "Angola",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "017",
+      "grupos": [
+        "vermelho-e-preto"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Metade vermelha em cima e metade preta embaixo, com meia roda dentada, catana e estrela amarelas no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "eg",
+        "iq",
+        "ye",
+        "sd",
+        "ki",
+        "mu"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ar",
+      "nome": "Argentina",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [
+        "azul-branco-azul"
+      ],
+      "dificuldadeAPriori": 1,
+      "descricao": "Três faixas horizontais, azul-celeste, branco e azul-celeste, com um sol amarelo de rosto humano no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "uy",
+        "rw",
+        "kz",
+        "ki",
+        "mw",
+        "na"
+      ],
+      "tracoVizinhanca": "sol com rosto no centro da faixa branca",
+      "proporcao": 1.6,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "at",
+      "nome": "Áustria",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "155",
+      "grupos": [
+        "vermelho-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais: vermelho, branco e vermelho, sem emblema.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "lb",
+        "lv",
+        "eg",
+        "ye",
+        "iq",
+        "hu"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "au",
+      "nome": "Austrália",
+      "aliases": [],
+      "regiao": "009",
+      "subRegiao": "053",
+      "grupos": [
+        "union-jack-no-cantao"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Azul-escuro com a Union Jack no cantão, uma grande estrela branca de sete pontas abaixo dela e cinco estrelas brancas na ponta.",
+      "classe": "cantao",
+      "vizinhos": [
+        "nz",
+        "bz",
+        "mh",
+        "cu",
+        "ba",
+        "is"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "az",
+      "nome": "Azerbaijão",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "crescente-com-faixas-1"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, azul-celeste, vermelho e verde, com crescente e estrela de oito pontas brancos no vermelho.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "uz",
+        "ly",
+        "sg",
+        "dz",
+        "tm",
+        "pk"
+      ],
+      "tracoVizinhanca": "branco no tricolor azul, vermelho e verde",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ba",
+      "nome": "Bósnia e Herzegovina",
+      "aliases": [
+        "Bósnia"
+      ],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [
+        "azul-e-amarelo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul com um triângulo amarelo e uma linha diagonal de estrelas brancas ao longo do lado maior do triângulo.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "mh",
+        "bz",
+        "is",
+        "nz",
+        "cu",
+        "gb"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bb",
+      "nome": "Barbados",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [
+        "azul-e-amarelo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas verticais, ultramarino, amarelo e ultramarino, com a cabeça de um tridente preto no centro.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "td",
+        "ro",
+        "md",
+        "vc",
+        "ba",
+        "gt"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bd",
+      "nome": "Bangladesh",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "034",
+      "grupos": [
+        "disco-central"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Verde-escuro com um disco vermelho levemente deslocado para o lado do mastro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "dm",
+        "sa",
+        "zm",
+        "pk",
+        "tm",
+        "mr"
+      ],
+      "tracoVizinhanca": "disco vermelho",
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "be",
+      "nome": "Bélgica",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "155",
+      "grupos": [
+        "preto-amarelo-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas verticais iguais, preto, amarelo e vermelho, em formato quase quadrado (13:15).",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "td",
+        "ro",
+        "sn",
+        "md",
+        "ad",
+        "ml"
+      ],
+      "proporcao": 1.154,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bf",
+      "nome": "Burquina Faso",
+      "aliases": [
+        "Burkina Faso"
+      ],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Duas faixas horizontais, vermelho em cima e verde embaixo, com uma estrela amarela de cinco pontas no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "gh",
+        "bo",
+        "tg",
+        "gw",
+        "st",
+        "lt"
+      ],
+      "tracoVizinhanca": "duas faixas e estrela",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bg",
+      "nome": "Bulgária",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "151",
+      "grupos": [
+        "verde-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais: branco, verde e vermelho.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sk",
+        "pl",
+        "ru",
+        "cl",
+        "lt",
+        "ir"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bh",
+      "nome": "Barein",
+      "aliases": [
+        "Bahrein",
+        "Barém"
+      ],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "serrilhada"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Vermelho com uma faixa branca no mastro, separada por uma serrilha de cinco pontas.",
+      "classe": "outro",
+      "vizinhos": [
+        "mt",
+        "qa",
+        "to",
+        "pt",
+        "tl",
+        "tr"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bi",
+      "nome": "Burundi",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "aspa"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Aspa branca entre triângulos vermelhos e verdes, com um disco branco central e três estrelas vermelhas de seis pontas.",
+      "classe": "cruz",
+      "vizinhos": [
+        "lk",
+        "gd",
+        "mr",
+        "cf",
+        "ge",
+        "us"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bj",
+      "nome": "Benin",
+      "aliases": [
+        "Benim"
+      ],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "faixa-vertical-no-mastro"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixa vertical verde no mastro e duas faixas horizontais à direita, amarelo em cima e vermelho embaixo.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "cg",
+        "et",
+        "st",
+        "mm",
+        "lt",
+        "tg"
+      ],
+      "tracoVizinhanca": "faixa vertical verde",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bn",
+      "nome": "Brunei",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Amarelo cortado por faixas diagonais branca e preta, com um emblema vermelho de crescente e guarda-sol no centro.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "bt",
+        "kn",
+        "tt",
+        "pg",
+        "sb",
+        "mh"
+      ],
+      "tracoVizinhanca": "faixas sobre amarelo",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bo",
+      "nome": "Bolívia",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [
+        "tricolor-vermelho-amarelo-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais: vermelho, amarelo e verde, sem emblema.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "gh",
+        "bf",
+        "tg",
+        "st",
+        "gw",
+        "mm"
+      ],
+      "tracoVizinhanca": "faixas lisas, vermelho em cima",
+      "proporcao": 1.467,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "br",
+      "nome": "Brasil",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Verde com um losango amarelo e um globo azul estrelado no centro, cortado por uma faixa branca com lema.",
+      "classe": "outro",
+      "vizinhos": [
+        "dm",
+        "st",
+        "sa",
+        "bd",
+        "zm",
+        "tg"
+      ],
+      "proporcao": 1.429,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bs",
+      "nome": "Bahamas",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, água-marinha, amarelo e água-marinha, com um triângulo preto no mastro.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "cu",
+        "dj",
+        "cz",
+        "tl",
+        "ph",
+        "gq"
+      ],
+      "tracoVizinhanca": "água-marinha e amarelo com triângulo preto",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bt",
+      "nome": "Butão",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "034",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Dividida na diagonal entre amarelo, do lado do mastro, e laranja, com um dragão branco ao longo da divisa.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "bn",
+        "kn",
+        "tt",
+        "pg",
+        "sb",
+        "mh"
+      ],
+      "tracoVizinhanca": "dragão",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bw",
+      "nome": "Botsuana",
+      "aliases": [
+        "Botswana"
+      ],
+      "regiao": "002",
+      "subRegiao": "018",
+      "grupos": [
+        "azul-claro-com-simbolo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul-claro com uma faixa horizontal preta no centro, bordada de branco em cima e embaixo.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "gr",
+        "ar",
+        "fm",
+        "uy",
+        "il",
+        "fj"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "by",
+      "nome": "Bielorrússia",
+      "aliases": [
+        "Belarus"
+      ],
+      "regiao": "150",
+      "subRegiao": "151",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Vermelho largo em cima e verde embaixo, com uma faixa vertical de ornamento vermelho e branco junto ao mastro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "bf",
+        "mu",
+        "gh",
+        "mw",
+        "gm",
+        "tj"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "bz",
+      "nome": "Belize",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "013",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Azul-real com faixas vermelhas finas em cima e embaixo e um disco branco com brasão e coroa de folhas no centro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "ba",
+        "nz",
+        "au",
+        "mh",
+        "cu",
+        "is"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ca",
+      "nome": "Canadá",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "021",
+      "grupos": [
+        "vermelho-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 1,
+      "descricao": "Vermelho nas laterais e um quadrado branco no centro com uma folha de bordo vermelha de onze pontas.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "pe",
+        "mn",
+        "cn",
+        "tr",
+        "mk",
+        "mt"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cd",
+      "nome": "República Democrática do Congo",
+      "aliases": [
+        "Congo-Kinshasa",
+        "RDC"
+      ],
+      "regiao": "002",
+      "subRegiao": "017",
+      "grupos": [
+        "diagonal-africana"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul-celeste com uma faixa diagonal vermelha bordada de amarelo e uma estrela amarela no canto do mastro.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "mh",
+        "so",
+        "is",
+        "cu",
+        "us",
+        "gb"
+      ],
+      "proporcao": 1.333,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cf",
+      "nome": "República Centro-Africana",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "017",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Quatro faixas horizontais, azul, branco, verde e amarelo, cortadas por uma faixa vertical vermelha, e uma estrela amarela no canto.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ua",
+        "bi",
+        "lk",
+        "us",
+        "gd",
+        "dj"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cg",
+      "nome": "República do Congo",
+      "aliases": [
+        "Congo-Brazzaville"
+      ],
+      "regiao": "002",
+      "subRegiao": "017",
+      "grupos": [
+        "diagonal-africana"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Dividida na diagonal por uma faixa amarela, com um triângulo verde do lado do mastro e um vermelho do lado da ponta.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "bj",
+        "st",
+        "et",
+        "mm",
+        "tg",
+        "lt"
+      ],
+      "tracoVizinhanca": "diagonal",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ch",
+      "nome": "Suíça",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "155",
+      "grupos": [
+        "cruz-centrada"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Quadrada e vermelha, com uma cruz branca de braços iguais no centro.",
+      "classe": "cruz",
+      "vizinhos": [
+        "tn",
+        "kg",
+        "al",
+        "tr",
+        "vn",
+        "me"
+      ],
+      "tracoVizinhanca": "cruz branca",
+      "proporcao": 1,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ci",
+      "nome": "Costa do Marfim",
+      "aliases": [
+        "Côte d'Ivoire"
+      ],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "verde-branco-laranja"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas verticais iguais: laranja no mastro, branco e verde.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "ng",
+        "gn",
+        "tm",
+        "pe",
+        "gy",
+        "ca"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cl",
+      "nome": "Chile",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Branco em cima e vermelho embaixo, com um cantão azul que traz uma estrela branca de cinco pontas.",
+      "classe": "cantao",
+      "vizinhos": [
+        "pl",
+        "sk",
+        "cz",
+        "lr",
+        "ru",
+        "bg"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cm",
+      "nome": "Camarões",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "017",
+      "grupos": [
+        "pan-africana-vertical"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas verticais, verde, vermelho e amarelo, com uma estrela amarela de cinco pontas no vermelho central.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "pt",
+        "af",
+        "bj",
+        "bh",
+        "ie",
+        "dz"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cn",
+      "nome": "China",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "030",
+      "grupos": [
+        "estrela-amarela-em-vermelho"
+      ],
+      "dificuldadeAPriori": 1,
+      "descricao": "Vermelho com uma grande estrela amarela no cantão e quatro estrelas menores em arco ao lado dela.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "tr",
+        "tn",
+        "vn",
+        "me",
+        "kg",
+        "al"
+      ],
+      "tracoVizinhanca": "cinco estrelas no cantão",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "co",
+      "nome": "Colômbia",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [
+        "gra-colombia"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Faixas horizontais amarela, azul e vermelha, com a amarela ocupando a metade de cima.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ec",
+        "lt",
+        "mm",
+        "ve",
+        "lv",
+        "pl"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cr",
+      "nome": "Costa Rica",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "013",
+      "grupos": [
+        "vermelho-branco-azul-horizontal",
+        "azul-branco-vermelho-branco-azul"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Cinco faixas horizontais, azul, branco, vermelho, branco e azul, com a vermelha central de largura dupla.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "kp",
+        "kh",
+        "sz",
+        "il",
+        "gr",
+        "cv"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cu",
+      "nome": "Cuba",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [
+        "triangulo-e-listras"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Cinco listras horizontais azuis e brancas e um triângulo vermelho no mastro com uma estrela branca.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "ph",
+        "cz",
+        "bs",
+        "dj",
+        "tl",
+        "gq"
+      ],
+      "tracoVizinhanca": "listras azuis",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cv",
+      "nome": "Cabo Verde",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Azul com uma faixa branca e vermelha abaixo do meio e um círculo de dez estrelas amarelas perto do mastro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "nr",
+        "hn",
+        "sv",
+        "ni",
+        "gr",
+        "mh"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cy",
+      "nome": "Chipre",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Branco com o mapa da ilha em cor de cobre e dois ramos de oliveira verdes abaixo dele.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "jp",
+        "kr",
+        "sm",
+        "ge",
+        "fi",
+        "np"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "cz",
+      "nome": "Tchéquia",
+      "aliases": [
+        "República Tcheca",
+        "República Checa",
+        "Chéquia"
+      ],
+      "regiao": "150",
+      "subRegiao": "151",
+      "grupos": [
+        "triangulo-e-listras"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Branco em cima e vermelho embaixo, com um triângulo azul no mastro que chega ao centro.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "ph",
+        "tl",
+        "gq",
+        "cu",
+        "bs",
+        "dj"
+      ],
+      "tracoVizinhanca": "branco e vermelho",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "de",
+      "nome": "Alemanha",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "155",
+      "grupos": [
+        "preto-amarelo-vermelho"
+      ],
+      "dificuldadeAPriori": 1,
+      "descricao": "Três faixas horizontais iguais: preto, vermelho e dourado.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ke",
+        "mw",
+        "ug",
+        "ua",
+        "az",
+        "sr"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "dj",
+      "nome": "Djibuti",
+      "aliases": [
+        "Djibouti"
+      ],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul-claro em cima e verde embaixo, com um triângulo branco no mastro e uma estrela vermelha nele.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "bs",
+        "cu",
+        "cz",
+        "ph",
+        "gq",
+        "tl"
+      ],
+      "tracoVizinhanca": "azul-claro e verde",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "dk",
+      "nome": "Dinamarca",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "154",
+      "grupos": [
+        "cruz-nordica"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com uma cruz nórdica branca, deslocada para o lado do mastro.",
+      "classe": "cruz",
+      "vizinhos": [
+        "ma",
+        "no",
+        "mv",
+        "tt",
+        "tn",
+        "vn"
+      ],
+      "proporcao": 1.321,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "dm",
+      "nome": "Dominica",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Verde com uma cruz de faixas amarela, preta e branca e um disco vermelho central com papagaio e dez estrelas.",
+      "classe": "cruz",
+      "vizinhos": [
+        "bd",
+        "sa",
+        "zm",
+        "tm",
+        "pk",
+        "mr"
+      ],
+      "tracoVizinhanca": "papagaio",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "do",
+      "nome": "República Dominicana",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [
+        "cruz-centrada"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Cruz branca centrada entre quartos azuis e vermelhos alternados, com o brasão no centro.",
+      "classe": "cruz",
+      "vizinhos": [
+        "us",
+        "no",
+        "dk",
+        "gb",
+        "is",
+        "my"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "webp",
+        "larguras": [
+          480,
+          960
+        ]
+      }
+    },
+    {
+      "codigo": "dz",
+      "nome": "Argélia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "015",
+      "grupos": [
+        "crescente-com-faixas-1"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Metade verde no mastro e metade branca, com um crescente e uma estrela vermelhos no centro.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "tm",
+        "pk",
+        "uz",
+        "km",
+        "mr",
+        "my"
+      ],
+      "tracoVizinhanca": "vermelho sobre verde e branco",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ec",
+      "nome": "Equador",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [
+        "gra-colombia"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Faixas horizontais amarela, azul e vermelha, com a amarela dobrada e o brasão com condor no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "co",
+        "lt",
+        "mm",
+        "ve",
+        "gq",
+        "lb"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "webp",
+        "larguras": [
+          480,
+          960
+        ]
+      }
+    },
+    {
+      "codigo": "ee",
+      "nome": "Estônia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "154",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Três faixas horizontais iguais: azul, preto e branco.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "bw",
+        "th",
+        "rs",
+        "cv",
+        "gr",
+        "uy"
+      ],
+      "proporcao": 1.571,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "eg",
+      "nome": "Egito",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "015",
+      "grupos": [
+        "pan-arabe-horizontal"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas horizontais, vermelho, branco e preto, com uma águia dourada no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ye",
+        "iq",
+        "sd",
+        "hu",
+        "nl",
+        "ao"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "er",
+      "nome": "Eritreia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Triângulo vermelho do mastro à ponta, verde em cima e azul embaixo, com um ramo de oliveira dourado em coroa.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "gy",
+        "km",
+        "zw",
+        "st",
+        "mz",
+        "ss"
+      ],
+      "tracoVizinhanca": "triângulo vermelho do mastro à ponta, verde em cima e azul embaixo, ramo dourado",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "es",
+      "nome": "Espanha",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Faixas horizontais vermelha, amarela e vermelha, com a amarela dobrada e o brasão perto do mastro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "mk",
+        "lb",
+        "gh",
+        "at",
+        "mr",
+        "lv"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "webp",
+        "larguras": [
+          480,
+          960
+        ]
+      }
+    },
+    {
+      "codigo": "et",
+      "nome": "Etiópia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "tricolor-vermelho-amarelo-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, verde, amarelo e vermelho, com um disco azul e uma estrela amarela de raios no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "bj",
+        "cg",
+        "st",
+        "mm",
+        "tg",
+        "lt"
+      ],
+      "tracoVizinhanca": "emblema azul no centro",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "fi",
+      "nome": "Finlândia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "154",
+      "grupos": [
+        "cruz-nordica"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Branco com uma cruz nórdica azul.",
+      "classe": "cruz",
+      "vizinhos": [
+        "kr",
+        "fm",
+        "sm",
+        "fj",
+        "jp",
+        "cy"
+      ],
+      "proporcao": 1.636,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "fj",
+      "nome": "Fiji",
+      "aliases": [],
+      "regiao": "009",
+      "subRegiao": "054",
+      "grupos": [
+        "union-jack-no-cantao"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul-claro com a Union Jack no cantão e um escudo com leão, cana, coqueiro e pomba do lado da ponta.",
+      "classe": "cantao",
+      "vizinhos": [
+        "tv",
+        "fm",
+        "sm",
+        "so",
+        "lc",
+        "fi"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "fm",
+      "nome": "Micronésia",
+      "aliases": [
+        "Estados Federados da Micronésia"
+      ],
+      "regiao": "009",
+      "subRegiao": "057",
+      "grupos": [
+        "azul-claro-com-simbolo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul-claro com quatro estrelas brancas de cinco pontas dispostas em losango no centro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "fj",
+        "lc",
+        "tv",
+        "so",
+        "sm",
+        "kz"
+      ],
+      "proporcao": 1.9,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "fr",
+      "nome": "França",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "155",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Três faixas verticais iguais: azul no mastro, branco e vermelho.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "mx",
+        "it",
+        "td",
+        "pe",
+        "ro",
+        "md"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ga",
+      "nome": "Gabão",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "017",
+      "grupos": [
+        "verde-azul-com-faixa-clara"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais: verde, amarelo e azul.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sl",
+        "sy",
+        "ar",
+        "bs",
+        "sr",
+        "cr"
+      ],
+      "proporcao": 1.333,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "gb",
+      "nome": "Reino Unido",
+      "aliases": [
+        "Grã-Bretanha"
+      ],
+      "regiao": "150",
+      "subRegiao": "154",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Azul com a cruz vermelha bordada de branco sobre duas aspas sobrepostas, branca e vermelha.",
+      "classe": "cruz",
+      "vizinhos": [
+        "us",
+        "is",
+        "np",
+        "my",
+        "kp",
+        "cu"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "gd",
+      "nome": "Granada",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Borda vermelha com seis estrelas e campo de triângulos amarelos e verdes, com estrela no centro e noz-moscada perto do mastro.",
+      "classe": "outro",
+      "vizinhos": [
+        "lk",
+        "mk",
+        "mv",
+        "bt",
+        "jm",
+        "tl"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ge",
+      "nome": "Geórgia",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "cruz-centrada"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Branco com uma grande cruz vermelha e quatro cruzes vermelhas menores nos quartos.",
+      "classe": "cruz",
+      "vizinhos": [
+        "jp",
+        "cy",
+        "np",
+        "gb",
+        "kr",
+        "lk"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "gh",
+      "nome": "Gana",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "tricolor-vermelho-amarelo-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, vermelho, amarelo e verde, com uma estrela preta de cinco pontas no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "bo",
+        "bf",
+        "tg",
+        "gw",
+        "st",
+        "mm"
+      ],
+      "tracoVizinhanca": "estrela preta",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "gm",
+      "nome": "Gâmbia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "verde-azul-com-faixa-clara"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais vermelha, azul e verde, com a azul central bordada por filetes brancos.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ly",
+        "tj",
+        "mu",
+        "hu",
+        "by",
+        "am"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "gn",
+      "nome": "Guiné",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "pan-africana-vertical"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas verticais iguais: vermelho no mastro, amarelo e verde.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "vc",
+        "gw",
+        "ci",
+        "gy",
+        "tm",
+        "tg"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "gq",
+      "nome": "Guiné Equatorial",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "017",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais verde, branca e vermelha, triângulo azul no mastro e brasão com árvore no centro.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "cz",
+        "tl",
+        "ph",
+        "dj",
+        "bs",
+        "cu"
+      ],
+      "tracoVizinhanca": "verde, branco e vermelho com brasão",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "gr",
+      "nome": "Grécia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [
+        "listras-com-cantao"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Nove listras horizontais azuis e brancas e uma cruz branca sobre azul no cantão.",
+      "classe": "cantao",
+      "vizinhos": [
+        "il",
+        "ar",
+        "bw",
+        "uy",
+        "fm",
+        "ni"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "gt",
+      "nome": "Guatemala",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "013",
+      "grupos": [
+        "azul-branco-azul"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas verticais, azul-celeste, branco e azul-celeste, com o brasão do pássaro quetzal no centro.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "fm",
+        "lc",
+        "gr",
+        "ar",
+        "so",
+        "bw"
+      ],
+      "proporcao": 1.6,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "gw",
+      "nome": "Guiné-Bissau",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "faixa-vertical-no-mastro"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixa vertical vermelha no mastro com estrela preta e duas faixas horizontais, amarelo em cima e verde embaixo.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "tg",
+        "st",
+        "bf",
+        "bo",
+        "gh",
+        "mm"
+      ],
+      "tracoVizinhanca": "faixa vertical vermelha com estrela",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "gy",
+      "nome": "Guiana",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Verde com um triângulo amarelo bordado de branco e, sobre ele, um vermelho bordado de preto, ambos a partir do mastro.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "st",
+        "er",
+        "mz",
+        "zw",
+        "vu",
+        "ss"
+      ],
+      "tracoVizinhanca": "triângulos sobrepostos",
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "hn",
+      "nome": "Honduras",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "013",
+      "grupos": [
+        "azul-branco-azul"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas horizontais, azul, branco e azul, com cinco estrelas azuis em xis no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sv",
+        "ni",
+        "cv",
+        "nr",
+        "il",
+        "ar"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "hr",
+      "nome": "Croácia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [
+        "pan-eslava"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, vermelho, branco e azul, com um escudo xadrez vermelho e branco sob coroa no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "py",
+        "nl",
+        "lu",
+        "ye",
+        "iq",
+        "eg"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ht",
+      "nome": "Haiti",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [
+        "azul-e-vermelho-horizontal"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul em cima e vermelho embaixo, com o brasão de palmeira e canhões num retângulo branco no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "li",
+        "cl",
+        "cv",
+        "ph",
+        "la",
+        "lv"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "hu",
+      "nome": "Hungria",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "151",
+      "grupos": [
+        "verde-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais: vermelho, branco e verde.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "tj",
+        "eg",
+        "ye",
+        "in",
+        "iq",
+        "lu"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "id",
+      "nome": "Indonésia",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [
+        "vermelho-e-branco"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Duas faixas horizontais iguais, vermelho em cima e branco embaixo, na proporção 2:3.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "mc",
+        "sg",
+        "ki",
+        "rs",
+        "bf",
+        "by"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ie",
+      "nome": "Irlanda",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "154",
+      "grupos": [
+        "verde-branco-laranja"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas verticais iguais, verde no mastro, branco e laranja, na proporção 1:2.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "it",
+        "mx",
+        "ng",
+        "fr",
+        "sn",
+        "dz"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "il",
+      "nome": "Israel",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Branco com duas faixas horizontais azuis e uma estrela de seis pontas azul no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "gr",
+        "ar",
+        "ni",
+        "uy",
+        "sv",
+        "hn"
+      ],
+      "proporcao": 1.375,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "in",
+      "nome": "Índia",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "034",
+      "grupos": [
+        "verde-branco-laranja"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais, açafrão, branco e verde, com uma roda azul de 24 raios no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "tj",
+        "hu",
+        "ne",
+        "ye",
+        "iq",
+        "eg"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "iq",
+      "nome": "Iraque",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "pan-arabe-horizontal"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas horizontais, vermelho, branco e preto, com uma inscrição verde em árabe no branco.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ye",
+        "eg",
+        "sd",
+        "hu",
+        "nl",
+        "tj"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ir",
+      "nome": "Irã",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "034",
+      "grupos": [
+        "verde-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais verde, branca e vermelha, com emblema vermelho no centro e inscrições brancas repetidas nas bordas.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "gq",
+        "kw",
+        "sy",
+        "pl",
+        "bg",
+        "at"
+      ],
+      "proporcao": 1.75,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "is",
+      "nome": "Islândia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "154",
+      "grupos": [
+        "cruz-nordica"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Azul com uma cruz nórdica vermelha bordada de branco.",
+      "classe": "cruz",
+      "vizinhos": [
+        "se",
+        "mh",
+        "gb",
+        "cu",
+        "so",
+        "cv"
+      ],
+      "proporcao": 1.389,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "it",
+      "nome": "Itália",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [
+        "verde-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 1,
+      "descricao": "Três faixas verticais iguais: verde no mastro, branco e vermelho.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "mx",
+        "ie",
+        "sn",
+        "fr",
+        "ml",
+        "ng"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "jm",
+      "nome": "Jamaica",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [
+        "aspa"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Aspa amarela entre triângulos verdes em cima e embaixo e pretos nas laterais.",
+      "classe": "cruz",
+      "vizinhos": [
+        "gy",
+        "tg",
+        "zm",
+        "zw",
+        "st",
+        "dm"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "jo",
+      "nome": "Jordânia",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "pan-arabe-com-triangulo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais preta, branca e verde, com um triângulo vermelho no mastro e uma estrela branca de sete pontas.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "gy",
+        "ae",
+        "tg",
+        "ss",
+        "na",
+        "sc"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "jp",
+      "nome": "Japão",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "030",
+      "grupos": [
+        "disco-central"
+      ],
+      "dificuldadeAPriori": 1,
+      "descricao": "Branco com um disco vermelho no centro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "cy",
+        "kr",
+        "ge",
+        "sm",
+        "np",
+        "fi"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ke",
+      "nome": "Quênia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "preto-vermelho-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais preta, vermelha e verde separadas por filetes brancos, com escudo e duas lanças no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "mw",
+        "sr",
+        "de",
+        "az",
+        "by",
+        "mu"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "kg",
+      "nome": "Quirguistão",
+      "aliases": [
+        "Quirguizistão"
+      ],
+      "regiao": "142",
+      "subRegiao": "143",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com um sol amarelo de quarenta raios e, dentro dele, o topo de uma tenda tradicional.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "al",
+        "me",
+        "ch",
+        "tn",
+        "cn",
+        "mk"
+      ],
+      "tracoVizinhanca": "sol com tenda; em vermelho, com tenda",
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "kh",
+      "nome": "Camboja",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [
+        "azul-branco-vermelho-branco-azul"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais azul, vermelha e azul, com a vermelha dobrada e um templo branco de três torres no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "cr",
+        "kp",
+        "cv",
+        "sz",
+        "nr",
+        "hn"
+      ],
+      "proporcao": 1.563,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ki",
+      "nome": "Quiribati",
+      "aliases": [
+        "Kiribati"
+      ],
+      "regiao": "009",
+      "subRegiao": "057",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho em cima com uma fragata amarela sobre sol nascente e, embaixo, ondas azuis e brancas.",
+      "classe": "outro",
+      "vizinhos": [
+        "uy",
+        "ar",
+        "mw",
+        "mk",
+        "ag",
+        "rw"
+      ],
+      "tracoVizinhanca": "sobre o mar",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "km",
+      "nome": "Comores",
+      "aliases": [
+        "Ilhas Comores"
+      ],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "crescente-com-faixas-2"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Quatro faixas horizontais, amarela, branca, vermelha e azul, e um triângulo verde com crescente e quatro estrelas.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "er",
+        "zw",
+        "dz",
+        "mv",
+        "my",
+        "gy"
+      ],
+      "tracoVizinhanca": "branco no triângulo verde, com quatro faixas; triângulo verde com crescente e quatro faixas",
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "kn",
+      "nome": "São Cristóvão e Névis",
+      "aliases": [
+        "Saint Kitts e Nevis"
+      ],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [
+        "diagonal-com-faixa-preta"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixa diagonal preta bordada de amarelo com duas estrelas brancas, entre um triângulo verde e um vermelho.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "pg",
+        "bt",
+        "tt",
+        "bn",
+        "sb",
+        "mh"
+      ],
+      "tracoVizinhanca": "preta com duas estrelas",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "kp",
+      "nome": "Coreia do Norte",
+      "aliases": [
+        "Coreia Norte",
+        "República Popular Democrática da Coreia"
+      ],
+      "regiao": "142",
+      "subRegiao": "030",
+      "grupos": [
+        "azul-branco-vermelho-branco-azul"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixa vermelha larga entre filetes brancos e faixas azuis, com uma estrela vermelha em disco branco perto do mastro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sz",
+        "cr",
+        "kh",
+        "lr",
+        "gb",
+        "lv"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "kr",
+      "nome": "Coreia do Sul",
+      "aliases": [
+        "Coreia Sul",
+        "República da Coreia"
+      ],
+      "regiao": "142",
+      "subRegiao": "030",
+      "grupos": [
+        "disco-central"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Branco com o círculo taegeuk vermelho e azul no centro e quatro trigramas pretos nos cantos.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "cy",
+        "jp",
+        "sm",
+        "fi",
+        "np",
+        "fj"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "kw",
+      "nome": "Kuwait",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "pan-arabe-com-triangulo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais verde, branca e vermelha, com um trapézio preto junto ao mastro.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "gq",
+        "ir",
+        "sy",
+        "at",
+        "pl",
+        "cl"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "kz",
+      "nome": "Cazaquistão",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "143",
+      "grupos": [
+        "azul-claro-com-simbolo",
+        "azul-e-amarelo"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Azul-celeste com um sol dourado sobre uma águia em voo e uma faixa vertical de ornamento dourado no mastro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "ar",
+        "rw",
+        "uy",
+        "na",
+        "ag",
+        "ki"
+      ],
+      "tracoVizinhanca": "dourado em azul",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "la",
+      "nome": "Laos",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [
+        "disco-central"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais vermelha, azul e vermelha, com a azul dobrada e um disco branco no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "lv",
+        "at",
+        "no",
+        "th",
+        "rs",
+        "lb"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "lb",
+      "nome": "Líbano",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "vermelho-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas vermelhas em cima e embaixo e uma faixa branca de largura dupla no centro com um cedro verde.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "at",
+        "lv",
+        "hu",
+        "tj",
+        "es",
+        "iq"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "lc",
+      "nome": "Santa Lúcia",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Azul-celeste com um triângulo preto bordado de branco e um triângulo amarelo menor na base dele, no centro.",
+      "classe": "outro",
+      "vizinhos": [
+        "fm",
+        "sm",
+        "kz",
+        "tv",
+        "fj",
+        "so"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "li",
+      "nome": "Liechtenstein",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "155",
+      "grupos": [
+        "azul-e-vermelho-horizontal"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Duas faixas horizontais iguais, azul em cima e vermelho embaixo, com uma coroa dourada no canto do mastro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ht",
+        "ph",
+        "cl",
+        "ws",
+        "sk",
+        "cv"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "lk",
+      "nome": "Sri Lanka",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "034",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Moldura amarela com duas faixas verticais, verde e laranja, e um painel grená com leão dourado segurando uma espada.",
+      "classe": "outro",
+      "vizinhos": [
+        "gd",
+        "mk",
+        "mv",
+        "bt",
+        "tl",
+        "zw"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "lr",
+      "nome": "Libéria",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "listras-com-cantao"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Onze listras horizontais vermelhas e brancas e um cantão azul com uma estrela branca.",
+      "classe": "cantao",
+      "vizinhos": [
+        "us",
+        "th",
+        "sz",
+        "lv",
+        "my",
+        "kp"
+      ],
+      "proporcao": 1.9,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ls",
+      "nome": "Lesoto",
+      "aliases": [
+        "Lesotho"
+      ],
+      "regiao": "002",
+      "subRegiao": "018",
+      "grupos": [
+        "verde-azul-com-faixa-clara"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais azul, branca e verde, com o branco largo e um chapéu tradicional preto no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "uz",
+        "rw",
+        "tj",
+        "ua",
+        "hn",
+        "hu"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "lt",
+      "nome": "Lituânia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "154",
+      "grupos": [
+        "tricolor-vermelho-amarelo-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais: amarelo, verde e vermelho.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "mm",
+        "bj",
+        "cg",
+        "et",
+        "gw",
+        "tg"
+      ],
+      "tracoVizinhanca": "amarelo em cima, sem emblema",
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "lu",
+      "nome": "Luxemburgo",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "155",
+      "grupos": [
+        "vermelho-branco-azul-horizontal"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas horizontais iguais, vermelho, branco e azul-celeste, na proporção 3:5.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "nl",
+        "hu",
+        "py",
+        "ye",
+        "tj",
+        "iq"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "lv",
+      "nome": "Letônia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "154",
+      "grupos": [
+        "vermelho-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Carmim escuro com uma faixa horizontal branca estreita no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "la",
+        "at",
+        "lb",
+        "lr",
+        "no",
+        "dk"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ly",
+      "nome": "Líbia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "015",
+      "grupos": [
+        "preto-vermelho-verde",
+        "crescente-com-faixas-1"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Faixas horizontais vermelha, preta e verde, com a preta dobrada e um crescente e uma estrela brancos nela.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sg",
+        "mr",
+        "mv",
+        "pk",
+        "tm",
+        "uz"
+      ],
+      "tracoVizinhanca": "branco na faixa preta",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ma",
+      "nome": "Marrocos",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "015",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com um pentagrama verde entrelaçado no centro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "vn",
+        "tr",
+        "cn",
+        "to",
+        "tn",
+        "me"
+      ],
+      "tracoVizinhanca": "pentagrama verde",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mc",
+      "nome": "Mônaco",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "155",
+      "grupos": [
+        "vermelho-e-branco"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Duas faixas horizontais iguais, vermelho em cima e branco embaixo, em formato quase quadrado (4:5).",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sg",
+        "id",
+        "ki",
+        "rs",
+        "mu",
+        "lu"
+      ],
+      "proporcao": 1.25,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "md",
+      "nome": "Moldávia",
+      "aliases": [
+        "Moldova"
+      ],
+      "regiao": "150",
+      "subRegiao": "151",
+      "grupos": [
+        "azul-amarelo-vermelho-vertical"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas verticais, azul, amarelo e vermelho, com uma águia segurando um escudo com cabeça de auroque no centro.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "ad",
+        "ro",
+        "td",
+        "be",
+        "fr",
+        "bb"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "me",
+      "nome": "Montenegro",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [
+        "aguia-em-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com borda dourada e uma águia dourada de duas cabeças, com coroa e escudo, no centro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "vn",
+        "kg",
+        "tn",
+        "cn",
+        "tr",
+        "mk"
+      ],
+      "tracoVizinhanca": "águia dourada com borda",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "webp",
+        "larguras": [
+          480,
+          960
+        ]
+      }
+    },
+    {
+      "codigo": "mg",
+      "nome": "Madagascar",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "faixa-vertical-no-mastro"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixa vertical branca no mastro e duas faixas horizontais, vermelho em cima e verde embaixo.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "vu",
+        "sc",
+        "cy",
+        "pa",
+        "bf",
+        "jp"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mh",
+      "nome": "Ilhas Marshall",
+      "aliases": [
+        "Marshall"
+      ],
+      "regiao": "009",
+      "subRegiao": "057",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul com dois raios diagonais, laranja e branco, que se abrem a partir do mastro, e uma estrela branca de 24 pontas.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "sb",
+        "pg",
+        "tt",
+        "kn",
+        "bn",
+        "bt"
+      ],
+      "tracoVizinhanca": "dois raios",
+      "proporcao": 1.9,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mk",
+      "nome": "Macedônia do Norte",
+      "aliases": [
+        "Macedônia"
+      ],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com um sol amarelo cujos oito raios se alargam até as bordas.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "me",
+        "vn",
+        "tr",
+        "to",
+        "cn",
+        "kg"
+      ],
+      "tracoVizinhanca": "sol de oito raios; de oito raios em vermelho",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ml",
+      "nome": "Mali",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "pan-africana-vertical"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas verticais iguais: verde no mastro, amarelo e vermelho.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "sn",
+        "be",
+        "it",
+        "pt",
+        "mx",
+        "cg"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mm",
+      "nome": "Mianmar",
+      "aliases": [
+        "Birmânia",
+        "Myanmar"
+      ],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [
+        "tricolor-vermelho-amarelo-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, amarelo, verde e vermelho, com uma grande estrela branca de cinco pontas no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "lt",
+        "bj",
+        "et",
+        "cg",
+        "gw",
+        "bo"
+      ],
+      "tracoVizinhanca": "estrela branca",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mn",
+      "nome": "Mongólia",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "030",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Três faixas verticais, vermelho, azul e vermelho, com o símbolo soyombo amarelo na faixa do mastro.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "pe",
+        "ca",
+        "dk",
+        "mt",
+        "ma",
+        "no"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mr",
+      "nome": "Mauritânia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "crescente-em-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Verde com crescente e estrela amarelos e faixas vermelhas estreitas em cima e embaixo.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "mv",
+        "tm",
+        "ly",
+        "zm",
+        "sg",
+        "bd"
+      ],
+      "tracoVizinhanca": "crescente e faixas vermelhas; amarelo no verde, com faixas vermelhas",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mt",
+      "nome": "Malta",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [
+        "vermelho-e-branco"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Duas faixas verticais, branco no mastro e vermelho, com uma cruz de condecoração cinza bordada de vermelho no canto.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "bh",
+        "qa",
+        "mx",
+        "it",
+        "fr",
+        "ca"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mu",
+      "nome": "Maurício",
+      "aliases": [
+        "Ilhas Maurício"
+      ],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Quatro faixas horizontais iguais: vermelho, azul, amarelo e verde.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "bf",
+        "ly",
+        "tj",
+        "by",
+        "hu",
+        "gm"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mv",
+      "nome": "Maldivas",
+      "aliases": [
+        "Ilhas Maldivas"
+      ],
+      "regiao": "142",
+      "subRegiao": "034",
+      "grupos": [
+        "crescente-em-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Moldura vermelha em volta de um retângulo verde com um crescente branco.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "tr",
+        "tn",
+        "my",
+        "mr",
+        "km",
+        "sg"
+      ],
+      "tracoVizinhanca": "branco no verde, com moldura vermelha",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mw",
+      "nome": "Malaui",
+      "aliases": [
+        "Malawi"
+      ],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "preto-vermelho-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais preta, vermelha e verde, com um sol nascente vermelho de raios na faixa preta.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "rw",
+        "ki",
+        "na",
+        "ag",
+        "ar",
+        "uy"
+      ],
+      "tracoVizinhanca": "nascente na faixa preta",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mx",
+      "nome": "México",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "013",
+      "grupos": [
+        "verde-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 1,
+      "descricao": "Três faixas verticais, verde, branco e vermelho, com uma águia sobre um cacto devorando uma serpente no centro.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "it",
+        "ie",
+        "fr",
+        "sn",
+        "mt",
+        "pe"
+      ],
+      "proporcao": 1.75,
+      "imagem": {
+        "formato": "webp",
+        "larguras": [
+          480,
+          960
+        ]
+      }
+    },
+    {
+      "codigo": "my",
+      "nome": "Malásia",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [
+        "listras-com-cantao",
+        "crescente-com-faixas-2"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Catorze listras horizontais vermelhas e brancas e um cantão azul com crescente e estrela amarelos de catorze pontas.",
+      "classe": "cantao",
+      "vizinhos": [
+        "mv",
+        "tr",
+        "sg",
+        "tn",
+        "km",
+        "mr"
+      ],
+      "tracoVizinhanca": "amarelo no cantão azul das listras",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "mz",
+      "nome": "Moçambique",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas verde, preta e amarela com filetes brancos e um triângulo vermelho com estrela, livro, fuzil e enxada.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "gy",
+        "zw",
+        "st",
+        "vu",
+        "ss",
+        "er"
+      ],
+      "tracoVizinhanca": "fuzil e enxada",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "na",
+      "nome": "Namíbia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "018",
+      "grupos": [
+        "diagonal-africana"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixa diagonal vermelha bordada de branco entre o azul, com sol amarelo junto ao mastro, e o verde.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "rw",
+        "ag",
+        "kz",
+        "mw",
+        "mk",
+        "ki"
+      ],
+      "tracoVizinhanca": "no cantão azul",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ne",
+      "nome": "Níger",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "verde-branco-laranja"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, laranja, branco e verde, com um disco laranja no centro, quase quadrada (6:7).",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "tj",
+        "in",
+        "bf",
+        "hu",
+        "mu",
+        "bo"
+      ],
+      "proporcao": 1.167,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ng",
+      "nome": "Nigéria",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Três faixas verticais iguais: verde, branco e verde.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "ie",
+        "it",
+        "ci",
+        "dz",
+        "tm",
+        "mx"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ni",
+      "nome": "Nicarágua",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "013",
+      "grupos": [
+        "azul-branco-azul"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas horizontais, azul, branco e azul, com um triângulo com arco-íris e vulcões no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sv",
+        "hn",
+        "il",
+        "ar",
+        "gr",
+        "cv"
+      ],
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "nl",
+      "nome": "Países Baixos",
+      "aliases": [
+        "Holanda"
+      ],
+      "regiao": "150",
+      "subRegiao": "155",
+      "grupos": [
+        "vermelho-branco-azul-horizontal"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas horizontais iguais, vermelho, branco e azul-escuro, na proporção 2:3.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "py",
+        "lu",
+        "ye",
+        "eg",
+        "iq",
+        "hu"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "no",
+      "nome": "Noruega",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "154",
+      "grupos": [
+        "cruz-nordica"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Vermelho com uma cruz nórdica azul bordada de branco.",
+      "classe": "cruz",
+      "vizinhos": [
+        "dk",
+        "mv",
+        "ma",
+        "tt",
+        "lv",
+        "us"
+      ],
+      "proporcao": 1.375,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "np",
+      "nome": "Nepal",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "034",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Recortada em dois triângulos sobrepostos, carmim com borda azul, com uma lua branca no de cima e um sol branco no de baixo.",
+      "classe": "outro",
+      "vizinhos": [
+        "gb",
+        "us",
+        "kr",
+        "jp",
+        "cz",
+        "ge"
+      ],
+      "proporcao": 0.82,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "nr",
+      "nome": "Nauru",
+      "aliases": [],
+      "regiao": "009",
+      "subRegiao": "057",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Azul com uma faixa horizontal amarela fina no meio e uma estrela branca de doze pontas abaixo dela, perto do mastro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "cv",
+        "hn",
+        "sv",
+        "nz",
+        "mh",
+        "kh"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "nz",
+      "nome": "Nova Zelândia",
+      "aliases": [],
+      "regiao": "009",
+      "subRegiao": "053",
+      "grupos": [
+        "union-jack-no-cantao"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Azul-escuro com a Union Jack no cantão e quatro estrelas vermelhas bordadas de branco na ponta.",
+      "classe": "cantao",
+      "vizinhos": [
+        "au",
+        "mh",
+        "is",
+        "nr",
+        "cu",
+        "bz"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "om",
+      "nome": "Omã",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "pan-arabe-com-triangulo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais branca, vermelha e verde e uma faixa vertical vermelha no mastro com o emblema de adaga e espadas.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "gw",
+        "gy",
+        "er",
+        "by",
+        "ge",
+        "np"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "webp",
+        "larguras": [
+          480,
+          960
+        ]
+      }
+    },
+    {
+      "codigo": "pa",
+      "nome": "Panamá",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "013",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Esquartelada: branco com estrela azul, vermelho, azul e branco com estrela vermelha.",
+      "classe": "outro",
+      "vizinhos": [
+        "us",
+        "gb",
+        "kr",
+        "do",
+        "sc",
+        "my"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "pe",
+      "nome": "Peru",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [
+        "vermelho-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas verticais iguais: vermelho, branco e vermelho.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "ca",
+        "mn",
+        "fr",
+        "mx",
+        "it",
+        "tn"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "pg",
+      "nome": "Papua-Nova Guiné",
+      "aliases": [],
+      "regiao": "009",
+      "subRegiao": "054",
+      "grupos": [
+        "vermelho-e-preto"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Dividida na diagonal: vermelho com uma ave-do-paraíso amarela em cima e preto com cinco estrelas brancas embaixo.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "tt",
+        "kn",
+        "mh",
+        "sb",
+        "bn",
+        "bt"
+      ],
+      "tracoVizinhanca": "preto e vermelho com ave",
+      "proporcao": 1.333,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ph",
+      "nome": "Filipinas",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [
+        "triangulo-e-listras"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul em cima e vermelho embaixo, com um triângulo branco no mastro que traz um sol de oito raios e três estrelas amarelas.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "cz",
+        "cu",
+        "tl",
+        "dj",
+        "bs",
+        "gq"
+      ],
+      "tracoVizinhanca": "azul e vermelho",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "pk",
+      "nome": "Paquistão",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "034",
+      "grupos": [
+        "crescente-em-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Verde-escuro com crescente e estrela brancos e uma faixa vertical branca no mastro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "tm",
+        "sa",
+        "dm",
+        "bd",
+        "zm",
+        "dz"
+      ],
+      "tracoVizinhanca": "faixa branca no mastro; branco no verde, com faixa branca no mastro",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "pl",
+      "nome": "Polônia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "151",
+      "grupos": [
+        "vermelho-e-branco"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Duas faixas horizontais iguais: branco em cima e vermelho embaixo.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "cl",
+        "sk",
+        "bg",
+        "ru",
+        "lr",
+        "cz"
+      ],
+      "proporcao": 1.6,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "pt",
+      "nome": "Portugal",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Verde no mastro e vermelho maior, com a esfera armilar amarela e o escudo sobre a divisa.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "sn",
+        "bh",
+        "ml",
+        "mx",
+        "it",
+        "cm"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "pw",
+      "nome": "Palau",
+      "aliases": [],
+      "regiao": "009",
+      "subRegiao": "057",
+      "grupos": [
+        "azul-claro-com-simbolo",
+        "azul-e-amarelo",
+        "disco-central"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Azul-claro com um disco amarelo levemente deslocado para o lado do mastro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "so",
+        "fm",
+        "tv",
+        "lc",
+        "is",
+        "fj"
+      ],
+      "proporcao": 1.6,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "py",
+      "nome": "Paraguai",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [
+        "vermelho-branco-azul-horizontal"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais, vermelho, branco e azul, com um emblema circular no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "hr",
+        "nl",
+        "lu",
+        "ye",
+        "iq",
+        "eg"
+      ],
+      "proporcao": 1.818,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "qa",
+      "nome": "Catar",
+      "aliases": [
+        "Qatar"
+      ],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "serrilhada"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Grená com uma faixa branca no mastro, separada por uma serrilha de nove pontas, bem alongada (11:28).",
+      "classe": "outro",
+      "vizinhos": [
+        "mt",
+        "bh",
+        "lv",
+        "no",
+        "gb",
+        "pk"
+      ],
+      "proporcao": 2.545,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ro",
+      "nome": "Romênia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "151",
+      "grupos": [
+        "azul-amarelo-vermelho-vertical"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas verticais iguais: azul-cobalto no mastro, amarelo e vermelho, sem emblema.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "td",
+        "md",
+        "ad",
+        "be",
+        "fr",
+        "bb"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "rs",
+      "nome": "Sérvia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [
+        "pan-eslava"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, vermelho, azul e branco, com o brasão da águia branca de duas cabeças perto do mastro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "mc",
+        "sg",
+        "th",
+        "mu",
+        "la",
+        "gm"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ru",
+      "nome": "Rússia",
+      "aliases": [
+        "Federação Russa"
+      ],
+      "regiao": "150",
+      "subRegiao": "151",
+      "grupos": [
+        "pan-eslava"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais: branco, azul e vermelho.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sk",
+        "si",
+        "pl",
+        "bg",
+        "ve",
+        "cl"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "rw",
+      "nome": "Ruanda",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "verde-azul-com-faixa-clara"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul-celeste largo em cima com um sol amarelo no canto da ponta, e faixas amarela e verde embaixo.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ar",
+        "kz",
+        "uy",
+        "mw",
+        "na",
+        "ki"
+      ],
+      "tracoVizinhanca": "no canto, em azul",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sa",
+      "nome": "Arábia Saudita",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Verde com uma inscrição branca em árabe e uma espada branca embaixo dela.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "bd",
+        "dm",
+        "zm",
+        "pk",
+        "tm",
+        "mr"
+      ],
+      "tracoVizinhanca": "inscrição e espada",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sb",
+      "nome": "Ilhas Salomão",
+      "aliases": [
+        "Salomão"
+      ],
+      "regiao": "009",
+      "subRegiao": "054",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixa diagonal amarela fina entre o azul, com cinco estrelas brancas junto ao mastro, e o verde.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "mh",
+        "pg",
+        "tt",
+        "kn",
+        "bn",
+        "bt"
+      ],
+      "tracoVizinhanca": "azul e verde com estrelas",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sc",
+      "nome": "Seicheles",
+      "aliases": [
+        "Seychelles"
+      ],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "diagonal-africana"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Cinco faixas em leque a partir do canto inferior do mastro: azul, amarelo, vermelho, branco e verde.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "na",
+        "vu",
+        "us",
+        "do",
+        "mg",
+        "my"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sd",
+      "nome": "Sudão",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "015",
+      "grupos": [
+        "pan-arabe-com-triangulo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais vermelha, branca e preta, com um triângulo verde no mastro.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "ye",
+        "eg",
+        "iq",
+        "hu",
+        "nl",
+        "ao"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "se",
+      "nome": "Suécia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "154",
+      "grupos": [
+        "cruz-nordica",
+        "azul-e-amarelo"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Azul com uma cruz nórdica amarela.",
+      "classe": "cruz",
+      "vizinhos": [
+        "is",
+        "gb",
+        "bs",
+        "pw",
+        "us",
+        "do"
+      ],
+      "proporcao": 1.6,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sg",
+      "nome": "Singapura",
+      "aliases": [
+        "Cingapura"
+      ],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [
+        "vermelho-e-branco"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho em cima e branco embaixo, com um crescente branco e cinco estrelas brancas em círculo no canto do vermelho.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ly",
+        "my",
+        "mr",
+        "mv",
+        "tr",
+        "tn"
+      ],
+      "tracoVizinhanca": "branco no vermelho, com cinco estrelas",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "si",
+      "nome": "Eslovênia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [
+        "pan-eslava"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, branco, azul e vermelho, com o brasão de montanha e três estrelas perto do mastro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ru",
+        "sk",
+        "cl",
+        "pl",
+        "bg",
+        "ve"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sk",
+      "nome": "Eslováquia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "151",
+      "grupos": [
+        "pan-eslava"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais, branco, azul e vermelho, com um escudo de cruz dupla branca sobre montanhas perto do mastro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ru",
+        "pl",
+        "cl",
+        "bg",
+        "si",
+        "ve"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sl",
+      "nome": "Serra Leoa",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "verde-azul-com-faixa-clara"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais: verde, branco e azul.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sy",
+        "ga",
+        "ar",
+        "ni",
+        "nl",
+        "ir"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sm",
+      "nome": "San Marino",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "039",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Duas faixas horizontais, branco em cima e azul-celeste embaixo, com o brasão de três torres no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "fm",
+        "kr",
+        "fj",
+        "cy",
+        "lc",
+        "jp"
+      ],
+      "proporcao": 1.333,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sn",
+      "nome": "Senegal",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "pan-africana-vertical"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas verticais iguais, verde no mastro, amarelo e vermelho, com uma estrela verde no centro.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "ml",
+        "be",
+        "it",
+        "mx",
+        "pt",
+        "ie"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "so",
+      "nome": "Somália",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "azul-claro-com-simbolo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul-celeste com uma estrela branca de cinco pontas no centro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "fm",
+        "tv",
+        "pw",
+        "fj",
+        "gr",
+        "is"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sr",
+      "nome": "Suriname",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Faixas verde, branca, vermelha, branca e verde, com a vermelha larga e uma estrela amarela no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "ke",
+        "mw",
+        "az",
+        "sz",
+        "by",
+        "ug"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ss",
+      "nome": "Sudão do Sul",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "pan-arabe-com-triangulo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas preta, vermelha e verde com filetes brancos e um triângulo azul no mastro com uma estrela amarela.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "vu",
+        "zw",
+        "gy",
+        "st",
+        "mz",
+        "km"
+      ],
+      "tracoVizinhanca": "triângulo azul com estrela amarela",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "st",
+      "nome": "São Tomé e Príncipe",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "017",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas horizontais verde, amarela e verde, um triângulo vermelho no mastro e duas estrelas pretas no amarelo.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "gy",
+        "tg",
+        "zw",
+        "gw",
+        "er",
+        "vu"
+      ],
+      "tracoVizinhanca": "triângulo vermelho e duas estrelas; triângulo vermelho e duas estrelas pretas no amarelo",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sv",
+      "nome": "El Salvador",
+      "aliases": [
+        "Salvador"
+      ],
+      "regiao": "019",
+      "subRegiao": "013",
+      "grupos": [
+        "azul-branco-azul"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas horizontais, azul, branco e azul, com o brasão triangular de vulcões no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "hn",
+        "ni",
+        "cv",
+        "il",
+        "nr",
+        "ar"
+      ],
+      "proporcao": 1.772,
+      "imagem": {
+        "formato": "webp",
+        "larguras": [
+          480,
+          960
+        ]
+      }
+    },
+    {
+      "codigo": "sy",
+      "nome": "Síria",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "pan-arabe-horizontal"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Três faixas horizontais iguais, verde, branco e preto, com três estrelas vermelhas no branco.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "kw",
+        "sl",
+        "eg",
+        "ye",
+        "iq",
+        "ae"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "sz",
+      "nome": "Essuatíni",
+      "aliases": [
+        "Suazilândia",
+        "Eswatini"
+      ],
+      "regiao": "002",
+      "subRegiao": "018",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Faixas azul, amarela, vermelha larga, amarela e azul, com escudo preto e branco e duas lanças deitadas no vermelho.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "kp",
+        "lr",
+        "th",
+        "cr",
+        "gb",
+        "kh"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "td",
+      "nome": "Chade",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "017",
+      "grupos": [
+        "azul-amarelo-vermelho-vertical"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas verticais iguais: azul-anil no mastro, amarelo e vermelho, sem emblema.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "ro",
+        "md",
+        "be",
+        "ad",
+        "fr",
+        "bb"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "tg",
+      "nome": "Togo",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "011",
+      "grupos": [
+        "listras-com-cantao"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Cinco listras horizontais verdes e amarelas e um cantão vermelho com uma estrela branca.",
+      "classe": "cantao",
+      "vizinhos": [
+        "st",
+        "gw",
+        "bf",
+        "gh",
+        "bj",
+        "bo"
+      ],
+      "tracoVizinhanca": "listras e cantão",
+      "proporcao": 1.618,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "th",
+      "nome": "Tailândia",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [
+        "vermelho-branco-azul-horizontal",
+        "azul-branco-vermelho-branco-azul"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Cinco faixas horizontais, vermelho, branco, azul, branco e vermelho, com a azul central de largura dupla.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "lr",
+        "rs",
+        "sz",
+        "la",
+        "uy",
+        "us"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "tj",
+      "nome": "Tadjiquistão",
+      "aliases": [
+        "Tajiquistão"
+      ],
+      "regiao": "142",
+      "subRegiao": "143",
+      "grupos": [
+        "verde-branco-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixas vermelha, branca larga e verde, com uma coroa amarela sob um arco de sete estrelas no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "hu",
+        "in",
+        "ne",
+        "mu",
+        "ye",
+        "eg"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "tl",
+      "nome": "Timor-Leste",
+      "aliases": [
+        "Timor Oriental"
+      ],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com um triângulo amarelo e, sobre ele, um triângulo preto menor com uma estrela branca, a partir do mastro.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "cz",
+        "ph",
+        "gq",
+        "bs",
+        "cu",
+        "dj"
+      ],
+      "tracoVizinhanca": "dois triângulos e estrela",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "tm",
+      "nome": "Turcomenistão",
+      "aliases": [
+        "Turquemenistão"
+      ],
+      "regiao": "142",
+      "subRegiao": "143",
+      "grupos": [
+        "crescente-em-verde"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Verde com uma faixa vertical vermelha de cinco desenhos de tapete perto do mastro, crescente branco e cinco estrelas.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "pk",
+        "sa",
+        "dm",
+        "zm",
+        "dz",
+        "bd"
+      ],
+      "tracoVizinhanca": "tapete e crescente; branco no verde, com faixa de tapetes",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "tn",
+      "nome": "Tunísia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "015",
+      "grupos": [
+        "crescente-em-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com um disco branco no centro que traz crescente e estrela vermelhos.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "tr",
+        "cn",
+        "vn",
+        "ch",
+        "al",
+        "me"
+      ],
+      "tracoVizinhanca": "crescente e estrela em disco branco; vermelho dentro de disco branco",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "to",
+      "nome": "Tonga",
+      "aliases": [],
+      "regiao": "009",
+      "subRegiao": "061",
+      "grupos": [
+        "cruz-centrada"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com um cantão branco que traz uma cruz vermelha.",
+      "classe": "cantao",
+      "vizinhos": [
+        "tr",
+        "cn",
+        "vn",
+        "ma",
+        "tn",
+        "me"
+      ],
+      "tracoVizinhanca": "cantão com cruz",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "tr",
+      "nome": "Turquia",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "crescente-em-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com crescente e estrela brancos perto do mastro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "cn",
+        "tn",
+        "vn",
+        "to",
+        "me",
+        "al"
+      ],
+      "tracoVizinhanca": "crescente e estrela soltos; branco solto no campo vermelho",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "tt",
+      "nome": "Trinidad e Tobago",
+      "aliases": [
+        "Trindade e Tobago"
+      ],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [
+        "vermelho-e-preto",
+        "diagonal-com-faixa-preta"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Vermelho com uma faixa diagonal preta bordada de branco, do alto do mastro ao canto de baixo da ponta.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "pg",
+        "kn",
+        "bt",
+        "mh",
+        "bn",
+        "sb"
+      ],
+      "tracoVizinhanca": "preta sobre vermelho",
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "tv",
+      "nome": "Tuvalu",
+      "aliases": [],
+      "regiao": "009",
+      "subRegiao": "061",
+      "grupos": [
+        "union-jack-no-cantao"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Azul-claro com a Union Jack no cantão e nove estrelas amarelas do lado da ponta.",
+      "classe": "cantao",
+      "vizinhos": [
+        "fj",
+        "fm",
+        "so",
+        "sm",
+        "lc",
+        "kz"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "tz",
+      "nome": "Tanzânia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "diagonal-africana"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Faixa diagonal preta bordada de amarelo, subindo do mastro para a ponta, entre verde e azul.",
+      "classe": "diagonal",
+      "vizinhos": [
+        "kn",
+        "sa",
+        "dm",
+        "zm",
+        "kz",
+        "bd"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ua",
+      "nome": "Ucrânia",
+      "aliases": [],
+      "regiao": "150",
+      "subRegiao": "151",
+      "grupos": [
+        "azul-e-amarelo"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Duas faixas horizontais iguais: azul em cima e amarelo embaixo.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "rw",
+        "ls",
+        "cf",
+        "de",
+        "uz",
+        "ee"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ug",
+      "nome": "Uganda",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [
+        "preto-amarelo-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Seis faixas horizontais, preto, amarelo e vermelho repetidos, com um grou num disco branco no centro.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "sr",
+        "lk",
+        "es",
+        "mr",
+        "zw",
+        "gd"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "us",
+      "nome": "Estados Unidos",
+      "aliases": [
+        "EUA",
+        "Estados Unidos da América"
+      ],
+      "regiao": "019",
+      "subRegiao": "021",
+      "grupos": [
+        "listras-com-cantao"
+      ],
+      "dificuldadeAPriori": 1,
+      "descricao": "Treze listras horizontais vermelhas e brancas e um cantão azul com cinquenta estrelas brancas.",
+      "classe": "cantao",
+      "vizinhos": [
+        "my",
+        "gb",
+        "lr",
+        "do",
+        "np",
+        "no"
+      ],
+      "proporcao": 1.9,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "uy",
+      "nome": "Uruguai",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [
+        "listras-com-cantao"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Nove listras horizontais brancas e azuis e um cantão branco com um sol amarelo de rosto humano.",
+      "classe": "cantao",
+      "vizinhos": [
+        "ar",
+        "ki",
+        "rw",
+        "kz",
+        "mw",
+        "na"
+      ],
+      "tracoVizinhanca": "sol com rosto no cantão",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "uz",
+      "nome": "Uzbequistão",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "143",
+      "grupos": [
+        "verde-azul-com-faixa-clara",
+        "crescente-com-faixas-2"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Faixas azul, branca e verde separadas por filetes vermelhos, com crescente e doze estrelas brancas no azul.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "az",
+        "dz",
+        "pk",
+        "tm",
+        "mr",
+        "ly"
+      ],
+      "tracoVizinhanca": "branco no azul, com doze estrelas",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "vc",
+      "nome": "São Vicente e Granadinas",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "029",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Três faixas verticais, azul, amarelo largo e verde, com três losangos verdes em V no centro.",
+      "classe": "faixas-verticais",
+      "vizinhos": [
+        "gn",
+        "af",
+        "tm",
+        "td",
+        "ro",
+        "bb"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ve",
+      "nome": "Venezuela",
+      "aliases": [],
+      "regiao": "019",
+      "subRegiao": "005",
+      "grupos": [
+        "gra-colombia"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas horizontais iguais, amarelo, azul e vermelho, com um arco de oito estrelas brancas no azul.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "co",
+        "lt",
+        "ec",
+        "ru",
+        "sk",
+        "mm"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "vn",
+      "nome": "Vietnã",
+      "aliases": [
+        "Vietnam"
+      ],
+      "regiao": "142",
+      "subRegiao": "035",
+      "grupos": [
+        "estrela-amarela-em-vermelho"
+      ],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho com uma grande estrela amarela de cinco pontas no centro.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "tr",
+        "tn",
+        "cn",
+        "me",
+        "kg",
+        "ma"
+      ],
+      "tracoVizinhanca": "uma estrela",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "vu",
+      "nome": "Vanuatu",
+      "aliases": [],
+      "regiao": "009",
+      "subRegiao": "054",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Vermelho em cima e verde embaixo, com um Y amarelo deitado bordado de preto e um triângulo preto com presa de javali.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "ss",
+        "gy",
+        "zw",
+        "st",
+        "mz",
+        "km"
+      ],
+      "tracoVizinhanca": "Y amarelo deitado, bordado de preto, com triângulo preto e presa de javali",
+      "proporcao": 1.667,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ws",
+      "nome": "Samoa",
+      "aliases": [],
+      "regiao": "009",
+      "subRegiao": "061",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Vermelho com um cantão azul que traz cinco estrelas brancas do Cruzeiro do Sul.",
+      "classe": "cantao",
+      "vizinhos": [
+        "ma",
+        "to",
+        "tt",
+        "my",
+        "tl",
+        "dk"
+      ],
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "ye",
+      "nome": "Iêmen",
+      "aliases": [],
+      "regiao": "142",
+      "subRegiao": "145",
+      "grupos": [
+        "pan-arabe-horizontal"
+      ],
+      "dificuldadeAPriori": 3,
+      "descricao": "Três faixas horizontais iguais: vermelho, branco e preto, sem emblema.",
+      "classe": "faixas-horizontais",
+      "vizinhos": [
+        "iq",
+        "eg",
+        "sd",
+        "hu",
+        "nl",
+        "tj"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "za",
+      "nome": "África do Sul",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "018",
+      "grupos": [],
+      "dificuldadeAPriori": 1,
+      "descricao": "Um Y verde deitado bordado de branco e amarelo, com triângulo preto no mastro, vermelho em cima e azul embaixo.",
+      "classe": "outro",
+      "vizinhos": [
+        "km",
+        "mv",
+        "vu",
+        "pg",
+        "do",
+        "pa"
+      ],
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "zm",
+      "nome": "Zâmbia",
+      "aliases": [],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Verde com uma águia laranja em voo e três faixas verticais, vermelha, preta e laranja, no canto de baixo da ponta.",
+      "classe": "campo-liso-com-emblema",
+      "vizinhos": [
+        "sa",
+        "dm",
+        "bd",
+        "tm",
+        "pk",
+        "mr"
+      ],
+      "tracoVizinhanca": "canto com águia",
+      "proporcao": 1.5,
+      "imagem": {
+        "formato": "svg"
+      }
+    },
+    {
+      "codigo": "zw",
+      "nome": "Zimbábue",
+      "aliases": [
+        "Zimbabwe"
+      ],
+      "regiao": "002",
+      "subRegiao": "014",
+      "grupos": [],
+      "dificuldadeAPriori": 2,
+      "descricao": "Sete faixas verde, amarela, vermelha e preta, e um triângulo branco bordado de preto com estrela vermelha e pássaro.",
+      "classe": "triangulo-no-mastro",
+      "vizinhos": [
+        "st",
+        "mz",
+        "gy",
+        "vu",
+        "ss",
+        "er"
+      ],
+      "tracoVizinhanca": "pássaro no triângulo branco",
+      "proporcao": 2,
+      "imagem": {
+        "formato": "svg"
+      }
+    }
+  ]
+}
