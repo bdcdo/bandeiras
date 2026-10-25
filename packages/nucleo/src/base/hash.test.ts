@@ -9,7 +9,7 @@ describe('hashFnv1a', () => {
   })
 
   it('tem sempre 16 dígitos e muda com um caractere', () => {
-    expect(hashFnv1a('bandeira:br')).toHaveLength(16)
-    expect(hashFnv1a('bandeira:br')).not.toBe(hashFnv1a('bandeira:bo'))
+    expect(hashFnv1a('item:a')).toHaveLength(16)
+    expect(hashFnv1a('item:a')).not.toBe(hashFnv1a('item:b'))
   })
 })
