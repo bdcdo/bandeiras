@@ -1,0 +1,57 @@
+{
+  "overrides": {
+    "cd": {
+      "nome": "República Democrática do Congo",
+      "motivo": "O CLDR dá \"Congo - Kinshasa\", forma de desambiguação pela capital com travessão; no Brasil o país se chama República Democrática do Congo, e a forma pela capital fica como alias."
+    },
+    "mm": {
+      "nome": "Mianmar",
+      "motivo": "O CLDR acrescenta o nome antigo entre parênteses (\"Mianmar (Birmânia)\"); o parêntese não é parte do nome, e Birmânia fica como alias."
+    }
+  },
+  "aliases": {
+    "ae": ["Emirados"],
+    "ba": ["Bósnia"],
+    "bf": ["Burkina Faso"],
+    "bh": ["Bahrein", "Barém"],
+    "bj": ["Benim"],
+    "bw": ["Botswana"],
+    "by": ["Belarus"],
+    "cd": ["Congo-Kinshasa", "RDC"],
+    "cg": ["Congo-Brazzaville"],
+    "ci": ["Côte d'Ivoire"],
+    "cz": ["República Tcheca", "República Checa", "Chéquia"],
+    "dj": ["Djibouti"],
+    "fm": ["Estados Federados da Micronésia"],
+    "gb": ["Grã-Bretanha"],
+    "kg": ["Quirguizistão"],
+    "ki": ["Kiribati"],
+    "km": ["Ilhas Comores"],
+    "kn": ["Saint Kitts e Nevis"],
+    "kp": ["Coreia Norte", "República Popular Democrática da Coreia"],
+    "kr": ["Coreia Sul", "República da Coreia"],
+    "ls": ["Lesotho"],
+    "md": ["Moldova"],
+    "mh": ["Marshall"],
+    "mk": ["Macedônia"],
+    "mm": ["Birmânia", "Myanmar"],
+    "mu": ["Ilhas Maurício"],
+    "mv": ["Ilhas Maldivas"],
+    "mw": ["Malawi"],
+    "nl": ["Holanda"],
+    "qa": ["Qatar"],
+    "ru": ["Federação Russa"],
+    "sb": ["Salomão"],
+    "sc": ["Seychelles"],
+    "sg": ["Cingapura"],
+    "sv": ["Salvador"],
+    "sz": ["Suazilândia", "Eswatini"],
+    "tj": ["Tajiquistão"],
+    "tl": ["Timor Oriental"],
+    "tm": ["Turquemenistão"],
+    "tt": ["Trindade e Tobago"],
+    "us": ["EUA", "Estados Unidos da América"],
+    "vn": ["Vietnam"],
+    "zw": ["Zimbabwe"]
+  }
+}
