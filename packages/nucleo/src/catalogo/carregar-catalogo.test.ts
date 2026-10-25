@@ -337,6 +337,25 @@ const VIOLACOES: Record<CodigoDeErroDeCatalogo, Violacao> = {
   }),
 }
 
+/**
+ * Violações que as da tabela acima não alcançam: a forma vazia num alias, e não só no rótulo, e a forma que só coincide
+ * com outra depois de normalizada. O ` .` no fim não muda a forma normalizada, porque o ponto some e o espaço que
+ * sobra é aparado, mas muda o texto cru.
+ */
+const VARIANTES: readonly { codigo: CodigoDeErroDeCatalogo; caso: string; violacao: Violacao }[] = [
+  { codigo: 'ROTULO_VAZIO', caso: 'num alias', violacao: noItem((i) => ({ ...i, aliases: [...i.aliases, ' . '] })) },
+  {
+    codigo: 'ROTULO_AMBIGUO',
+    caso: 'alias igual ao rótulo de outro item só depois de normalizado',
+    violacao: noItem((i, d, k) => ({ ...i, aliases: [...i.aliases, `${seguinte(d.itens, k).rotulo} .`] })),
+  },
+  {
+    codigo: 'ROTULO_REPETIDO',
+    caso: 'alias igual ao rótulo só depois de normalizado',
+    violacao: noItem((i) => ({ ...i, aliases: [...i.aliases, `${i.rotulo} .`] })),
+  },
+]
+
 /** As ocorrências que o erro da carga lista no detalhe, depois de conferir que o código é o esperado. */
 function ocorrenciasDoErro(codigo: string, dados: DadosDeCatalogo): string[] {
   const r = carregarCatalogo(dados)
@@ -487,8 +506,13 @@ describe('carregarCatalogo', () => {
   })
 
   describe('cada invariante violada devolve o próprio código, com as ocorrências de cada registro que a viola', () => {
-    for (const [codigo, { em, violar }] of Object.entries(VIOLACOES)) {
-      it(codigo, () => {
+    const casos = [
+      ...Object.entries(VIOLACOES).map(([codigo, violacao]) => ({ nome: codigo, codigo, violacao })),
+      ...VARIANTES.map(({ codigo, caso, violacao }) => ({ nome: `${codigo}, ${caso}`, codigo, violacao })),
+    ]
+    for (const { nome, codigo, violacao } of casos) {
+      const { em, violar } = violacao
+      it(nome, () => {
         fc.assert(
           fc.property(
             catalogoValido({ grupos: 2, vizinhancas: 2, categorias: 2 }),
