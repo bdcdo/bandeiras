@@ -77,7 +77,7 @@ function dadosMinimos(): DadosDeCatalogo {
 
 // Gerador de catálogos válidos. Ids previsíveis (i0, i1, ...), rótulos e aliases de texto Unicode qualquer, únicos
 // depois de normalizados; grupos de 2 a n - 1 membros, para sempre sobrar um item fora de cada grupo.
-type Minimos = { grupos?: number; vizinhancas?: number }
+type Minimos = { grupos?: number; vizinhancas?: number; categorias?: number }
 
 const formaValida = fc
   .string({ unit: 'grapheme', minLength: 1, maxLength: 10 })
@@ -95,7 +95,10 @@ function catalogoValido(minimos: Minimos = {}): fc.Arbitrary<DadosDeCatalogo> {
     return fc
       .record({
         formas: fc.uniqueArray(formaValida, { selector: normalizarRotulo, minLength: n, maxLength: 3 * n }),
-        subcategoriasPorCategoria: fc.array(fc.integer({ min: 1, max: 3 }), { minLength: 1, maxLength: 3 }),
+        subcategoriasPorCategoria: fc.array(fc.integer({ min: 1, max: 3 }), {
+          minLength: minimos.categorias ?? 1,
+          maxLength: 3,
+        }),
         nClasses: fc.integer({ min: 1, max: 4 }),
         escolhas: fc.array(
           fc.record({
@@ -176,11 +179,14 @@ function catalogoValido(minimos: Minimos = {}): fc.Arbitrary<DadosDeCatalogo> {
   })
 }
 
-function primeiro<T>(xs: readonly T[]): T {
-  const x = xs[0]
-  if (x === undefined) throw new Error('o cenário pede uma lista não vazia')
+function posicao<T>(xs: readonly T[], k: number): T {
+  const x = xs[k]
+  if (x === undefined) throw new Error(`o cenário pede uma lista com a posição ${String(k)}`)
   return x
 }
+const primeiro = <T>(xs: readonly T[]): T => posicao(xs, 0)
+/** O registro depois do de posição k, dando a volta no fim da lista. */
+const seguinte = <T>(xs: readonly T[], k: number): T => posicao(xs, (k + 1) % xs.length)
 
 const naPosicao = <T>(xs: readonly T[], k: number, mudanca: (x: T) => T): T[] =>
   xs.map((x, j) => (j === k ? mudanca(x) : x))
@@ -195,13 +201,17 @@ const comItemDeId = (d: DadosDeCatalogo, id: string, mudanca: (i: ItemBruto) => 
     d.itens.findIndex((i) => i.id === id),
     mudanca,
   )
-const comGrupo = (d: DadosDeCatalogo, mudanca: (g: GrupoBruto) => GrupoBruto): DadosDeCatalogo => ({
+const comGrupo = (d: DadosDeCatalogo, k: number, mudanca: (g: GrupoBruto) => GrupoBruto): DadosDeCatalogo => ({
   ...d,
-  grupos: naPosicao(d.grupos, 0, mudanca),
+  grupos: naPosicao(d.grupos, k, mudanca),
 })
-const comVizinhanca = (d: DadosDeCatalogo, mudanca: (v: VizinhancaBruta) => VizinhancaBruta): DadosDeCatalogo => ({
+const comVizinhanca = (
+  d: DadosDeCatalogo,
+  k: number,
+  mudanca: (v: VizinhancaBruta) => VizinhancaBruta,
+): DadosDeCatalogo => ({
   ...d,
-  vizinhancas: naPosicao(d.vizinhancas, 0, mudanca),
+  vizinhancas: naPosicao(d.vizinhancas, k, mudanca),
 })
 const semChave = (registro: Readonly<Record<string, string>>, chave: string): Record<string, string> =>
   Object.fromEntries(Object.entries(registro).filter(([k]) => k !== chave))
@@ -220,70 +230,120 @@ function mexerEmTudo(valor: unknown): void {
   }
 }
 
+type Colecao = 'itens' | 'grupos' | 'vizinhancas' | 'categorias'
+
 /**
- * Uma violação por invariante, cada uma sobre um catálogo válido com pelo menos um grupo e uma vizinhança. Cada
- * mutação quebra a invariante pedida sem quebrar nenhuma que venha antes dela na ordem de verificação. O tipo obriga
- * a tabela a cobrir todo código de erro.
+ * Uma forma de quebrar uma invariante no registro de posição k da coleção `em`, sem quebrar nenhuma que venha antes
+ * dela na ordem de verificação. Aplicada em duas posições, quebra a invariante em dois registros.
  */
-const VIOLACOES: Record<CodigoDeErroDeCatalogo, (d: DadosDeCatalogo) => DadosDeCatalogo> = {
-  ID_DE_ITEM_REPETIDO: (d) => ({ ...d, itens: [...d.itens, primeiro(d.itens)] }),
-  ID_DE_GRUPO_REPETIDO: (d) => ({ ...d, grupos: [...d.grupos, primeiro(d.grupos)] }),
-  ID_DE_VIZINHANCA_REPETIDO: (d) => ({ ...d, vizinhancas: [...d.vizinhancas, primeiro(d.vizinhancas)] }),
-  ID_DE_CATEGORIA_REPETIDO: (d) => ({ ...d, categorias: [...d.categorias, primeiro(d.categorias)] }),
-  ID_DE_SUBCATEGORIA_REPETIDO: (d) => ({
-    ...d,
-    categorias: naPosicao(d.categorias, 0, (c) => ({
-      ...c,
-      subcategorias: [...c.subcategorias, primeiro(c.subcategorias)],
-    })),
+type Violacao = { em: Colecao; violar: (d: DadosDeCatalogo, k: number) => DadosDeCatalogo }
+
+const noItem = (mudanca: (i: ItemBruto, d: DadosDeCatalogo, k: number) => ItemBruto): Violacao => ({
+  em: 'itens',
+  violar: (d, k) => comItem(d, k, (i) => mudanca(i, d, k)),
+})
+const noGrupo = (mudanca: (g: GrupoBruto) => GrupoBruto): Violacao => ({
+  em: 'grupos',
+  violar: (d, k) => comGrupo(d, k, mudanca),
+})
+const naVizinhanca = (mudanca: (v: VizinhancaBruta) => VizinhancaBruta): Violacao => ({
+  em: 'vizinhancas',
+  violar: (d, k) => comVizinhanca(d, k, mudanca),
+})
+/** No item que `escolher` aponta a partir do grupo de posição k: as invariantes de 5 cruzam item e grupo. */
+const noItemDoGrupo = (
+  escolher: (g: GrupoBruto, d: DadosDeCatalogo) => string,
+  mudanca: (i: ItemBruto, g: GrupoBruto) => ItemBruto,
+): Violacao => ({
+  em: 'grupos',
+  violar: (d, k) => {
+    const g = posicao(d.grupos, k)
+    return comItemDeId(d, escolher(g, d), (i) => mudanca(i, g))
+  },
+})
+const primeiroMembro = (g: GrupoBruto): string => primeiro(g.membros)
+function foraDoGrupo(g: GrupoBruto, d: DadosDeCatalogo): string {
+  const fora = d.itens.find((i) => !g.membros.includes(i.id))
+  if (fora === undefined) throw new Error('o gerador deixa sempre um item fora de cada grupo')
+  return fora.id
+}
+
+/** Uma violação por invariante. O tipo obriga a tabela a cobrir todo código de erro. */
+const VIOLACOES: Record<CodigoDeErroDeCatalogo, Violacao> = {
+  ID_DE_ITEM_REPETIDO: { em: 'itens', violar: (d, k) => ({ ...d, itens: [...d.itens, posicao(d.itens, k)] }) },
+  ID_DE_GRUPO_REPETIDO: { em: 'grupos', violar: (d, k) => ({ ...d, grupos: [...d.grupos, posicao(d.grupos, k)] }) },
+  ID_DE_VIZINHANCA_REPETIDO: {
+    em: 'vizinhancas',
+    violar: (d, k) => ({ ...d, vizinhancas: [...d.vizinhancas, posicao(d.vizinhancas, k)] }),
+  },
+  ID_DE_CATEGORIA_REPETIDO: {
+    em: 'categorias',
+    violar: (d, k) => ({ ...d, categorias: [...d.categorias, posicao(d.categorias, k)] }),
+  },
+  ID_DE_SUBCATEGORIA_REPETIDO: {
+    em: 'categorias',
+    violar: (d, k) => ({
+      ...d,
+      categorias: naPosicao(d.categorias, k, (c) => ({
+        ...c,
+        subcategorias: [...c.subcategorias, primeiro(c.subcategorias)],
+      })),
+    }),
+  },
+  ROTULO_VAZIO: noItem((i) => ({ ...i, rotulo: ' - ' })),
+  ROTULO_AMBIGUO: noItem((i, d, k) => ({ ...i, aliases: [...i.aliases, seguinte(d.itens, k).rotulo] })),
+  ROTULO_REPETIDO: noItem((i) => ({ ...i, aliases: [...i.aliases, i.rotulo] })),
+  DESCRICAO_VAZIA: noItem((i) => ({ ...i, descricao: '  ' })),
+  CATEGORIA_INEXISTENTE: noItem((i) => ({ ...i, categoria: 'categoria-inexistente' })),
+  SUBCATEGORIA_INEXISTENTE: noItem((i) => ({ ...i, subcategoria: 'subcategoria-inexistente' })),
+  CLASSE_INEXISTENTE: noItem((i) => ({ ...i, classe: 'classe-inexistente' })),
+  DIFICULDADE_INVALIDA: noItem((i) => ({ ...i, dificuldadeAPriori: 4 })),
+  GRUPO_COM_MENOS_DE_DOIS_MEMBROS: noGrupo((g) => ({ ...g, membros: [primeiro(g.membros)] })),
+  GRUPO_COM_MEMBRO_INEXISTENTE: noGrupo((g) => ({ ...g, membros: [...g.membros, 'inexistente'] })),
+  GRUPO_COM_MEMBRO_REPETIDO: noGrupo((g) => ({ ...g, membros: [...g.membros, primeiro(g.membros)] })),
+  GRUPO_SEM_TRACO_DE_MEMBRO: noGrupo((g) => ({
+    ...g,
+    tracoDistintivo: semChave(g.tracoDistintivo, primeiro(g.membros)),
+  })),
+  GRUPO_COM_TRACO_DE_NAO_MEMBRO: noGrupo((g) => ({
+    ...g,
+    tracoDistintivo: { ...g.tracoDistintivo, inexistente: 'traço' },
+  })),
+  GRUPO_COM_PAR_INVALIDO: noGrupo((g) => ({ ...g, paresIndiscerniveis: [[primeiro(g.membros), primeiro(g.membros)]] })),
+  GRUPO_COM_PESO_DE_NAO_MEMBRO: noGrupo((g) => ({ ...g, pesos: { inexistente: 1 } })),
+  GRUPO_COM_PESO_INVALIDO: noGrupo((g) => ({ ...g, pesos: { [primeiro(g.membros)]: 0 } })),
+  ITEM_COM_GRUPO_INEXISTENTE: noItem((i) => ({ ...i, grupos: [...i.grupos, 'grupo-inexistente'] })),
+  ITEM_COM_GRUPO_REPETIDO: noItemDoGrupo(primeiroMembro, (i, g) => ({ ...i, grupos: [...i.grupos, g.id] })),
+  ITEM_NAO_E_MEMBRO_DO_GRUPO: noItemDoGrupo(foraDoGrupo, (i, g) => ({ ...i, grupos: [...i.grupos, g.id] })),
+  MEMBRO_NAO_DECLARA_O_GRUPO: noItemDoGrupo(primeiroMembro, (i, g) => ({
+    ...i,
+    grupos: i.grupos.filter((x) => x !== g.id),
+  })),
+  VIZINHANCA_COM_MEMBRO_INEXISTENTE: naVizinhanca((v) => ({ ...v, membros: [...v.membros, 'inexistente'] })),
+  VIZINHANCA_COM_MEMBRO_REPETIDO: naVizinhanca((v) => ({ ...v, membros: [...v.membros, primeiro(v.membros)] })),
+  VIZINHANCA_SEM_TRACO_DE_MEMBRO: naVizinhanca((v) => ({
+    ...v,
+    tracoDistintivo: semChave(v.tracoDistintivo, primeiro(v.membros)),
+  })),
+  VIZINHANCA_COM_TRACO_DE_NAO_MEMBRO: naVizinhanca((v) => ({
+    ...v,
+    tracoDistintivo: { ...v.tracoDistintivo, inexistente: 'traço' },
+  })),
+  VIZINHO_INEXISTENTE: noItem((i) => ({ ...i, vizinhos: [...i.vizinhos, 'inexistente'] })),
+  VIZINHO_E_O_PROPRIO_ITEM: noItem((i) => ({ ...i, vizinhos: [...i.vizinhos, i.id] })),
+  VIZINHO_REPETIDO: noItem((i, d, k) => {
+    const outro = seguinte(d.itens, k).id
+    return { ...i, vizinhos: [outro, outro] }
   }),
-  ROTULO_VAZIO: (d) => comItem(d, 0, (i) => ({ ...i, rotulo: ' - ' })),
-  ROTULO_AMBIGUO: (d) => comItem(d, 1, (i) => ({ ...i, aliases: [...i.aliases, primeiro(d.itens).rotulo] })),
-  ROTULO_REPETIDO: (d) => comItem(d, 0, (i) => ({ ...i, aliases: [...i.aliases, i.rotulo] })),
-  DESCRICAO_VAZIA: (d) => comItem(d, 0, (i) => ({ ...i, descricao: '  ' })),
-  CATEGORIA_INEXISTENTE: (d) => comItem(d, 0, (i) => ({ ...i, categoria: 'categoria-inexistente' })),
-  SUBCATEGORIA_INEXISTENTE: (d) => comItem(d, 0, (i) => ({ ...i, subcategoria: 'subcategoria-inexistente' })),
-  CLASSE_INEXISTENTE: (d) => comItem(d, 0, (i) => ({ ...i, classe: 'classe-inexistente' })),
-  DIFICULDADE_INVALIDA: (d) => comItem(d, 0, (i) => ({ ...i, dificuldadeAPriori: 4 })),
-  GRUPO_COM_MENOS_DE_DOIS_MEMBROS: (d) => comGrupo(d, (g) => ({ ...g, membros: [primeiro(g.membros)] })),
-  GRUPO_COM_MEMBRO_INEXISTENTE: (d) => comGrupo(d, (g) => ({ ...g, membros: [...g.membros, 'inexistente'] })),
-  GRUPO_COM_MEMBRO_REPETIDO: (d) => comGrupo(d, (g) => ({ ...g, membros: [...g.membros, primeiro(g.membros)] })),
-  GRUPO_SEM_TRACO_DE_MEMBRO: (d) =>
-    comGrupo(d, (g) => ({ ...g, tracoDistintivo: semChave(g.tracoDistintivo, primeiro(g.membros)) })),
-  GRUPO_COM_TRACO_DE_NAO_MEMBRO: (d) =>
-    comGrupo(d, (g) => ({ ...g, tracoDistintivo: { ...g.tracoDistintivo, inexistente: 'traço' } })),
-  GRUPO_COM_PAR_INVALIDO: (d) =>
-    comGrupo(d, (g) => ({ ...g, paresIndiscerniveis: [[primeiro(g.membros), primeiro(g.membros)]] })),
-  GRUPO_COM_PESO_DE_NAO_MEMBRO: (d) => comGrupo(d, (g) => ({ ...g, pesos: { inexistente: 1 } })),
-  GRUPO_COM_PESO_INVALIDO: (d) => comGrupo(d, (g) => ({ ...g, pesos: { [primeiro(g.membros)]: 0 } })),
-  ITEM_COM_GRUPO_INEXISTENTE: (d) => comItem(d, 0, (i) => ({ ...i, grupos: [...i.grupos, 'grupo-inexistente'] })),
-  ITEM_COM_GRUPO_REPETIDO: (d) => {
-    const g = primeiro(d.grupos)
-    return comItemDeId(d, primeiro(g.membros), (i) => ({ ...i, grupos: [...i.grupos, g.id] }))
-  },
-  ITEM_NAO_E_MEMBRO_DO_GRUPO: (d) => {
-    const g = primeiro(d.grupos)
-    const fora = d.itens.find((i) => !g.membros.includes(i.id))
-    if (fora === undefined) throw new Error('o gerador deixa sempre um item fora de cada grupo')
-    return comItemDeId(d, fora.id, (i) => ({ ...i, grupos: [...i.grupos, g.id] }))
-  },
-  MEMBRO_NAO_DECLARA_O_GRUPO: (d) => {
-    const g = primeiro(d.grupos)
-    return comItemDeId(d, primeiro(g.membros), (i) => ({ ...i, grupos: i.grupos.filter((x) => x !== g.id) }))
-  },
-  VIZINHANCA_COM_MEMBRO_INEXISTENTE: (d) => comVizinhanca(d, (v) => ({ ...v, membros: [...v.membros, 'inexistente'] })),
-  VIZINHANCA_COM_MEMBRO_REPETIDO: (d) =>
-    comVizinhanca(d, (v) => ({ ...v, membros: [...v.membros, primeiro(v.membros)] })),
-  VIZINHANCA_SEM_TRACO_DE_MEMBRO: (d) =>
-    comVizinhanca(d, (v) => ({ ...v, tracoDistintivo: semChave(v.tracoDistintivo, primeiro(v.membros)) })),
-  VIZINHANCA_COM_TRACO_DE_NAO_MEMBRO: (d) =>
-    comVizinhanca(d, (v) => ({ ...v, tracoDistintivo: { ...v.tracoDistintivo, inexistente: 'traço' } })),
-  VIZINHO_INEXISTENTE: (d) => comItem(d, 0, (i) => ({ ...i, vizinhos: [...i.vizinhos, 'inexistente'] })),
-  VIZINHO_E_O_PROPRIO_ITEM: (d) => comItem(d, 0, (i) => ({ ...i, vizinhos: [...i.vizinhos, i.id] })),
-  VIZINHO_REPETIDO: (d) => {
-    const outro = d.itens[1]?.id ?? 'inexistente'
-    return comItem(d, 0, (i) => ({ ...i, vizinhos: [outro, outro] }))
-  },
+}
+
+/** As ocorrências que o erro da carga lista no detalhe, depois de conferir que o código é o esperado. */
+function ocorrenciasDoErro(codigo: string, dados: DadosDeCatalogo): string[] {
+  const r = carregarCatalogo(dados)
+  expect(r.ok ? undefined : r.erro.codigo).toBe(codigo)
+  if (r.ok) return []
+  // O detalhe é a descrição da invariante, dois-pontos e as ocorrências separadas por ponto e vírgula.
+  return r.erro.detalhe.slice(r.erro.detalhe.indexOf(': ') + 2).split('; ')
 }
 
 describe('carregarCatalogo', () => {
@@ -326,7 +386,7 @@ describe('carregarCatalogo', () => {
 
   it('omite pares e pesos do grupo que não os declara', () => {
     const dados = dadosMinimos()
-    const semOpcionais = comGrupo(dados, (g) => ({
+    const semOpcionais = comGrupo(dados, 0, (g) => ({
       id: g.id,
       nome: g.nome,
       membros: g.membros,
@@ -373,13 +433,14 @@ describe('carregarCatalogo', () => {
     expect(carregarCatalogo(dados)).toMatchObject({ ok: false, erro: { codigo: 'CLASSE_INEXISTENTE' } })
   })
 
-  it('pega o rótulo ambíguo entre itens depois da normalização', () => {
-    const dados = comItem(dadosMinimos(), 1, (i) => ({ ...i, aliases: ['item-á'] }))
+  it('pega cada rótulo ambíguo entre itens depois da normalização', () => {
+    const dados = comItem(dadosMinimos(), 1, (i) => ({ ...i, aliases: ['item-á', 'Apelido A.'] }))
     expect(carregarCatalogo(dados)).toEqual({
       ok: false,
       erro: {
         codigo: 'ROTULO_AMBIGUO',
-        detalhe: "rótulo ou alias que, normalizado, resolve mais de um item: 'item a' em 'a', 'b'",
+        detalhe:
+          "rótulo ou alias que, normalizado, resolve mais de um item: 'item a' em 'a', 'b'; 'apelido a' em 'a', 'b'",
       },
     })
   })
@@ -413,27 +474,38 @@ describe('carregarCatalogo', () => {
 
   it('recusa par indiscernível incompleto, com estranho ou repetido', () => {
     for (const par of [['a'], ['a', 'c'], ['a', 'a'], ['a', 'b', 'a']]) {
-      const dados = comGrupo(dadosMinimos(), (g) => ({ ...g, paresIndiscerniveis: [par] }))
+      const dados = comGrupo(dadosMinimos(), 0, (g) => ({ ...g, paresIndiscerniveis: [par] }))
       expect(carregarCatalogo(dados)).toMatchObject({ ok: false, erro: { codigo: 'GRUPO_COM_PAR_INVALIDO' } })
     }
   })
 
   it('recusa peso negativo, nulo ou não finito', () => {
     for (const peso of [-1, 0, Number.NaN, Number.POSITIVE_INFINITY]) {
-      const dados = comGrupo(dadosMinimos(), (g) => ({ ...g, pesos: { a: peso } }))
+      const dados = comGrupo(dadosMinimos(), 0, (g) => ({ ...g, pesos: { a: peso } }))
       expect(carregarCatalogo(dados)).toMatchObject({ ok: false, erro: { codigo: 'GRUPO_COM_PESO_INVALIDO' } })
     }
   })
 
-  describe('cada invariante violada devolve o próprio código', () => {
-    for (const [codigo, violar] of Object.entries(VIOLACOES)) {
+  describe('cada invariante violada devolve o próprio código, com as ocorrências de cada registro que a viola', () => {
+    for (const [codigo, { em, violar }] of Object.entries(VIOLACOES)) {
       it(codigo, () => {
         fc.assert(
-          fc.property(catalogoValido({ grupos: 1, vizinhancas: 1 }), (dados) => {
-            expect(carregarCatalogo(dados).ok).toBe(true)
-            const r = carregarCatalogo(violar(dados))
-            expect(r.ok ? undefined : r.erro.codigo).toBe(codigo)
-          }),
+          fc.property(
+            catalogoValido({ grupos: 2, vizinhancas: 2, categorias: 2 }),
+            fc.nat(),
+            fc.nat(),
+            (dados, a, b) => {
+              expect(carregarCatalogo(dados).ok).toBe(true)
+              // Duas posições distintas da coleção, sorteadas: a violação não fica presa ao primeiro registro.
+              const tamanho = dados[em].length
+              const j = a % tamanho
+              const k = (j + 1 + (b % (tamanho - 1))) % tamanho
+              const emJ = ocorrenciasDoErro(codigo, violar(dados, j))
+              const emK = ocorrenciasDoErro(codigo, violar(dados, k))
+              const nasDuas = ocorrenciasDoErro(codigo, violar(violar(dados, j), k))
+              expect(nasDuas).toEqual(expect.arrayContaining([...emJ, ...emK]))
+            },
+          ),
           { numRuns: 50 },
         )
       })
