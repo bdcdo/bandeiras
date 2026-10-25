@@ -61,9 +61,21 @@ export type Categoria = {
   subcategorias: ReadonlyMap<string, string>
 }
 
+// O que torna Catalogo nominal. Marca<T, Nome>, a dos ids, não bastaria: o campo `__marca` é público, o spread o copia,
+// e `{ ...carregado, grupos: outro.grupos }` passaria por Catalogo com os grupos de um catálogo sobre os itens e o hash
+// de outro. Membro privado o spread não copia, e o TypeScript compara tipo com membro privado pela declaração, não pela
+// forma. `declare class` não gera código: como `__marca`, o campo nunca existe no objeto.
+declare class MarcaDeCatalogo {
+  private readonly validado: true
+}
+
 /**
- * Catálogo validado. Só `carregarCatalogo` constrói um: quem tem um `Catalogo` tem a garantia de todas as invariantes
- * de lá, e nenhuma camada acima volta a conferir referência quebrada.
+ * Catálogo validado. Só `carregarCatalogo` constrói um, com o único cast para este tipo; sem cast, nem um literal com
+ * estes campos nem `{ ...catalogo, grupos: outros }` passam por `Catalogo`. Quem tem um tem a garantia de todas as
+ * invariantes de lá, e nenhuma camada acima volta a conferir referência quebrada.
+ *
+ * A garantia é do compilador, e tem o alcance dele: `Object.assign` e o spread dentro de função genérica escapam,
+ * porque o TypeScript tipa o resultado dos dois como interseção com o original, marca inclusive.
  */
 export type Catalogo = {
   itens: ReadonlyMap<IdItem, Item>
@@ -72,7 +84,7 @@ export type Catalogo = {
   classes: ReadonlySet<string>
   categorias: ReadonlyMap<string, Categoria>
   hash: string
-}
+} & MarcaDeCatalogo
 
 // Formas de entrada de carregarCatalogo, amigáveis a JSON: ids como string, listas e objetos simples, dificuldade como
 // número qualquer e pares como listas. A validação é que transforma isto nos tipos marcados acima.

@@ -336,7 +336,9 @@ export function carregarCatalogo(dados: DadosDeCatalogo): Resultado<Catalogo, Er
 // e cada um é garantido por uma invariante acima.
 
 function construir(dados: DadosDeCatalogo): Catalogo {
-  return {
+  // keyof deixa de fora o membro privado da marca: `campos` tem a forma do catálogo sem a marca, e o cast no fim é o
+  // único ponto onde um valor vira Catalogo.
+  const campos: Pick<Catalogo, keyof Catalogo> = {
     itens: new Map(dados.itens.map((i) => [i.id as IdItem, construirItem(i)])),
     grupos: new Map(dados.grupos.map((g) => [g.id as IdGrupo, construirGrupo(g)])),
     vizinhancas: new Map(dados.vizinhancas.map((v) => [v.id as IdVizinhanca, construirVizinhanca(v)])),
@@ -351,6 +353,7 @@ function construir(dados: DadosDeCatalogo): Catalogo {
     // reproduzido sobre itens que mudaram.
     hash: hashFnv1a(serializarCanonico(dados)),
   }
+  return campos as Catalogo
 }
 
 // As listas são copiadas para o catálogo não mudar se quem chamou mexer depois nos dados de entrada.
