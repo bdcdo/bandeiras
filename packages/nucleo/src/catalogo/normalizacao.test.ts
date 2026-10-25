@@ -35,6 +35,12 @@ const PECAS = [
   '!',
   '(',
   ')',
+  ':',
+  ';',
+  '?',
+  '/',
+  '"',
+  '&',
   '\u034f',
   '\u0483',
   '\u05b0',
@@ -79,6 +85,7 @@ describe('normalizarRotulo', () => {
   it('apaga a pontuação restante sem deixar espaço', () => {
     expect(normalizarRotulo('I.T.E.M.')).toBe('item')
     expect(normalizarRotulo('Item (B), C!')).toBe('item b c')
+    expect(normalizarRotulo('Item: B; C? "D" & E/F')).toBe('item b c d ef')
   })
 
   it('colapsa espaços de todo tipo e apara as pontas', () => {
@@ -109,11 +116,13 @@ describe('normalizarRotulo', () => {
     )
   })
 
-  it('nunca devolve diacrítico, maiúscula, espaço duplo nem espaço nas pontas', () => {
+  it('nunca devolve diacrítico, pontuação, maiúscula, espaço duplo nem espaço nas pontas', () => {
     fc.assert(
       fc.property(textoInteressante, (texto) => {
         const r = normalizarRotulo(texto)
         expect(r).not.toMatch(/[\u0300-\u036f]/)
+        // \p{P} cobre também hífen, traços e apóstrofos, que viram espaço antes de a pontuação restante sumir.
+        expect(r).not.toMatch(/\p{P}/u)
         // Maiúscula aqui é o que muda ao passar para minúsculas: há letras de categoria maiúscula sem forma minúscula
         // (como U+2102), que nenhuma normalização tem como trocar.
         expect(r.toLowerCase()).toBe(r)
