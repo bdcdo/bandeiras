@@ -26,7 +26,7 @@ export type Vocabulario = Readonly<
 
 /**
  * Ajustes do domínio aos parâmetros do modelo de memória, como pares nome-valor planos. O tipo não restringe as chaves
- * porque os parâmetros moram numa camada acima desta; quem monta o motor valida cada chave contra os parâmetros do
+ * porque os parâmetros moram na camada `memoria`, acima desta; é ela que valida cada chave contra os parâmetros do
  * modelo e recusa a que não existir.
  */
 export type AjustesDeParametros = Readonly<Record<string, number>>
