@@ -1,0 +1,11 @@
+{
+  // Testes e scripts do gerador, que rodam no Node (`node scripts/x.ts`, com imports relativos com extensão .ts).
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM"],
+    "types": ["node", "vite/client"],
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src/**/*.ts", "scripts/**/*.ts", "gerado/*.json", "curadoria/*.json"]
+}

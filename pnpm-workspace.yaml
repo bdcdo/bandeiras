@@ -24,8 +24,12 @@ autoInstallPeers: false
 # opcionais, sem script; o Vite 8 não traz esbuild. Pacote que o install recusar com ERR_PNPM_IGNORED_BUILDS entra aqui com
 # o motivo.
 allowBuilds: {}
-# eslint-plugin-jsx-a11y 6.10.2 declara peer eslint até a 9. As regras dele leem a AST do JSX e rodam na 10 sem mudança
-# de API; silenciar só este aviso evita que ele esconda avisos reais de peer.
+# eslint-plugin-jsx-a11y 6.10.2 e eslint-plugin-react-hooks 5.2.0 declaram peer eslint até a 9. As regras dos dois leem a
+# AST e rodam na 10 sem mudança de API; silenciar só estes avisos evita que eles escondam avisos reais de peer. O
+# react-hooks fica na 5.2.0 de propósito: da 6 em diante ele traz @babel/core, que depende de semver@6.3.1, e essa versão
+# reprova em trustPolicy (uma versão anterior tinha atestado de proveniência e ela não). As duas regras clássicas
+# (rules-of-hooks e exhaustive-deps) são as que este repositório usa.
 peerDependencyRules:
   allowedVersions:
     'eslint-plugin-jsx-a11y>eslint': '10'
+    'eslint-plugin-react-hooks>eslint': '10'

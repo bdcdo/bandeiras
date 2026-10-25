@@ -1,0 +1,14 @@
+{
+  // Configurações e scripts que rodam no Node fora dos pacotes: vitest.config.ts, eslint.config.js, scripts/*.mjs e
+  // .dependency-cruiser.cjs. JS entra com checagem, para nenhum arquivo versionado ficar fora de um projeto.
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "allowJs": true,
+    "checkJs": true
+  },
+  "include": ["vitest.config.ts", "eslint.config.js", "scripts/*.mjs", ".dependency-cruiser.cjs", "tipos/*.d.ts"]
+}

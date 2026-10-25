@@ -1,0 +1,55 @@
+/* Fonte única de cor, raio, espaçamento e camada. Identidade própria e neutra: seis papéis de cor e um só acento.
+   scripts/contraste.mjs lê este arquivo e reprova par abaixo do mínimo WCAG; mudar uma cor aqui é rodar o script. */
+:root {
+  color-scheme: light dark;
+
+  --cor-fundo: #ffffff;
+  --cor-superficie: #f4f6f8;
+  --cor-texto: #1a1f26;
+  --cor-texto-suave: #4a5568;
+  --cor-acao: #1f4e9c;
+  --cor-texto-sobre-acao: #ffffff;
+  --cor-acerto: #1b6b3a;
+  --cor-erro: #b3261e;
+  --cor-borda: #7b869a;
+  --cor-foco: #1f4e9c;
+
+  /* Estados de item no catálogo. Nunca só por cor: cada estado leva ícone e rótulo. */
+  --cor-estado-nao-vista: #5c6675;
+  --cor-estado-aprendendo: #8a4b00;
+  --cor-estado-em-revisao: #1f4e9c;
+  --cor-estado-fragil: #b3261e;
+  --cor-estado-dominada: #1b6b3a;
+
+  --raio: 8px;
+  --raio-grande: 14px;
+  --espaco-1: 4px;
+  --espaco-2: 8px;
+  --espaco-3: 16px;
+  --espaco-4: 24px;
+  --espaco-5: 40px;
+  --camada-faixa: 10;
+  --camada-dialogo: 20;
+  --alvo-minimo: 44px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cor-fundo: #121619;
+    --cor-superficie: #1c2227;
+    --cor-texto: #e8ecf0;
+    --cor-texto-suave: #aeb8c4;
+    --cor-acao: #8fb4f0;
+    --cor-texto-sobre-acao: #0d1a2e;
+    --cor-acerto: #6fcf97;
+    --cor-erro: #ff8a80;
+    --cor-borda: #65727f;
+    --cor-foco: #8fb4f0;
+
+    --cor-estado-nao-vista: #aeb8c4;
+    --cor-estado-aprendendo: #f2b24a;
+    --cor-estado-em-revisao: #8fb4f0;
+    --cor-estado-fragil: #ff8a80;
+    --cor-estado-dominada: #6fcf97;
+  }
+}

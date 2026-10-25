@@ -1,0 +1,11 @@
+{
+  // Dados e adaptador do domínio, importados pela casca; sem Node, com JSON.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM"],
+    "types": ["vite/client"],
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*.ts", "gerado/*.json", "curadoria/*.json"],
+  "exclude": ["src/**/*.test.ts"]
+}

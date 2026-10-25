@@ -1,0 +1,23 @@
+{
+  "name": "@bandeiras/dominio-bandeiras",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Aplicação do núcleo às 193 bandeiras dos membros da ONU: catálogo, curadoria, imagens e vocabulário",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "dependencies": {
+    "@bandeiras/nucleo": "workspace:*"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^26.6.5",
+    "sharp": "^0.35.5",
+    "svgo": "^4.1.0",
+    "vitest": "^5.0.5"
+  }
+}

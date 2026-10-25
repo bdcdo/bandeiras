@@ -2,5 +2,10 @@
   // Só de solução: o projectService do typescript-eslint procura o tsconfig.json mais próximo de cada arquivo e segue as
   // referências, como o editor faz. Os projetos-folha ficam dentro de cada pacote.
   "files": [],
-  "references": [{ "path": "./apps/web" }]
+  "references": [
+    { "path": "./packages/nucleo" },
+    { "path": "./packages/dominio-bandeiras" },
+    { "path": "./apps/web" },
+    { "path": "./tsconfig.tooling.json" }
+  ]
 }

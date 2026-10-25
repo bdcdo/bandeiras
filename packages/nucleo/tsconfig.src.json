@@ -1,0 +1,11 @@
+{
+  // Código de produção do núcleo. `types: []` e lib sem DOM: Date e Math.random existem no ES2023 e ficam para o lint;
+  // crypto, performance, process e Buffer nem compilam.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "types": []
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"]
+}

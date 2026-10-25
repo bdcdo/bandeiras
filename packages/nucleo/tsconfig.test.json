@@ -1,0 +1,9 @@
+{
+  // Os testes podem usar Node; o projeto de produção os exclui, para o código do núcleo continuar sem acesso a globais.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts"]
+}

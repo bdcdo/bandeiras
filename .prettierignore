@@ -1,0 +1,9 @@
+pnpm-lock.yaml
+node_modules/
+dist/
+coverage/
+test-results/
+playwright-report/
+packages/dominio-bandeiras/imagens/
+packages/dominio-bandeiras/gerado/
+LICENCAS-DE-DADOS.md
