@@ -1,0 +1,9 @@
+{
+  // O service worker roda num escopo próprio, com a lib WebWorker e sem DOM; por isso não cabe no projeto do app.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "WebWorker"],
+    "types": []
+  },
+  "include": ["sw"]
+}

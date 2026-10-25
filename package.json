@@ -1,0 +1,22 @@
+{
+  "name": "bandeiras",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Aprender as 193 bandeiras dos membros da ONU ao modo Math Academy, sobre um núcleo de repetição espaçada reutilizável",
+  "author": "Bruno Oliveira <11776829+bdcdo@users.noreply.github.com>",
+  "license": "MIT",
+  "packageManager": "pnpm@11.5.3",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "pnpm --filter bandeiras-web dev",
+    "build": "pnpm --filter bandeiras-web build",
+    "test:e2e": "pnpm --filter bandeiras-web build && pnpm --filter bandeiras-web test:e2e"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "~6.0.3"
+  }
+}

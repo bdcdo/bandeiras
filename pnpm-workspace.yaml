@@ -1,0 +1,31 @@
+packages:
+  - 'packages/*'
+  - 'apps/*'
+
+# Cadeia de suprimentos. Cada trava abaixo existe para uma publicação comprometida não chegar ao lockfile antes de alguém
+# notar.
+#
+# Segura versões publicadas há menos de sete dias (o valor é em minutos), a janela em que a maioria das publicações
+# maliciosas é retirada. Com esta chave explícita o pnpm 11 liga minimumReleaseAgeStrict: uma versão exata nova demais faz
+# o install falhar fora de TTY, em vez de recuar em silêncio para outra. Exceção pontual vai em minimumReleaseAgeExclude
+# como nome@versão, com o motivo ao lado; a trava em si nunca é desligada.
+minimumReleaseAge: 10080
+# Recusa dependência transitiva resolvida fora do registro (URL git, tarball, caminho local).
+blockExoticSubdeps: true
+# Impede que uma atualização afrouxe as travas acima em silêncio.
+trustPolicy: no-downgrade
+# O campo engines de cada package.json reprova Node fora de >=24 <25. No pnpm 11 o .npmrc só é lido para autenticação,
+# registry e proxy, e um engine-strict ali é descartado em silêncio; por isso a chave fica aqui e o repositório não tem
+# .npmrc.
+engineStrict: true
+# Peer obrigatório é declarado à mão em devDependencies, para o lockfile dizer de onde cada pacote veio.
+autoInstallPeers: false
+# Scripts de instalação são negados por padrão. sharp 0.33+ e @resvg/resvg-js trazem os binários por dependências
+# opcionais, sem script; o Vite 8 não traz esbuild. Pacote que o install recusar com ERR_PNPM_IGNORED_BUILDS entra aqui com
+# o motivo.
+allowBuilds: {}
+# eslint-plugin-jsx-a11y 6.10.2 declara peer eslint até a 9. As regras dele leem a AST do JSX e rodam na 10 sem mudança
+# de API; silenciar só este aviso evita que ele esconda avisos reais de peer.
+peerDependencyRules:
+  allowedVersions:
+    'eslint-plugin-jsx-a11y>eslint': '10'

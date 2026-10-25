@@ -1,0 +1,12 @@
+{
+  "name": "Bandeiras",
+  "short_name": "Bandeiras",
+  "description": "Aprender as 193 bandeiras dos membros da ONU",
+  "lang": "pt-BR",
+  "start_url": "/bandeiras/",
+  "scope": "/bandeiras/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2458a6",
+  "icons": [{ "src": "/bandeiras/icone.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

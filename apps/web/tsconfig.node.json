@@ -1,0 +1,12 @@
+{
+  // Configuração do Vite, plugin do service worker e specs do Playwright, que rodam no Node. A lib DOM entra só pelos
+  // callbacks de page.evaluate, que o Playwright executa dentro da página.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    // O Vite pede extensão nos imports da configuração para o carregador nativo; o tsc aceita .ts porque não emite.
+    "allowImportingTsExtensions": true
+  },
+  "include": ["vite.config.ts", "playwright.config.ts", "playwright.real.config.ts", "plugins", "e2e"]
+}

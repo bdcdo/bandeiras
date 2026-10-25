@@ -1,0 +1,34 @@
+{
+  // Base compartilhada pelos sete projetos-folha. Cada um só acrescenta lib, types, jsx e include.
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "ESNext",
+    // Resolução do Vite: sem extensão obrigatória, com exports e condições de pacote.
+    "moduleResolution": "bundler",
+    // Todo arquivo é módulo, mesmo sem import ou export; evita colisão de nomes globais entre arquivos.
+    "moduleDetection": "force",
+    "strict": true,
+    // Indexar array ou Record devolve T | undefined. O catálogo, o grafo e a seleção indexam mapas o tempo todo, e um
+    // índice fora de faixa viraria undefined silencioso no meio de uma sessão.
+    "noUncheckedIndexedAccess": true,
+    // Campo opcional aceita ausência, nunca undefined explícito. Os eventos vão para o log e para o servidor como JSON, e
+    // `{ x: undefined }` e `{}` serializam diferente.
+    "exactOptionalPropertyTypes": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    // Método que sobrescreve declara override; pega rename na classe base.
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    // Acesso a chave de index signature usa colchetes, o que marca no código onde a chave não é garantida.
+    "noPropertyAccessFromIndexSignature": true,
+    // Só sintaxe que o Node apaga ao executar .ts direto (sem enum, namespace nem parameter properties). Os scripts do
+    // domínio rodam com `node scripts/x.ts`, e o núcleo segue a mesma regra para continuar portável.
+    "erasableSyntaxOnly": true,
+    // Import de tipo escreve `import type`; o que sobra em runtime é exatamente o que está escrito.
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    // tsc é só régua; quem emite é o Vite.
+    "noEmit": true
+  }
+}
