@@ -6,8 +6,9 @@
  * que ele deixou commitado. Imagem que mudou exige conferência à mão e o hash novo no mesmo commit.
  *
  * Por bandeira: recusa SVG com <text> ou <image> (texto depende da fonte instalada para rasterizar igual em todo
- * lugar, e <image> embute bitmap que o svgo não otimiza); passa o svgo; rasteriza o original e o otimizado e reprova
- * se o svgo mudou a imagem; grava o SVG otimizado ou, acima de 100 KB, um WebP em duas larguras.
+ * lugar, e <image> embute bitmap que o svgo não otimiza); passa o svgo; rasteriza o original e o otimizado em dois
+ * renderizadores e reprova se o svgo mudou a imagem em algum deles; grava o SVG otimizado ou, acima de 100 KB, um WebP
+ * em duas larguras.
  */
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, unlinkSync, writeFileSync } from 'node:fs'
@@ -45,13 +46,14 @@ const OPCOES_DO_WEBP = { quality: 88, effort: 6, smartSubsample: true } as const
 /** Teto do conjunto de imagens: o pré-cache do service worker baixa tudo na primeira visita, inclusive no celular. */
 const TETO_DAS_IMAGENS_BYTES = 6 * 1024 * 1024
 /**
- * Plugins do preset desligados para um código, quando o gate de fidelidade reprova o preset inteiro. Cada entrada diz o
- * que o svgo estragava; o gate continua valendo para o resultado.
+ * Códigos cujo original o resvg não desenha por inteiro. O gate deles compara só pelo librsvg: pelo resvg, ele poria um
+ * original incompleto contra um otimizado completo e reprovaria a otimização certa.
  *
- * pk: a estrela é um polígono com coordenadas na casa das centenas de milhares, escalado por 1,6e-5. O convertPathData
- * arredonda essas coordenadas antes da escala e deforma a estrela (0,82% dos pixels a 480 px, acima do limite).
+ * pk: a estrela é um polígono com coordenadas na casa das centenas de milhares sob scale(0.00001557408), e o resvg não a
+ * desenha no original. O preset do svgo aplica a transformação às coordenadas, e aí o resvg passa a desenhá-la (0,82%
+ * dos pixels a 480 px). No librsvg, original e otimizado têm a mesma estrela.
  */
-const PLUGINS_DESLIGADOS: Partial<Record<string, string[]>> = { pk: ['convertPathData'] }
+const GATE_SO_PELO_LIBRSVG: ReadonlySet<string> = new Set(['pk'])
 
 // O pacote não exporta o package.json; ele fica ao lado do ponto de entrada que o resolvedor devolve.
 const VERSAO_DO_RESVG = (
@@ -85,9 +87,7 @@ const garantirViewBox: CustomPlugin = {
 
 function otimizar(codigo: string, original: string): string {
   try {
-    const desligados = Object.fromEntries((PLUGINS_DESLIGADOS[codigo] ?? []).map((nome) => [nome, false]))
-    const preset = { name: 'preset-default', params: { overrides: desligados } } as const
-    return optimize(original, { floatPrecision: 3, plugins: [garantirViewBox, preset] }).data
+    return optimize(original, { floatPrecision: 3, plugins: [garantirViewBox, 'preset-default'] }).data
   } catch (erro) {
     falhar(`${codigo}: svgo falhou (${erro instanceof Error ? erro.message : String(erro)})`)
   }
@@ -96,6 +96,21 @@ function otimizar(codigo: string, original: string): string {
 function rasterizar(svg: string | Buffer, largura: number): { largura: number; altura: number; pixels: Buffer } {
   const imagem = new Resvg(svg, { fitTo: { mode: 'width', value: largura }, font: { loadSystemFonts: false } }).render()
   return { largura: imagem.width, altura: imagem.height, pixels: imagem.pixels }
+}
+
+/**
+ * Rasteriza pelo librsvg, embutido no sharp, no tamanho que o resvg deu. O librsvg desenha no tamanho intrínseco vezes
+ * density/72; a densidade leva o desenho ao dobro da largura pedida e o resize reduz, para o antisserrilhado sair igual
+ * nos dois lados da comparação.
+ */
+async function rasterizarPeloLibrsvg(svg: string, largura: number, altura: number): Promise<Buffer> {
+  const entrada = Buffer.from(svg)
+  const { width: intrinseca } = await sharp(entrada, { limitInputPixels: false }).metadata()
+  return sharp(entrada, { density: (72 * 2 * largura) / intrinseca, limitInputPixels: false })
+    .resize(largura, altura, { fit: 'fill' })
+    .ensureAlpha()
+    .raw()
+    .toBuffer()
 }
 
 /** Fração dos pixels em que algum canal (RGBA) difere mais que a tolerância. */
@@ -142,7 +157,9 @@ function sha256(conteudo: Buffer): string {
 }
 
 type Imagem = { formato: 'svg' } | { formato: 'webp'; larguras: number[] }
-type Processada = { codigo: string; proporcao: number; imagem: Imagem; arquivos: Map<string, Buffer> }
+/** Fração de pixels diferentes entre original e otimizado em cada renderizador; resvg ausente nos códigos isentos. */
+type Gate = { resvg?: number; librsvg: number }
+type Processada = { codigo: string; proporcao: number; imagem: Imagem; arquivos: Map<string, Buffer>; gate: Gate }
 
 async function processar(codigo: string): Promise<Processada> {
   const caminho = `${CAMINHOS.cache}${codigo}.svg`
@@ -161,20 +178,33 @@ async function processar(codigo: string): Promise<Processada> {
       `${codigo}: o svgo mudou o tamanho rasterizado (${String(antes.altura)} -> ${String(depois.altura)} px de altura)`,
     )
   }
-  const fracao = fracaoDiferente(antes.pixels, depois.pixels)
-  if (fracao > FRACAO_MAXIMA_DIFERENTE) {
-    falhar(
-      `${codigo}: o svgo mudou ${(fracao * 100).toFixed(2)}% dos pixels (máximo ${String(FRACAO_MAXIMA_DIFERENTE * 100)}%)`,
-    )
+  // Dois renderizadores porque cada um ignora coisas que o outro desenha: o que o svgo estragar num elemento que só um
+  // deles desenha passaria por um gate de renderizador único.
+  const gate: Gate = {
+    librsvg: fracaoDiferente(
+      await rasterizarPeloLibrsvg(original, antes.largura, antes.altura),
+      await rasterizarPeloLibrsvg(otimizado, antes.largura, antes.altura),
+    ),
+    ...(GATE_SO_PELO_LIBRSVG.has(codigo) ? {} : { resvg: fracaoDiferente(antes.pixels, depois.pixels) }),
+  }
+  for (const [renderizador, fracao] of Object.entries(gate)) {
+    if (fracao > FRACAO_MAXIMA_DIFERENTE) {
+      falhar(
+        `${codigo}: o svgo mudou ${(fracao * 100).toFixed(2)}% dos pixels no ${renderizador} (máximo ${String(FRACAO_MAXIMA_DIFERENTE * 100)}%)`,
+      )
+    }
   }
 
   const proporcao = proporcaoDaBandeira(codigo, otimizado)
   const bytes = Buffer.from(otimizado)
   if (bytes.length <= LIMITE_DO_SVG_BYTES) {
-    return { codigo, proporcao, imagem: { formato: 'svg' }, arquivos: new Map([[`${codigo}.svg`, bytes]]) }
+    return { codigo, proporcao, imagem: { formato: 'svg' }, arquivos: new Map([[`${codigo}.svg`, bytes]]), gate }
   }
-  // O raster sai do resvg, o mesmo renderizador do gate, e o sharp só codifica: o WebP mostra exatamente o que o gate
-  // conferiu, sem depender do librsvg embutido no sharp.
+  // O raster sai do resvg e o sharp só codifica: o WebP mostra o que o gate do resvg conferiu. Um código isento desse
+  // gate não pode virar WebP, porque o resvg não desenha o original dele por inteiro.
+  if (GATE_SO_PELO_LIBRSVG.has(codigo)) {
+    falhar(`${codigo}: passou de 100 KB e viraria WebP pelo resvg, que não desenha este original por inteiro`)
+  }
   const arquivos = new Map<string, Buffer>()
   for (const largura of LARGURAS_DO_WEBP) {
     const png = new Resvg(otimizado, { fitTo: { mode: 'width', value: largura }, font: { loadSystemFonts: false } })
@@ -182,7 +212,7 @@ async function processar(codigo: string): Promise<Processada> {
       .asPng()
     arquivos.set(`${codigo}-${String(largura)}.webp`, await sharp(png).webp(OPCOES_DO_WEBP).toBuffer())
   }
-  return { codigo, proporcao, imagem: { formato: 'webp', larguras: [...LARGURAS_DO_WEBP] }, arquivos }
+  return { codigo, proporcao, imagem: { formato: 'webp', larguras: [...LARGURAS_DO_WEBP] }, arquivos, gate }
 }
 
 /**
@@ -350,6 +380,15 @@ async function principal(): Promise<void> {
   console.log(`${String(processadas.length)} bandeiras; ${String(nomesDosArquivos.length)} arquivos em imagens/`)
   console.log(`WebP (${String(webp.length)}): ${webp.join(' ')}`)
   console.log(`total de imagens/: ${String(total)} bytes (${(total / 1024 / 1024).toFixed(2)} MB)`)
+  for (const renderizador of ['resvg', 'librsvg'] as const) {
+    const [pior] = processadas
+      .flatMap(({ codigo, gate }) => (gate[renderizador] === undefined ? [] : [{ codigo, fracao: gate[renderizador] }]))
+      .sort((a, b) => b.fracao - a.fracao)
+    if (pior !== undefined) {
+      console.log(`gate ${renderizador}: maior diferença ${(pior.fracao * 100).toFixed(3)}% (${pior.codigo})`)
+    }
+  }
+  console.log(`gate só pelo librsvg: ${[...GATE_SO_PELO_LIBRSVG].join(' ')}`)
 }
 
 if (import.meta.main) await principal()
