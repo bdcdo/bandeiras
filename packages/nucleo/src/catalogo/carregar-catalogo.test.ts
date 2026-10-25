@@ -207,6 +207,20 @@ const semChave = (registro: Readonly<Record<string, string>>, chave: string): Re
   Object.fromEntries(Object.entries(registro).filter(([k]) => k !== chave))
 
 /**
+ * Altera a entrada em profundidade, como faria quem chamou depois da carga: toda lista ganha um elemento e todo objeto
+ * ganha uma chave, dos registros de item e grupo ao traço distintivo, aos pesos e a cada par indiscernível.
+ */
+function mexerEmTudo(valor: unknown): void {
+  if (Array.isArray(valor)) {
+    for (const x of valor) mexerEmTudo(x)
+    valor.push('intruso')
+  } else if (typeof valor === 'object' && valor !== null) {
+    for (const x of Object.values(valor)) mexerEmTudo(x)
+    Object.assign(valor, { intruso: 'intruso' })
+  }
+}
+
+/**
  * Uma violação por invariante, cada uma sobre um catálogo válido com pelo menos um grupo e uma vizinhança. Cada
  * mutação quebra a invariante pedida sem quebrar nenhuma que venha antes dela na ordem de verificação. O tipo obriga
  * a tabela a cobrir todo código de erro.
@@ -324,11 +338,10 @@ describe('carregarCatalogo', () => {
   })
 
   it('não muda quando a entrada é alterada depois da carga', () => {
-    const aliases = ['Apelido A']
-    const dados = comItem(dadosMinimos(), 0, (i) => ({ ...i, aliases }))
+    const dados = dadosMinimos()
     const catalogo = desembrulhar(carregarCatalogo(dados))
-    aliases.push('Outro apelido')
-    expect(catalogo.itens.get('a' as IdItem)?.aliases).toEqual(['Apelido A'])
+    mexerEmTudo(dados)
+    expect(catalogo).toEqual(desembrulhar(carregarCatalogo(dadosMinimos())))
   })
 
   it('carrega todo catálogo válido gerado ao acaso, com um item por id e grupos coerentes', () => {
