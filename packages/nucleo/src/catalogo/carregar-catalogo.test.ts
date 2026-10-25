@@ -3,16 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { desembrulhar } from '../base/resultado'
 import { carregarCatalogo, type CodigoDeErroDeCatalogo } from './carregar-catalogo'
 import { normalizarRotulo } from './normalizacao'
-import type {
-  CategoriaBruta,
-  DadosDeCatalogo,
-  GrupoBruto,
-  IdGrupo,
-  IdItem,
-  IdVizinhanca,
-  ItemBruto,
-  VizinhancaBruta,
-} from './tipos'
+import type { DadosDeCatalogo, GrupoBruto, IdGrupo, IdItem, IdVizinhanca, ItemBruto, VizinhancaBruta } from './tipos'
 
 // Catálogo pequeno escrito à mão: três itens, um grupo, uma vizinhança, duas classes, uma categoria com duas
 // subcategorias.
@@ -191,14 +182,12 @@ function primeiro<T>(xs: readonly T[]): T {
   return x
 }
 
-const naPosicao =
-  <T>(k: number, mudanca: (x: T) => T) =>
-  (xs: readonly T[]): T[] =>
-    xs.map((x, j) => (j === k ? mudanca(x) : x))
+const naPosicao = <T>(xs: readonly T[], k: number, mudanca: (x: T) => T): T[] =>
+  xs.map((x, j) => (j === k ? mudanca(x) : x))
 
 const comItem = (d: DadosDeCatalogo, k: number, mudanca: (i: ItemBruto) => ItemBruto): DadosDeCatalogo => ({
   ...d,
-  itens: naPosicao(k, mudanca)(d.itens),
+  itens: naPosicao(d.itens, k, mudanca),
 })
 const comItemDeId = (d: DadosDeCatalogo, id: string, mudanca: (i: ItemBruto) => ItemBruto): DadosDeCatalogo =>
   comItem(
@@ -208,11 +197,11 @@ const comItemDeId = (d: DadosDeCatalogo, id: string, mudanca: (i: ItemBruto) => 
   )
 const comGrupo = (d: DadosDeCatalogo, mudanca: (g: GrupoBruto) => GrupoBruto): DadosDeCatalogo => ({
   ...d,
-  grupos: naPosicao(0, mudanca)(d.grupos),
+  grupos: naPosicao(d.grupos, 0, mudanca),
 })
 const comVizinhanca = (d: DadosDeCatalogo, mudanca: (v: VizinhancaBruta) => VizinhancaBruta): DadosDeCatalogo => ({
   ...d,
-  vizinhancas: naPosicao(0, mudanca)(d.vizinhancas),
+  vizinhancas: naPosicao(d.vizinhancas, 0, mudanca),
 })
 const semChave = (registro: Readonly<Record<string, string>>, chave: string): Record<string, string> =>
   Object.fromEntries(Object.entries(registro).filter(([k]) => k !== chave))
@@ -229,10 +218,10 @@ const VIOLACOES: Record<CodigoDeErroDeCatalogo, (d: DadosDeCatalogo) => DadosDeC
   ID_DE_CATEGORIA_REPETIDO: (d) => ({ ...d, categorias: [...d.categorias, primeiro(d.categorias)] }),
   ID_DE_SUBCATEGORIA_REPETIDO: (d) => ({
     ...d,
-    categorias: naPosicao<CategoriaBruta>(0, (c) => ({
+    categorias: naPosicao(d.categorias, 0, (c) => ({
       ...c,
       subcategorias: [...c.subcategorias, primeiro(c.subcategorias)],
-    }))(d.categorias),
+    })),
   }),
   ROTULO_VAZIO: (d) => comItem(d, 0, (i) => ({ ...i, rotulo: ' - ' })),
   ROTULO_AMBIGUO: (d) => comItem(d, 1, (i) => ({ ...i, aliases: [...i.aliases, primeiro(d.itens).rotulo] })),
