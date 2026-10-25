@@ -42,11 +42,10 @@ const TENTATIVAS = 4
  * governo com cláusula própria, como a OGL-om) reprova e pede outro título.
  */
 const LICENCAS_EXATAS = new Set(['Public domain', 'CC0', 'CC BY 3.0', 'CC BY 4.0', 'CC BY-SA 3.0', 'CC BY-SA 4.0'])
-export function licencaAceita(licenca: string): boolean {
+function licencaAceita(licenca: string): boolean {
   return LICENCAS_EXATAS.has(licenca) || licenca.startsWith('PD-')
 }
 
-type ValorDeMetadado = { value?: string } | undefined
 type PaginaDaApi = {
   title: string
   missing?: boolean
@@ -55,9 +54,8 @@ type PaginaDaApi = {
     url: string
     descriptionurl: string
     sha1: string
-    size: number
     timestamp: string
-    extmetadata?: Record<string, ValorDeMetadado>
+    extmetadata?: Record<string, { value?: string }>
   }[]
 }
 type RespostaDaApi = {
@@ -86,7 +84,7 @@ async function buscar(url: string): Promise<Response> {
 }
 
 /** Texto puro de um campo do extmetadata, que vem em HTML (links, spans, entidades). */
-export function limparHtml(html: string): string {
+function limparHtml(html: string): string {
   const entidades: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' }
   return html
     .replace(/<[^>]*>/g, ' ')
@@ -125,7 +123,7 @@ async function consultar(
     const parametros = new URLSearchParams({
       action: 'query',
       prop: 'imageinfo',
-      iiprop: 'url|sha1|size|timestamp|extmetadata',
+      iiprop: 'url|sha1|timestamp|extmetadata',
       iiextmetadatafilter: 'LicenseShortName|LicenseUrl|Artist|Credit',
       format: 'json',
       formatversion: '2',

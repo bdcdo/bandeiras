@@ -28,7 +28,5 @@ export const MEMBROS_ONU = [
   ...['au', 'fj', 'ki', 'mh', 'fm', 'nr', 'nz', 'pw', 'pg', 'ws', 'sb', 'to', 'tv', 'vu'],
 ] as const
 
-export type CodigoMembro = (typeof MEMBROS_ONU)[number]
-
 /** Os mesmos códigos em ordem alfabética, a ordem de todo arquivo gerado (o diff de regeneração fica estável). */
 export const MEMBROS_EM_ORDEM: readonly string[] = [...MEMBROS_ONU].sort()

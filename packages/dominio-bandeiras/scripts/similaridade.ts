@@ -83,7 +83,7 @@ function somaDeVariancias(cores: Lab[]): number {
   return total
 }
 
-export function assinar(codigo: string, svg: Buffer): Assinatura {
+function assinar(codigo: string, svg: Buffer): Assinatura {
   const { largura, altura, lab } = rasterizar(svg)
   const pixel = (x: number, y: number): Lab => lab[y * largura + x] ?? [0, 0, 0]
 
@@ -119,7 +119,7 @@ export function assinar(codigo: string, svg: Buffer): Assinatura {
 }
 
 /** Média do ΔE76 entre as nove células, mais a penalidade de orientação. */
-export function distancia(a: Assinatura, b: Assinatura): number {
+function distancia(a: Assinatura, b: Assinatura): number {
   let soma = 0
   for (let i = 0; i < 9; i++) {
     const ca = a.grade[i] ?? [0, 0, 0]
@@ -153,7 +153,7 @@ function ranking(codigo: string, assinaturas: Map<string, Assinatura>): { codigo
     .sort((x, y) => x.distancia - y.distancia || x.codigo.localeCompare(y.codigo))
 }
 
-export function calcularVizinhos(assinaturas: Map<string, Assinatura>, vizinhancas: Vizinhanca[]): Vizinhos {
+function calcularVizinhos(assinaturas: Map<string, Assinatura>, vizinhancas: Vizinhanca[]): Vizinhos {
   const vizinhos: Vizinhos = {}
   for (const codigo of MEMBROS_EM_ORDEM) {
     const minhas = vizinhancas.filter((v) => v.membros.includes(codigo))
@@ -161,7 +161,7 @@ export function calcularVizinhos(assinaturas: Map<string, Assinatura>, vizinhanc
     const comembros = new Set(minhas.flatMap((v) => v.membros).filter((c) => c !== codigo))
     // O co-membro mais próximo de cada vizinhança entra garantido. Sem isso, quem está em duas vizinhanças pode ter os
     // seis lugares tomados pela mais parecida (o Quirguistão, todo vermelho, perderia o sol para os vermelhos lisos).
-    const garantidos = new Set(minhas.map((v) => ordem.find((c) => c !== codigo && v.membros.includes(c))))
+    const garantidos = new Set(minhas.map((v) => ordem.find((c) => v.membros.includes(c))))
     const escolhidos = ordem.filter((c) => garantidos.has(c))
     for (const c of ordem) {
       if (escolhidos.length >= VIZINHOS_POR_BANDEIRA) break
@@ -185,7 +185,6 @@ export function candidatosAFamilia(
   assinaturas: Map<string, Assinatura>,
   familias: Familia[],
   vizinhancas: Vizinhanca[],
-  quantos = 30,
 ): Candidato[] {
   const dividem = (grupos: { membros: string[] }[], a: string, b: string): boolean =>
     grupos.some((g) => g.membros.includes(a) && g.membros.includes(b))
@@ -203,7 +202,7 @@ export function candidatosAFamilia(
       })
     }
   }
-  return pares.sort((p, q) => p.distancia - q.distancia || (p.a + p.b).localeCompare(q.a + q.b)).slice(0, quantos)
+  return pares.sort((p, q) => p.distancia - q.distancia || (p.a + p.b).localeCompare(q.a + q.b)).slice(0, 30)
 }
 
 function principal(): void {

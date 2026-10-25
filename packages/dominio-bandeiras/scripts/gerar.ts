@@ -93,7 +93,7 @@ function otimizar(codigo: string, original: string): string {
   }
 }
 
-function rasterizar(svg: string | Buffer, largura: number): { largura: number; altura: number; pixels: Buffer } {
+function rasterizar(svg: string, largura: number): { largura: number; altura: number; pixels: Buffer } {
   const imagem = new Resvg(svg, { fitTo: { mode: 'width', value: largura }, font: { loadSystemFonts: false } }).render()
   return { largura: imagem.width, altura: imagem.height, pixels: imagem.pixels }
 }

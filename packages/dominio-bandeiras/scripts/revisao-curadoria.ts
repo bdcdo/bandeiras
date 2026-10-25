@@ -12,7 +12,7 @@
  * commitada: é material de revisão, não dado.
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
-import { CAMINHOS, lerCuradoria, lerJson, type Licenca } from './comum.ts'
+import { CAMINHOS, lerCuradoria, lerJson, type Familia, type Licenca, type Vizinhanca } from './comum.ts'
 import { MEMBROS_EM_ORDEM } from './membros.ts'
 import { assinarTodas, candidatosAFamilia, type Candidato } from './similaridade.ts'
 
@@ -51,8 +51,7 @@ function dadosDasImagens(bandeiras: Bandeira[]): Record<string, string> {
   return dados
 }
 
-function pagina(): string {
-  const { notas } = argumentos()
+function pagina(notas: Nota[]): string {
   const { commons, nomes, familias, vizinhancas, fora } = lerCuradoria()
   const gerado = lerJson(`${CAMINHOS.gerado}bandeiras.json`) as { geradoEm: string; bandeiras: Bandeira[] }
   const licencas = lerJson(`${CAMINHOS.gerado}licencas.json`) as Licenca[]
@@ -65,10 +64,7 @@ function pagina(): string {
     `${esc(nomeDe(codigo))}<span class="dif">dificuldade ${String(porCodigo.get(codigo)?.dificuldadeAPriori ?? '?')}</span>` +
     `${legenda === '' ? '' : `<span class="traco">${esc(legenda)}</span>`}</figcaption></figure>`
 
-  const grupo = (
-    g: { id: string; nome: string; membros: string[]; tracoDistintivo: Record<string, string> },
-    extra = '',
-  ) =>
+  const grupo = (g: Familia | Vizinhanca, extra = '') =>
     `<section class="grupo"><h3>${esc(g.nome)} <code>${g.id}</code> <small>${String(g.membros.length)} membros</small></h3>${extra}` +
     `<div class="lado">${g.membros.map((m) => figura(m, g.tracoDistintivo[m] ?? '')).join('')}</div></section>`
 
@@ -185,8 +181,8 @@ for (const img of document.querySelectorAll('img[data-codigo]')) img.src = IMAGE
 }
 
 if (import.meta.main) {
-  const html = pagina()
-  const { saida } = argumentos()
+  const { saida, notas } = argumentos()
+  const html = pagina(notas)
   if (saida === undefined) process.stdout.write(html)
   else {
     writeFileSync(saida, html)

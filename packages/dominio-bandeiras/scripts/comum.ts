@@ -12,7 +12,6 @@ import { fileURLToPath } from 'node:url'
 const PACOTE = new URL('../', import.meta.url)
 
 export const CAMINHOS = {
-  pacote: fileURLToPath(PACOTE),
   curadoria: fileURLToPath(new URL('curadoria/', PACOTE)),
   gerado: fileURLToPath(new URL('gerado/', PACOTE)),
   imagens: fileURLToPath(new URL('imagens/', PACOTE)),
