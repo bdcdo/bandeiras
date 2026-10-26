@@ -121,6 +121,15 @@ describe('imagens', () => {
     expect(sha256(ler('af-960.webp'))).toBe('83b2dc272fded42c2adb71a8221e9c53704978130356de1ca0a25fb5637d84d3')
   })
 
+  it('nenhum SVG traz o nome do país em <title>, <desc> ou texto "Flag of"', () => {
+    // A imagem é o estímulo da pergunta "que país é este?". O título do SVG aparece como título da aba quando a imagem é
+    // aberta sozinha e em toda renderização fora de <img>; a casca não consegue tirá-lo de dentro do arquivo.
+    for (const nome of arquivos.filter((n) => n.endsWith('.svg'))) {
+      const svg = ler(nome).toString('utf8')
+      for (const trecho of ['<title', '<desc', 'Flag of']) expect(svg.includes(trecho), `${nome}: ${trecho}`).toBe(false)
+    }
+  })
+
   it('o conjunto de imagens soma até 6 MB', () => {
     const total = arquivos.reduce((soma, nome) => soma + statSync(new URL(nome, PASTA_IMAGENS)).size, 0)
     expect(total).toBeLessThanOrEqual(6 * 1024 * 1024)

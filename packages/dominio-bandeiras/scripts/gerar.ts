@@ -90,9 +90,21 @@ const garantirViewBox: CustomPlugin = {
   }),
 }
 
+/**
+ * O <title> e o <desc> dos originais do Commons dizem o país ("Flag of Norway"), e a imagem é o estímulo da pergunta.
+ * No svgo 4 o removeTitle saiu do preset-default, e o removeDesc do preset só apaga desc vazio ou de editor ("Created
+ * with"); por isso o removeTitle entra à parte e o removeDesc apaga qualquer desc. O removeMetadata já vem no preset.
+ */
 export function otimizar(codigo: string, original: string): string {
   try {
-    return optimize(original, { floatPrecision: 3, plugins: [garantirViewBox, 'preset-default'] }).data
+    return optimize(original, {
+      floatPrecision: 3,
+      plugins: [
+        garantirViewBox,
+        { name: 'preset-default', params: { overrides: { removeDesc: { removeAny: true } } } },
+        'removeTitle',
+      ],
+    }).data
   } catch (erro) {
     falhar(`${codigo}: svgo falhou (${erro instanceof Error ? erro.message : String(erro)})`)
   }
