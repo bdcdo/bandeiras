@@ -1,10 +1,12 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
+import { desembrulhar } from '../base/resultado'
 import { TECNICAS_TODAS_LIGADAS } from '../catalogo/tecnicas'
 import { estadoMemoriaInicial } from './estado-memoria'
-import { PARAMETROS_PADRAO as P, type Dificuldade } from './parametros'
+import { PARAMETROS_PADRAO as P, resolverParametros, type Dificuldade, type Parametros } from './parametros'
 import { ehTopicoLento, velocidade } from './velocidade'
 
+const ajustados = (ajustes: Record<string, number>): Parametros => desembrulhar(resolverParametros(ajustes))
 const LIGADA = TECNICAS_TODAS_LIGADAS
 const DESLIGADA = { ...TECNICAS_TODAS_LIGADAS, velocidadeAdaptativa: false }
 const com = (acuracia: number) => estadoMemoriaInicial(acuracia)
@@ -33,6 +35,36 @@ describe('velocidade', () => {
         expect(v).toBeLessThanOrEqual(P.velocidadeMax)
         if (a <= b) expect(v).toBeLessThanOrEqual(velocidade(com(b), d1, P, LIGADA))
         if (d1 <= d2) expect(v).toBeGreaterThanOrEqual(velocidade(com(a), d2, P, LIGADA))
+      }),
+    )
+  })
+
+  it('traz para os limites da velocidade o que aceleração e dificuldade deixariam fora deles', () => {
+    // Com os padrões a razão fica em [0,385; 1,72], dentro de [0,25; 2], e o limite de fora nunca age; com estes
+    // ajustes, age. Desaceleração 0,5 na dificuldade 1 e acurácia 1: 1,375 / 0,5 = 2,75, acima do teto de 2.
+    expect(velocidade(com(1), 1, ajustados({ 'desaceleracaoPorDificuldade.1': 0.5 }), LIGADA)).toBe(P.velocidadeMax)
+    // Piso de 0,5 e acurácia 0 na dificuldade 3: 0,5 / 1,3 = 0,385, abaixo do piso.
+    expect(velocidade(com(0), 3, ajustados({ velocidadeMin: 0.5 }), LIGADA)).toBe(0.5)
+  })
+
+  it('fica entre os limites com qualquer parâmetro aceito, inclusive quando a razão sai deles', () => {
+    const parametros = fc
+      .record({
+        ganhoAceleracao: fc.double({ min: 0, max: 10, noNaN: true }),
+        aceleracaoMin: fc.double({ min: 0.1, max: 1, noNaN: true }),
+        aceleracaoMax: fc.double({ min: 1, max: 4, noNaN: true }),
+        'desaceleracaoPorDificuldade.1': fc.double({ min: 0.3, max: 2, noNaN: true }),
+        'desaceleracaoPorDificuldade.2': fc.double({ min: 0.3, max: 2, noNaN: true }),
+        'desaceleracaoPorDificuldade.3': fc.double({ min: 0.3, max: 2, noNaN: true }),
+        velocidadeMin: fc.double({ min: 0.1, max: 1, noNaN: true }),
+        velocidadeMax: fc.double({ min: 1, max: 3, noNaN: true }),
+      })
+      .map(ajustados)
+    fc.assert(
+      fc.property(parametros, acuracia, dificuldade, (p, a, d) => {
+        const v = velocidade(com(a), d, p, LIGADA)
+        expect(v).toBeGreaterThanOrEqual(p.velocidadeMin)
+        expect(v).toBeLessThanOrEqual(p.velocidadeMax)
       }),
     )
   })
