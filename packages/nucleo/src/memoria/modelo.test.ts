@@ -251,6 +251,19 @@ describe('decaimentoPorAtraso', () => {
     expect(decaimentoPorAtraso(P.limiarDevido / 4, ajustados({ kDecaimentoPorAtraso: 0.8 }))).toBeCloseTo(2.6, 12)
   })
 
+  it('decide pelo limiar, e não pela inclinação, se a memória está abaixo dele', () => {
+    // Com limiar e inclinação separados, a memória fica entre os dois. Inclinação 0,8 e memória 0,6, acima do limiar
+    // 0,5: decay 1. Decidir pela inclinação daria 1 + 0,8 * log2(0,5 / 0,6) = 0,79, abaixo de 1.
+    expect(decaimentoPorAtraso(0.6, ajustados({ kDecaimentoPorAtraso: 0.8 }))).toBe(1)
+    // Inclinação 0,3 e memória 0,4, abaixo do limiar 0,5: a fórmula vale. Decidir pela inclinação daria 1.
+    expect(decaimentoPorAtraso(0.4, ajustados({ kDecaimentoPorAtraso: 0.3 }))).toBeCloseTo(
+      1 + 0.3 * Math.log2(0.5 / 0.4),
+      12,
+    )
+    // Limiar 0,3 e memória 0,4, acima dele e abaixo da inclinação 0,5: decay 1. Decidir pela inclinação daria 0,79.
+    expect(decaimentoPorAtraso(0.4, ajustados({ limiarDevido: 0.3 }))).toBe(1)
+  })
+
   it('vale 1 com a memória no limiar ou acima e o teto com memória zero ou negativa', () => {
     expect(decaimentoPorAtraso(P.limiarDevido, P)).toBe(1)
     expect(decaimentoPorAtraso(2, P)).toBe(1)
