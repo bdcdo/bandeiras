@@ -7,7 +7,14 @@ import type { Catalogo, IdItem } from '../catalogo/tipos'
 import { topicoDeItem, type IdTopico } from '../grafo/topico'
 import { estadoMemoriaInicial, type EstadoMemoria } from '../memoria'
 import { resolverParametros, type Parametros } from '../memoria/parametros'
-import { contextoDeSessao, registrarApresentacao, registrarQuestao, type ContextoDeSessao } from './contexto-de-sessao'
+import {
+  chaveDeOpcoes,
+  contextoDeSessao,
+  registrarApresentacao,
+  registrarQuestao,
+  type ContextoDeSessao,
+} from './contexto-de-sessao'
+import { escolherDistratores, type ModoDeDistratores } from './distratores'
 import { gerarQuestao, type PedidoDeQuestao } from './gerar-questao'
 import { parceirosIndiscerniveis } from './pares'
 import { opcoesDe, type Questao } from './questao'
@@ -257,6 +264,48 @@ describe('propriedades das questões numa sessão sorteada', () => {
     expect(vistos.deGrupo).toBeGreaterThan(20)
     expect(vistos.grupoMembros).toBeGreaterThan(3)
     expect(vistos.comPendentes).toBeGreaterThan(100)
+  })
+})
+
+describe('distratores com um item em pares de dois grupos', () => {
+  // A sessão sorteada de cima quase nunca põe um item em dois pares; aqui todo catálogo ganha dois grupos com par que
+  // dividem um item, o que faz a barragem dos parceiros depender da ordem do sorteio.
+  const comCadeia = fc
+    .record({ espec: especificacao, x: fc.nat(), y: fc.nat(), z: fc.nat() })
+    .map(({ espec, x, y, z }): EspecificacaoDeCatalogo => {
+      const n = espec.classes.length
+      const par = (outro: number) => ({ membros: [x % n, outro % n], par: true })
+      return { ...espec, grupos: [...espec.grupos, par(y), par(z)] }
+    })
+
+  it('o que o pool rende não depende da semente, e o sorteio tem n itens sem par, com o conjunto já mostrado ou não', () => {
+    fc.assert(
+      fc.property(
+        comCadeia,
+        fc.nat(),
+        fc.constantFrom<ModoDeDistratores>('dissimilares', 'parecidos'),
+        fc.integer({ min: 0, max: 6 }),
+        fc.string({ maxLength: 8 }),
+        fc.string({ maxLength: 8 }),
+        (espec, k, modo, n, semente, outraSemente) => {
+          const catalogo = catalogoDe(espec)
+          const itens = [...catalogo.itens.keys()]
+          const alvo = itens[k % itens.length] as IdItem
+          const parametros = desembrulhar(resolverParametros({}))
+          const escolher = (ctx: ContextoDeSessao, s: string) =>
+            escolherDistratores(alvo, modo, n, catalogo, ctx, sorteioComSemente(s), parametros)
+          const vazio = contextoDeSessao({})
+          const uma = escolher(vazio, semente)
+          expect(escolher(vazio, outraSemente).ok).toBe(uma.ok)
+          if (!uma.ok) return
+          const usado = { ...vazio, conjuntosUsados: new Set([chaveDeOpcoes([alvo, ...uma.valor])]) }
+          for (const valor of [uma.valor, desembrulhar(escolher(usado, outraSemente))]) {
+            expect(valor).toHaveLength(n)
+            expect(paresDentro(catalogo, valor)).toEqual([])
+          }
+        },
+      ),
+    )
   })
 })
 

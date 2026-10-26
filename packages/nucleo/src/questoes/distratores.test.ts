@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { catalogoFixo } from '../apoio-a-testes/catalogo-de-teste'
+import { catalogoDe, catalogoFixo } from '../apoio-a-testes/catalogo-de-teste'
 import { desembrulhar } from '../base/resultado'
 import { sorteioComSemente } from '../base/sorteio-com-semente'
 import type { IdItem } from '../catalogo/tipos'
 import { PARAMETROS_PADRAO as P, resolverParametros } from '../memoria/parametros'
-import { chaveDeOpcoes, contextoDeSessao, type ContextoDeSessao } from './contexto-de-sessao'
+import { chaveDeOpcoes, contextoDeSessao, registrarQuestao, type ContextoDeSessao } from './contexto-de-sessao'
 import { escolherDistratores, type ModoDeDistratores } from './distratores'
+import { gerarQuestao } from './gerar-questao'
+import { opcoesDe } from './questao'
 
 const catalogo = catalogoFixo()
 const ids = (texto: string): IdItem[] => texto.split('') as IdItem[]
@@ -116,6 +118,71 @@ describe('escolherDistratores e o contexto da sessão', () => {
       conjuntosUsados: new Set([chaveDeOpcoes([A, C]), chaveDeOpcoes([D, A])]),
     }
     expect([[C], [D]]).toContainEqual(desembrulhar(escolher(A, 'parecidos', 1, todos, quatro, 'repete')))
+  })
+})
+
+describe('escolherDistratores com um item em pares de dois grupos', () => {
+  // a, de classe e categoria próprias, é o alvo; b, c e d são dissimilares dele. b faz par com c no grupo-1 e com d no
+  // grupo-2: pôr b barra os outros dois, e só {c, d} rende dois distratores.
+  const encadeado = catalogoDe({
+    classes: [1, 2, 2, 2],
+    categorias: [1, 2, 2, 2],
+    aliases: [],
+    vizinhos: [],
+    grupos: [
+      { membros: [1, 2], par: true },
+      { membros: [1, 3], par: true },
+    ],
+    vizinhancas: [],
+  })
+  const sementes = Array.from({ length: 40 }, (_, k) => `encadeado-${String(k)}`)
+  const escolherEm = (ctx: ContextoDeSessao, semente: string) =>
+    escolherDistratores(A, 'dissimilares', 2, encadeado, ctx, sorteioComSemente(semente), P)
+
+  it('chega a n com qualquer semente, deixando de fora o item que barraria os dois', () => {
+    for (const semente of sementes) expect(conjunto(escolherEm(VAZIO, semente)), semente).toEqual(new Set([C, D]))
+  })
+
+  it('com o único conjunto completo já mostrado, repete-o, e nunca devolve lista curta', () => {
+    const usado: ContextoDeSessao = { ...VAZIO, conjuntosUsados: new Set([chaveDeOpcoes([A, C, D])]) }
+    for (const semente of sementes) expect(conjunto(escolherEm(usado, semente)), semente).toEqual(new Set([C, D]))
+  })
+
+  it('a questão sai com as opções pedidas mesmo depois de mostrar o único conjunto completo', () => {
+    const tres = desembrulhar(resolverParametros({ opcoesMultiplaEscolha: 3 }))
+    for (const semente of sementes) {
+      const sorteio = sorteioComSemente(semente)
+      const pedido = { tipo: 'licao', item: A, kp: 1 } as const
+      const primeira = desembrulhar(gerarQuestao(pedido, encadeado, VAZIO, sorteio, tres))
+      const segunda = desembrulhar(gerarQuestao(pedido, encadeado, registrarQuestao(VAZIO, primeira), sorteio, tres))
+      expect(opcoesDe(segunda.formato), semente).toHaveLength(3)
+    }
+  })
+
+  it('com os pares fechando um ciclo, conta só um dos três', () => {
+    // b com c, c com d e d com b: qualquer dois deles formam um par, e o pool de a rende um.
+    const ciclo = catalogoDe({
+      classes: [1, 2, 2, 2],
+      categorias: [1, 2, 2, 2],
+      aliases: [],
+      vizinhos: [],
+      grupos: [
+        { membros: [1, 2], par: true },
+        { membros: [2, 3], par: true },
+        { membros: [3, 1], par: true },
+      ],
+      vizinhancas: [],
+    })
+    const escolherNoCiclo = (n: number) =>
+      escolherDistratores(A, 'dissimilares', n, ciclo, VAZIO, sorteioComSemente('ciclo'), P)
+    expect(desembrulhar(escolherNoCiclo(1))).toHaveLength(1)
+    expect(escolherNoCiclo(2)).toEqual({
+      ok: false,
+      erro: {
+        codigo: 'DISTRATORES_INSUFICIENTES',
+        detalhe: "'a' em modo dissimilares: o pool rende 1 distratores, e são pedidos 2",
+      },
+    })
   })
 })
 
