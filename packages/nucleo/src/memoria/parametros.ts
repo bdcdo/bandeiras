@@ -75,8 +75,8 @@ function congelar<T extends object>(objeto: T): T {
 }
 
 export const PARAMETROS_PADRAO: Parametros = congelar({
-  // interval do livro para repNum = 1, em dias. Com o crescimento abaixo, a sequência de intervalos ideais é 1; 2,2;
-  // 4,84; 10,65; 23; 51; 113; 248 dias.
+  // interval do livro para repNum = 1, em dias. Com o crescimento abaixo, os primeiros intervalos ideais são 1; 2,2;
+  // 4,84 e 10,65 dias, e a partir do nono vale o teto de um ano; o teste de `intervaloIdeal` fixa esses valores.
   intervaloBaseDias: 1,
   // Razão entre intervalos ideais consecutivos: cada repetição bem-sucedida multiplica o intervalo seguinte por 2,2.
   crescimentoIntervalo: 2.2,
