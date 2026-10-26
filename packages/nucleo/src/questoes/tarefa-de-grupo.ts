@@ -1,0 +1,160 @@
+import { erro, ok, type Resultado } from '../base/resultado'
+import type { SorteioComSemente } from '../base/sorteio-com-semente'
+import type { Catalogo, Direcao, IdGrupo, IdItem } from '../catalogo/tipos'
+import { topicoDeItem, type IdTopico } from '../grafo/topico'
+import { acuraciaNaDirecao, type EstadoMemoria, type Parametros } from '../memoria'
+import type { ContextoDeSessao } from './contexto-de-sessao'
+import { parceirosIndiscerniveis } from './pares'
+import {
+  criarQuestao,
+  type ContextoDeQuestao,
+  type ErroDeQuestao,
+  type FormatoDeQuestao,
+  type Questao,
+} from './questao'
+
+// Ordem de desempate entre direções de mesma acurácia: recordar primeiro, porque é a evidência mais forte e a única que
+// não se acerta ao acaso.
+const ORDEM_DE_DESEMPATE: readonly Direcao[] = ['recordar', 'reconhecer', 'produzir']
+
+function direcaoMaisFraca(e: EstadoMemoria): Direcao {
+  return ORDEM_DE_DESEMPATE.reduce((fraca, d) => (acuraciaNaDirecao(e, d) < acuraciaNaDirecao(e, fraca) ? d : fraca))
+}
+
+/** O que impede os alvos de formar uma tarefa, cada problema numa frase. */
+function problemasDosAlvos(
+  membros: readonly IdItem[],
+  alvos: readonly IdItem[],
+  memorias: ReadonlyMap<IdTopico, EstadoMemoria>,
+  catalogo: Catalogo,
+  ctx: ContextoDeSessao,
+): string[] {
+  const conjunto = new Set(alvos)
+  return [
+    ...(alvos.length === 0 ? ['tarefa sem alvo'] : []),
+    ...alvos.filter((a, k) => alvos.indexOf(a) !== k).map((a) => `alvo repetido: '${a}'`),
+    ...alvos.filter((a) => !membros.includes(a)).map((a) => `alvo que não é membro do grupo: '${a}'`),
+    ...alvos.filter((a) => !memorias.has(topicoDeItem(a).id)).map((a) => `alvo sem estado de memória: '${a}'`),
+    ...alvos.filter((a) => ctx.pendentesNovas.has(a)).map((a) => `alvo ainda não apresentado: '${a}'`),
+    // O parceiro de um alvo de par é opção certa do `grupo-membros`, e não pode ser algo que a pessoa ainda não viu.
+    ...alvos
+      .filter((a) => [...parceirosIndiscerniveis(a, catalogo)].some((p) => ctx.pendentesNovas.has(p)))
+      .map((a) => `parceiro ainda não apresentado do alvo '${a}'`),
+    // Os dois itens de um par como alvos não cabem: o parceiro de um alvo nunca é mostrado ao lado dele, e o outro alvo
+    // precisaria estar na tela.
+    ...alvos
+      .filter((a) => [...parceirosIndiscerniveis(a, catalogo)].some((p) => conjunto.has(p) && p > a))
+      .map((a) => `alvos que formam um par indiscernível: '${a}' e o parceiro`),
+  ]
+}
+
+/**
+ * Estímulos mostrados lado a lado na tarefa: os alvos, os outros membros do grupo e, se faltar para `opcoesMinimasDeGrupo`,
+ * os vizinhos dos membros, na ordem de parecença de cada um. Ficam de fora o parceiro indiscernível de um alvo, que
+ * nunca aparece ao lado dele, o segundo item de um par sem alvo, porque dois estímulos iguais na tela não são opções
+ * distintas, e quem ainda não foi apresentado. Devolve a lista na ordem de inclusão.
+ */
+function montarExibidos(
+  membros: readonly IdItem[],
+  alvos: readonly IdItem[],
+  catalogo: Catalogo,
+  ctx: ContextoDeSessao,
+  opcoesMinimas: number,
+): IdItem[] {
+  const exibidos: IdItem[] = []
+  const barrados = new Set<IdItem>()
+  const incluir = (id: IdItem): void => {
+    if (exibidos.includes(id) || barrados.has(id) || ctx.pendentesNovas.has(id) || !catalogo.itens.has(id)) return
+    exibidos.push(id)
+    for (const parceiro of parceirosIndiscerniveis(id, catalogo)) barrados.add(parceiro)
+  }
+  for (const alvo of alvos) incluir(alvo)
+  for (const membro of membros) incluir(membro)
+  for (const membro of membros) {
+    for (const vizinho of catalogo.itens.get(membro)?.vizinhos ?? []) {
+      if (exibidos.length >= opcoesMinimas) return exibidos
+      incluir(vizinho)
+    }
+  }
+  return exibidos
+}
+
+/**
+ * Direção de cada alvo que não é de par: a de menor acurácia, com pelo menos metade dos alvos da tarefa, arredondada
+ * para cima, em `recordar`. Faltando, passam a recordar os alvos de menor acurácia em recordar, na ordem dos alvos no
+ * empate. Alvo de par não recorda, porque a pergunta dele é `grupo-membros`; com muitos alvos de par, a metade pode não
+ * ser alcançável, e todos os outros recordam.
+ */
+function direcoes(
+  semPar: readonly { alvo: IdItem; estado: EstadoMemoria }[],
+  totalDeAlvos: number,
+): ReadonlyMap<IdItem, Direcao> {
+  const escolhidas = new Map(semPar.map(({ alvo, estado }) => [alvo, direcaoMaisFraca(estado)]))
+  const faltam = Math.ceil(totalDeAlvos / 2) - [...escolhidas.values()].filter((d) => d === 'recordar').length
+  // O sort do JavaScript é estável: no empate, a ordem dos alvos decide.
+  const candidatos = semPar
+    .filter(({ alvo }) => escolhidas.get(alvo) !== 'recordar')
+    .sort((x, y) => acuraciaNaDirecao(x.estado, 'recordar') - acuraciaNaDirecao(y.estado, 'recordar'))
+  for (const { alvo } of candidatos.slice(0, Math.max(0, faltam))) escolhidas.set(alvo, 'recordar')
+  return escolhidas
+}
+
+/**
+ * Questões da tarefa de grupo, uma por alvo, na ordem dos alvos, todas com o mesmo contexto: os exibidos de
+ * `montarExibidos`, em ordem sorteada.
+ *
+ * Alvo de par indiscernível recebe `grupo-membros`: o estímulo dele destacado e os rótulos dos exibidos e do parceiro
+ * como opções, para marcar os dois. Os outros alvos recebem a direção de `direcoes`: `rotulo-digitado` com o alvo
+ * destacado entre os exibidos, ou múltipla escolha com os exibidos como opções, reembaralhados a cada questão.
+ *
+ * Recusa com `ALVOS_INVALIDOS` alvo ausente, repetido, fora do grupo, sem estado de memória, ainda não apresentado ou par
+ * de outro alvo; com `DISTRATORES_INSUFICIENTES` o grupo que nem com os vizinhos chega às opções mínimas; e com
+ * `ALVOS_DEMAIS` mais alvos que exibidos menos dois, porque com uma opção só sobrando o último alvo sairia por
+ * eliminação. Quais alvos entram é escolha de quem monta a tarefa.
+ */
+export function gerarQuestoesDeGrupo(
+  grupo: IdGrupo,
+  alvos: readonly IdItem[],
+  memorias: ReadonlyMap<IdTopico, EstadoMemoria>,
+  catalogo: Catalogo,
+  ctx: ContextoDeSessao,
+  sorteio: SorteioComSemente,
+  parametros: Parametros,
+): Resultado<readonly Questao[], ErroDeQuestao> {
+  const g = catalogo.grupos.get(grupo)
+  if (g === undefined) return erro({ codigo: 'GRUPO_INEXISTENTE', detalhe: `grupo que não existe: '${grupo}'` })
+  const problemas = problemasDosAlvos(g.membros, alvos, memorias, catalogo, ctx)
+  if (problemas.length > 0) return erro({ codigo: 'ALVOS_INVALIDOS', detalhe: problemas.join('; ') })
+
+  const exibidos = montarExibidos(g.membros, alvos, catalogo, ctx, parametros.opcoesMinimasDeGrupo)
+  if (exibidos.length < parametros.opcoesMinimasDeGrupo) {
+    return erro({
+      codigo: 'DISTRATORES_INSUFICIENTES',
+      detalhe: `grupo '${grupo}': ${String(exibidos.length)} exibidos com os vizinhos, e o mínimo é ${String(parametros.opcoesMinimasDeGrupo)}`,
+    })
+  }
+  if (alvos.length > exibidos.length - 2) {
+    return erro({
+      codigo: 'ALVOS_DEMAIS',
+      detalhe: `grupo '${grupo}': ${String(alvos.length)} alvos para ${String(exibidos.length)} exibidos; o máximo é ${String(exibidos.length - 2)}`,
+    })
+  }
+
+  const parceiros = new Map(alvos.map((a) => [a, [...parceirosIndiscerniveis(a, catalogo)]]))
+  const semPar = alvos.flatMap((alvo) => {
+    const estado = memorias.get(topicoDeItem(alvo).id)
+    return parceiros.get(alvo)?.length === 0 && estado !== undefined ? [{ alvo, estado }] : []
+  })
+  const direcaoDe = direcoes(semPar, alvos.length)
+  const contexto: ContextoDeQuestao = { tipo: 'grupo', grupo, exibidos: sorteio.embaralhar(exibidos) }
+
+  const formatoDe = (a: IdItem): FormatoDeQuestao => {
+    const doPar = parceiros.get(a) ?? []
+    if (doPar.length > 0) return { tipo: 'grupo-membros', opcoes: sorteio.embaralhar([...exibidos, ...doPar]) }
+    const direcao = direcaoDe.get(a)
+    if (direcao === 'reconhecer') return { tipo: 'estimulo-para-rotulo', opcoes: sorteio.embaralhar(exibidos) }
+    if (direcao === 'produzir') return { tipo: 'rotulo-para-estimulo', opcoes: sorteio.embaralhar(exibidos) }
+    return { tipo: 'rotulo-digitado' }
+  }
+  return ok(alvos.map((a) => criarQuestao(a, formatoDe(a), contexto)))
+}
