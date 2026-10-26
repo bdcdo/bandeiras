@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { caminhosLidos, mudaASaida, variacoes, type Formula } from '../apoio-a-testes/regua-de-parametros'
 import { desembrulhar } from '../base/resultado'
 import { somarDias, type Dias, type Instante } from '../base/tempo'
 import { carregarCatalogo } from '../catalogo/carregar-catalogo'
@@ -6,6 +7,7 @@ import { TECNICAS_TODAS_LIGADAS } from '../catalogo/tecnicas'
 import type { DadosDeCatalogo, IdItem, ItemBruto } from '../catalogo/tipos'
 import { topicoDeItem, type IdTopico } from '../grafo/topico'
 import { acuraciaInicial, atualizarAcuracia } from './acuracia'
+import { prontoParaCronometrar } from './consultas'
 import { estadoMemoriaInicial, type EstadoMemoria } from './estado-memoria'
 import {
   aplicarRepeticao,
@@ -17,66 +19,12 @@ import {
   memoriaEm,
   reagendar,
 } from './modelo'
-import { PARAMETROS_PADRAO as P, resolverParametros, type CaminhoDeParametro, type Parametros } from './parametros'
+import { PARAMETROS_PADRAO as P, type CaminhoDeParametro } from './parametros'
 import { ehTopicoLento, velocidade } from './velocidade'
 
-// Régua de uma classe de defeito: a fórmula que lê um parâmetro no lugar de outro. Vários parâmetros têm o mesmo valor
-// padrão, e uma troca entre dois deles dá os mesmos números em todo teste que roda com os padrões. A régua declara, para
-// cada fórmula da camada, de quais caminhos de parâmetro ela depende, inclusive pelas fórmulas que chama, e confere duas
-// coisas. Primeiro, que a fórmula lê exatamente esses caminhos, registrados por um Proxy; segundo, que cada um deles,
-// ajustado sozinho por `resolverParametros`, muda a saída em ao menos um dos cenários fixos. Trocar todas as leituras de um
-// caminho por outro reprova a primeira, porque o caminho declarado deixa de ser lido. A régua não garante pegar a troca
-// parcial, em que só uma das leituras de um caminho lido em mais de um lugar passa a ler outro caminho declarado, nem a
-// permuta de dois caminhos declarados: nas duas, os dois continuam lidos e movendo a saída. Essas trocas ficam com casos
-// fixos em `modelo.test.ts`, como o da guarda de `decaimentoPorAtraso`, e com as propriedades de parâmetros sorteados.
-// Uma fórmula que passe a ler um caminho novo reprova a primeira até ele entrar na lista dela, com um cenário em que mova
-// a saída.
-
-/**
- * Os parâmetros, com cada caminho lido anotado em `lidos`. O Proxy envolve uma cópia rasa de cada nível, e não o objeto
- * congelado: sobre uma propriedade congelada, o Proxy é obrigado a devolver o próprio valor dela, e não poderia devolver
- * o espião do objeto aninhado no lugar.
- */
-function espiao(p: Parametros, lidos: Set<string>): Parametros {
-  const espiar = (alvo: object, prefixo: string): object =>
-    new Proxy(
-      { ...alvo },
-      {
-        get(copia, chave) {
-          const valor: unknown = Reflect.get(copia, chave)
-          if (typeof chave !== 'string') return valor
-          if (typeof valor === 'object' && valor !== null) return espiar(valor, `${prefixo}${chave}.`)
-          lidos.add(`${prefixo}${chave}`)
-          return valor
-        },
-      },
-    )
-  return espiar(p, '') as Parametros
-}
-
-function valorPadrao(caminho: CaminhoDeParametro): number {
-  const [chave = '', sub] = caminho.split('.')
-  const valor: unknown = Reflect.get(P, chave)
-  const folha: unknown = sub === undefined ? valor : Reflect.get(valor as object, sub)
-  if (typeof folha !== 'number') throw new Error(`caminho sem valor numérico: ${caminho}`)
-  return folha
-}
-
-/**
- * Múltiplos do valor padrão tentados em cada caminho; os que `resolverParametros` recusa, pela faixa ou por uma relação,
- * ficam de fora. Os múltiplos longe de 1 existem porque alguns parâmetros só agem longe do padrão, como os limites da
- * velocidade, que a razão nunca alcança com os padrões.
- */
-const FATORES = [0.25, 0.5, 0.8, 1.25, 2, 4]
-
-const variacoes = (caminho: CaminhoDeParametro): Parametros[] =>
-  FATORES.flatMap((fator) => {
-    const r = resolverParametros({ [caminho]: valorPadrao(caminho) * fator })
-    return r.ok ? [r.valor] : []
-  })
-
-// A saída de toda fórmula aqui é número, booleano, texto ou estado de números, e o JSON compara todos bit a bit.
-const mesmaSaida = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b)
+// A régua das fórmulas da camada `memoria`; o que ela confere e o que não pega está em
+// `apoio-a-testes/regua-de-parametros.ts`. As trocas parciais ficam com casos fixos em `modelo.test.ts`, como o da guarda
+// de `decaimentoPorAtraso`, e com as propriedades de parâmetros sorteados.
 
 const T0 = 1_700_000_000_000 as Instante
 const em = (dias: number): Instante => somarDias(T0, dias as Dias)
@@ -151,13 +99,6 @@ const DA_VELOCIDADE = [
   'velocidadeMin',
   'velocidadeMax',
 ] as const satisfies readonly CaminhoDeParametro[]
-
-type Formula = Readonly<{
-  nome: string
-  dependeDe: readonly CaminhoDeParametro[]
-  /** Cenários fixos; cada caminho de `dependeDe` precisa mover a saída em ao menos um deles. */
-  cenarios: readonly ((p: Parametros) => unknown)[]
-}>
 
 // O cenário com 50 repetições existe porque o intervalo máximo só age com o intervalo ideal no teto.
 const FORMULAS: readonly Formula[] = [
@@ -247,19 +188,25 @@ const FORMULAS: readonly Formula[] = [
       (p) => acuraciaInicial(topico('a'), catalogo, new Map(), p),
     ],
   },
+  {
+    nome: 'prontoParaCronometrar',
+    dependeDe: ['numRepeticoesMinimaCronometrada', 'acuraciaMinimaCronometrada'],
+    // Na borda das repetições mínimas, subi-las tira o tópico do cronômetro; com acurácia 0,8, só baixar a mínima dela
+    // (a faixa não deixa subir muito acima de 0,9) o põe lá.
+    cenarios: [
+      (p) => prontoParaCronometrar({ ...com(0.9), numRepeticoes: 3 }, p),
+      (p) => prontoParaCronometrar({ ...com(0.8), numRepeticoes: 5 }, p),
+    ],
+  },
 ]
 
-describe.each(FORMULAS)('$nome depende dos parâmetros que declara', ({ dependeDe, cenarios }) => {
+describe.each(FORMULAS)('$nome depende dos parâmetros que declara', (formula) => {
   it('lê exatamente esses caminhos de parâmetro', () => {
-    const lidos = new Set<string>()
-    for (const cenario of cenarios) cenario(espiao(P, lidos))
-    expect(lidos).toEqual(new Set(dependeDe))
+    expect(caminhosLidos(formula)).toEqual(new Set(formula.dependeDe))
   })
 
-  it.each(dependeDe)('muda a saída quando só %s muda', (caminho) => {
-    const ajustes = variacoes(caminho)
-    expect(ajustes.length).toBeGreaterThan(0)
-    const mudou = cenarios.some((cenario) => ajustes.some((p) => !mesmaSaida(cenario(p), cenario(P))))
-    expect(mudou).toBe(true)
+  it.each(formula.dependeDe)('muda a saída quando só %s muda', (caminho: CaminhoDeParametro) => {
+    expect(variacoes(caminho).length).toBeGreaterThan(0)
+    expect(mudaASaida(formula, caminho)).toBe(true)
   })
 })
