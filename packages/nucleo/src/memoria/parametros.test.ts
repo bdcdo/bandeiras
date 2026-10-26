@@ -148,6 +148,23 @@ describe('resolverParametros', () => {
     expect(codigo({ velocidadeMin: 3, velocidadeMax: 4 })).toBeUndefined()
   })
 
+  it('aceita teto entre o limiar e o limiar mais o rawDelta perfeito, e recusa o que passa disso', () => {
+    // Acima disso nem o acerto perfeito no dia devido devolveria a memória ao teto, e o espaçamento real ficaria
+    // abaixo do intervalo ideal em toda repetição.
+    expect(codigo({ tetoMemoria: 0.8 })).toBeUndefined()
+    expect(codigo({ tetoMemoria: 1.5 })).toBeUndefined()
+    expect(codigo({ limiarDevido: 0.3, tetoMemoria: 0.6 })).toBeUndefined()
+    expect(resolverParametros({ tetoMemoria: 1.6 })).toEqual({
+      ok: false,
+      erro: {
+        codigo: 'PARAMETRO_INVALIDO',
+        detalhe: 'relação entre parâmetros quebrada: tetoMemoria <= limiarDevido + deltaBruto.perfeita',
+      },
+    })
+    expect(codigo({ 'deltaBruto.perfeita': 0.4 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ limiarDevido: 0.2, tetoMemoria: 1.25 })).toBe('PARAMETRO_INVALIDO')
+  })
+
   it('confere a chave desconhecida antes do valor inválido', () => {
     expect(codigo({ inexistente: 1, intervaloBaseDias: -1 })).toBe('PARAMETRO_DESCONHECIDO')
   })

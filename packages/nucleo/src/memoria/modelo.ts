@@ -17,39 +17,48 @@ export function intervaloIdeal(numRepeticoes: number, parametros: Parametros): D
 }
 
 /**
- * memory agora: a memória da última repetição, decaindo pela metade a cada intervalo ideal. Zero para quem nunca repetiu.
+ * memory agora: a memória da última repetição, multiplicada por limiar / teto a cada intervalo ideal. Assim ela cai do
+ * teto ao limiar em exatamente um intervalo, quaisquer que sejam os dois; com os padrões, 1 e 0,5, cai pela metade.
+ * Zero para quem nunca repetiu.
  *
  * Um instante anterior à última repetição dá memória acima da base, de propósito: é a mesma curva estendida para trás, e
  * é ela que faz `memoriaEm(e, devidoEm(e))` valer o limiar mesmo quando a base já está abaixo dele.
  */
 export function memoriaEm(e: EstadoMemoria, agora: Instante, parametros: Parametros): number {
   if (e.ultimaRepEm === undefined) return 0
-  return e.memoriaBase * 0.5 ** (diasEntre(e.ultimaRepEm, agora) / intervaloIdeal(e.numRepeticoes, parametros))
+  const { limiarDevido, tetoMemoria } = parametros
+  const intervalos = diasEntre(e.ultimaRepEm, agora) / intervaloIdeal(e.numRepeticoes, parametros)
+  return e.memoriaBase * (limiarDevido / tetoMemoria) ** intervalos
 }
 
 /**
  * Instante em que a memória cai ao limiar e a repetição vence, ou `undefined` para quem nunca repetiu. Memória zero
- * vence na hora da última repetição. É a inversa de `memoriaEm`: com memória base b e intervalo I, a memória chega ao
- * limiar L depois de I * log2(b / L) dias, e por isso base abaixo do limiar dá vencimento no passado.
+ * vence na hora da última repetição. É a inversa de `memoriaEm`: com memória base b, limiar L, teto T e intervalo I, a
+ * memória chega ao limiar depois de I * log(b / L) / log(T / L) dias, e por isso base abaixo do limiar dá vencimento no
+ * passado. Com T / L = 2, como nos padrões, o divisor log2(T / L) vale 1 exatamente.
  */
 export function devidoEm(e: EstadoMemoria, parametros: Parametros): Instante | undefined {
   if (e.ultimaRepEm === undefined) return undefined
   if (e.memoriaBase <= 0) return e.ultimaRepEm
-  const dias = intervaloIdeal(e.numRepeticoes, parametros) * Math.log2(e.memoriaBase / parametros.limiarDevido)
-  return somarDias(e.ultimaRepEm, dias as Dias)
+  const { limiarDevido, tetoMemoria } = parametros
+  const intervalos = Math.log2(e.memoriaBase / limiarDevido) / Math.log2(tetoMemoria / limiarDevido)
+  return somarDias(e.ultimaRepEm, (intervaloIdeal(e.numRepeticoes, parametros) * intervalos) as Dias)
 }
 
 /**
  * Desconto do rawDelta de um acerto feito cedo (p. 373), entre 0 e 1. É o menor de dois termos.
  *
- * O primeiro mede a precocidade pela memória: 0 com memória 1 ou mais (acabou de acertar), 1 com a memória no limiar ou
- * abaixo (venceu). O segundo mede pelo tempo desde a última tentativa explícita, em intervalos ideais, e vale 1 quando
- * não houve tentativa explícita. É ele que faz o reteste dentro da mesma sessão, logo depois de um erro, contar como
- * prática e quase nada como repetição: o erro derruba a memória e zera o primeiro termo, mas não o segundo.
+ * O primeiro mede a precocidade pela memória, entre o limiar e o teto: 0 com a memória no teto ou acima (acabou de
+ * acertar), 1 com a memória no limiar ou abaixo (venceu). Medir contra memória 1 com um teto abaixo de 1 deixaria esse
+ * termo acima de 0 logo depois de um acerto, e o crédito implícito, que não grava tentativa, somaria repetições a cada
+ * minuto. O segundo mede pelo tempo desde a última tentativa explícita, em intervalos ideais, e vale 1 quando não houve
+ * tentativa explícita. É ele que faz o reteste dentro da mesma sessão, logo depois de um erro, contar como prática e
+ * quase nada como repetição: o erro derruba a memória e zera o primeiro termo, mas não o segundo.
  */
 export function fatorPrecocidade(e: EstadoMemoria, agora: Instante, parametros: Parametros): number {
   const m = memoriaEm(e, agora, parametros)
-  const pelaMemoria = limitar((1 - m) / (1 - parametros.limiarDevido), 0, 1)
+  const { limiarDevido, tetoMemoria } = parametros
+  const pelaMemoria = limitar((tetoMemoria - m) / (tetoMemoria - limiarDevido), 0, 1)
   if (e.ultimaTentativaEm === undefined) return pelaMemoria
   const intervalo = intervaloIdeal(e.numRepeticoes, parametros)
   return Math.min(pelaMemoria, limitar(diasEntre(e.ultimaTentativaEm, agora) / intervalo, 0, 1))
@@ -112,12 +121,14 @@ export function aplicarRepeticao(e: EstadoMemoria, repeticao: Repeticao, paramet
 
 /**
  * Move o vencimento para `dias` depois de `agora`, sem mexer em `numRepeticoes`. Como o vencimento é derivado, o único
- * jeito de movê-lo é trocar a memória base: com base L * 2^(dias / I), a memória chega ao limiar L exatamente em `dias`.
- * Com `dias` acima de um intervalo, a base passa do teto, e um acerto antecipado não ganha crédito até a memória cair a
- * 1, porque o fator de precocidade vale 0 enquanto ela estiver acima disso.
+ * jeito de movê-lo é trocar a memória base: com base L * (T / L)^(dias / I), a memória chega ao limiar L exatamente em
+ * `dias`. Com `dias` acima de um intervalo, a base passa do teto T, e um acerto antecipado não ganha crédito até a
+ * memória cair ao teto, porque o fator de precocidade vale 0 enquanto ela estiver acima dele.
  */
 export function reagendar(e: EstadoMemoria, agora: Instante, dias: Dias, parametros: Parametros): EstadoMemoria {
-  const memoriaBase = parametros.limiarDevido * 2 ** (dias / intervaloIdeal(e.numRepeticoes, parametros))
+  const { limiarDevido, tetoMemoria } = parametros
+  const memoriaBase =
+    limiarDevido * (tetoMemoria / limiarDevido) ** (dias / intervaloIdeal(e.numRepeticoes, parametros))
   return { ...e, ultimaRepEm: agora, memoriaBase }
 }
 

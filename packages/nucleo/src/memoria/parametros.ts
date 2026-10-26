@@ -82,10 +82,13 @@ export const PARAMETROS_PADRAO: Parametros = congelar({
   crescimentoIntervalo: 2.2,
   // Teto do interval: ninguém espera mais de um ano por uma revisão, por mais repetições que tenha.
   intervaloMaximoDias: 365,
-  // Limiar de memory abaixo do qual a repetição vence. Memória 1 decai a 0,5 exatamente no intervalo ideal.
+  // Limiar de memory abaixo do qual a repetição vence. A memória decai do teto ao limiar em exatamente um intervalo
+  // ideal, e com o teto 1 isso é cair pela metade.
   limiarDevido: 0.5,
-  // Teto de memory depois de uma repetição. Devolve a memória a 1 em todo acerto, e assim o espaçamento real é o da
-  // sequência acima; sem teto, um acerto no dia devido deixaria a memória em 1,5 e esticaria o intervalo por log2(3).
+  // Teto de memory depois de uma repetição. Um acerto no dia devido com delta de pelo menos teto - limiar devolve a
+  // memória ao teto, e o espaçamento real é o do intervalo ideal. Um acerto parcial, como o lento em múltipla escolha ou
+  // o crédito implícito com fator baixo, deixa a memória abaixo do teto e antecipa o vencimento seguinte. Sem o teto,
+  // um acerto perfeito no dia devido deixaria a memória em 1,5 e esticaria o intervalo seguinte.
   tetoMemoria: 1,
   // Peso da resposta nova na média exponencial da acurácia: a média esquece em cerca de 5 avaliações.
   alfaAcuracia: 0.3,
@@ -189,10 +192,10 @@ const NEGATIVO_ATE_MENOS_UM: Faixa = { descricao: 'menor que 0 e no mínimo -1',
 
 /**
  * Faixa aceita por parâmetro. O tipo obriga a tabela a cobrir todo caminho de `Parametros`. As faixas que não são só
- * "positivo" existem porque uma fórmula depende delas: o limiar fica em (0, 1) porque `fatorPrecocidade` divide por
- * 1 - limiar e `devidoEm` toma o logaritmo da memória sobre ele; o crescimento é pelo menos 1 para o intervalo nunca
- * encolher com mais repetições; o decay nunca fica abaixo de 1; e o rawDelta de acerto fica em (0, 1] e o de erro em
- * [-1, 0), porque uma repetição perfeita vale uma repetição inteira, e o limite do reteste depende disso.
+ * "positivo" existem porque uma fórmula depende delas: o limiar fica acima de 0 porque `devidoEm` toma o logaritmo da
+ * memória sobre ele; o crescimento é pelo menos 1 para o intervalo nunca encolher com mais repetições; o decay nunca
+ * fica abaixo de 1; e o rawDelta de acerto fica em (0, 1] e o de erro em [-1, 0), porque uma repetição perfeita vale uma
+ * repetição inteira, e o limite do reteste depende disso. O que o limiar e o teto exigem um do outro está em `RELACOES`.
  */
 const FAIXAS: Readonly<Record<CaminhoDeParametro, Faixa>> = {
   intervaloBaseDias: POSITIVO,
@@ -246,11 +249,18 @@ const FAIXAS: Readonly<Record<CaminhoDeParametro, Faixa>> = {
 
 /**
  * Relações entre parâmetros que a faixa de cada um sozinha não garante. Um limite mínimo acima do máximo deixaria o
- * `limitar` sem sentido; teto de memória abaixo do limiar deixaria todo tópico vencido logo depois de um acerto.
+ * `limitar` sem sentido. O teto de memória fica acima do limiar porque a memória decai do teto ao limiar e
+ * `fatorPrecocidade` divide por teto - limiar; com o teto no limiar ou abaixo, todo tópico venceria logo depois de um
+ * acerto. E fica no máximo um rawDelta perfeito acima do limiar, senão nem o acerto perfeito no dia devido devolveria a
+ * memória ao teto, e o espaçamento real ficaria abaixo do intervalo ideal em toda repetição.
  */
 const RELACOES: readonly { descricao: string; vale: (p: Parametros) => boolean }[] = [
   { descricao: 'intervaloBaseDias <= intervaloMaximoDias', vale: (p) => p.intervaloBaseDias <= p.intervaloMaximoDias },
   { descricao: 'limiarDevido < tetoMemoria', vale: (p) => p.limiarDevido < p.tetoMemoria },
+  {
+    descricao: 'tetoMemoria <= limiarDevido + deltaBruto.perfeita',
+    vale: (p) => p.tetoMemoria <= p.limiarDevido + p.deltaBruto.perfeita,
+  },
   { descricao: 'aceleracaoMin <= aceleracaoMax', vale: (p) => p.aceleracaoMin <= p.aceleracaoMax },
   { descricao: 'velocidadeMin <= velocidadeMax', vale: (p) => p.velocidadeMin <= p.velocidadeMax },
   {
