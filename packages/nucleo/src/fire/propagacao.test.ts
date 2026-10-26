@@ -9,7 +9,7 @@ import { montarGrafo, type ArestaEncompassing, type Grafo } from '../grafo/grafo
 import { topicoDeGrupo, topicoDeItem, type IdTopico, type Topico } from '../grafo/topico'
 import { estadoMemoriaInicial, type EstadoMemoria } from '../memoria/estado-memoria'
 import { aplicarRepeticao } from '../memoria/modelo'
-import { PARAMETROS_PADRAO as P, type Dificuldade } from '../memoria/parametros'
+import { PARAMETROS_PADRAO as P, resolverParametros, type Dificuldade } from '../memoria/parametros'
 import { ehTopicoLento, velocidade } from '../memoria/velocidade'
 import { propagarCredito, propagarPenalidade, type ContextoDePropagacao, type Memorias } from './propagacao'
 
@@ -92,6 +92,26 @@ describe('propagarCredito', () => {
     expect(numRep(m, C)).toBeCloseTo(2 + 0.5 * 0.5, 9)
   })
 
+  it('traz a exposição para [0, 1]: acima de 1 vale 1, e abaixo de 0 corta como 0', () => {
+    // Exposição 2 em a daria a ele delta 2, o dobro da repetição explícita.
+    const exposicao = (t: IdTopico): number => (t === A ? 2 : t === B ? -1 : 1)
+    const m = propagarCredito(contexto(), todos(), { origem: G1, deltaBruto: 1, exposicao })
+    expect(numRep(m, A)).toBeCloseTo(3, 9)
+    expect(m.get(A)?.acuracia).toBeCloseTo(0.85 + 0.3 * 0.5 * (1 - 0.85), 12)
+    expect(m.get(B)).toEqual(pronto())
+  })
+
+  it('dá à acurácia do encompassado a força da acurácia implícita, e não outro fator', () => {
+    // No padrão a força e os fatores de exposição e de múltipla escolha valem 0,5; aqui cada um tem um valor.
+    const p = desembrulhar(
+      resolverParametros({ forcaAcuraciaImplicita: 0.8, fatorExposicaoDistrator: 0.2, fatorMultiplaEscolha: 0.35 }),
+    )
+    const m = propagarCredito(contexto({ parametros: p }), todos(), { origem: G2, deltaBruto: 1, exposicao: () => 1 })
+    expect(numRep(m, G1)).toBeCloseTo(3, 9)
+    expect(m.get(G1)?.acuracia).toBeCloseTo(0.85 + 0.3 * 0.8 * (1 - 0.85), 12)
+    expect(m.get(C)?.acuracia).toBeCloseTo(0.85 + 0.3 * 0.8 * 0.5 * (1 - 0.85), 12)
+  })
+
   it('pula o tópico lento e corta o ramo abaixo dele', () => {
     const dificuldade = (t: IdTopico): Dificuldade => (t === G1 ? 3 : 2)
     const m = propagarCredito(contexto({ dificuldade }), todos(), { origem: G2, deltaBruto: 1, exposicao: () => 1 })
@@ -166,6 +186,15 @@ describe('propagarPenalidade', () => {
     })
     expect(excluido.memorias.get(G1)).toEqual(pronto())
     expect(numRep(excluido.memorias, G2)).toBeCloseTo(1, 9)
+  })
+
+  it('passa por ascendente elegível sem estado sem penalizá-lo nem pô-lo na culpa', () => {
+    const m = new Map(todos())
+    m.delete(G1)
+    const r = propagarPenalidade(contexto(), m, { origem: A, deltaBruto: -1, elegiveis: TODOS })
+    expect(r.memorias.has(G1)).toBe(false)
+    expect(numRep(r.memorias, G2)).toBeCloseTo(1, 9)
+    expect([...r.culpa]).toEqual([G2, A])
   })
 
   it('penaliza o tópico lento como qualquer outro', () => {
@@ -264,7 +293,8 @@ const contextoDo = (c: Cenario): ContextoDePropagacao => ({
 })
 const deltaDeAcerto = fc.constantFrom(P.deltaBruto.perfeita, P.deltaBruto.lenta)
 const deltaDeErro = fc.constantFrom(P.deltaBruto.errada, P.deltaBruto['tempo-esgotado'])
-const exposicoes = fc.array(fc.constantFrom(0, P.fatorExposicaoDistrator, 1), { minLength: 8, maxLength: 8 })
+// Exposições dentro de [0, 1] e fora dela, que a propagação traz para dentro: -1 corta como 0 e 2 vale 1.
+const exposicoes = fc.array(fc.constantFrom(-1, 0, P.fatorExposicaoDistrator, 1, 2), { minLength: 8, maxLength: 8 })
 
 /** Delta de numRepeticoes que o tópico teria com uma repetição explícita de `deltaBruto`, do mesmo estado. */
 function deltaExplicito(ctx: ContextoDePropagacao, e: EstadoMemoria, t: IdTopico, deltaBruto: number): number {
@@ -294,7 +324,7 @@ describe('propriedades da propagação', () => {
     )
   })
 
-  it('a culpa é a origem e parte dos ascendentes dela', () => {
+  it('a culpa é a origem e os ascendentes que a penalidade de fato alcançou', () => {
     fc.assert(
       fc.property(cenario, deltaDeErro, fc.func(fc.boolean()), (c, erro, elegivel) => {
         const elegiveis = new Set([...c.grafo.topicos.keys()].filter((t) => elegivel(t)))
@@ -302,7 +332,13 @@ describe('propriedades da propagação', () => {
         const permitidos = new Set([c.origem, ...fechoAscendente(c.grafo, c.origem)])
         expect(r.culpa.has(c.origem)).toBe(true)
         for (const t of r.culpa) expect(permitidos.has(t)).toBe(true)
-        for (const t of r.culpa) if (t !== c.origem) expect(elegiveis.has(t)).toBe(true)
+        for (const t of r.culpa) {
+          if (t === c.origem) continue
+          expect(elegiveis.has(t), t).toBe(true)
+          // Penalizado de fato: tinha estado, e a penalidade o mudou (ao menos a contagem de avaliações).
+          expect(c.memorias.has(t), t).toBe(true)
+          expect(r.memorias.get(t), t).not.toEqual(c.memorias.get(t))
+        }
       }),
     )
   })
@@ -332,7 +368,7 @@ describe('propriedades da propagação', () => {
     )
   })
 
-  it('tópico lento e tópico de exposição 0 ficam inalterados pelo crédito', () => {
+  it('tópico lento e tópico de exposição 0 ou negativa ficam inalterados pelo crédito', () => {
     fc.assert(
       fc.property(cenario, deltaDeAcerto, exposicoes, (c, acerto, exp) => {
         const ctx = contextoDo(c)
@@ -341,7 +377,7 @@ describe('propriedades da propagação', () => {
         const credito = propagarCredito(ctx, c.memorias, { origem: c.origem, deltaBruto: acerto, exposicao })
         for (const [t, e] of c.memorias) {
           const lento = ehTopicoLento(e, ctx.dificuldade(t), P, ctx.tecnicas)
-          if (lento || exposicao(t) === 0) expect(credito.get(t), t).toEqual(e)
+          if (lento || exposicao(t) <= 0) expect(credito.get(t), t).toEqual(e)
         }
       }),
     )
