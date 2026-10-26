@@ -1,0 +1,132 @@
+[
+  {
+    "id": "pan-africana-horizontal",
+    "nome": "Pan-africana horizontal",
+    "membros": ["et", "gh", "bo", "lt", "mm", "bf", "gw", "bj", "tg", "cg", "st"],
+    "tracoDistintivo": {
+      "et": "emblema azul no centro",
+      "gh": "estrela preta",
+      "bo": "faixas lisas, vermelho em cima",
+      "lt": "amarelo em cima, sem emblema",
+      "mm": "estrela branca",
+      "bf": "duas faixas e estrela",
+      "gw": "faixa vertical vermelha com estrela",
+      "bj": "faixa vertical verde",
+      "tg": "listras e cantão",
+      "cg": "diagonal",
+      "st": "triângulo vermelho e duas estrelas"
+    }
+  },
+  {
+    "id": "vermelho-liso-com-simbolo",
+    "nome": "Vermelho liso com símbolo",
+    "membros": ["vn", "cn", "ma", "kg", "tr", "tn", "al", "me", "ch", "to", "mk"],
+    "tracoDistintivo": {
+      "vn": "uma estrela",
+      "cn": "cinco estrelas no cantão",
+      "ma": "pentagrama verde",
+      "kg": "sol com tenda",
+      "tr": "crescente e estrela soltos",
+      "tn": "crescente e estrela em disco branco",
+      "al": "águia preta",
+      "me": "águia dourada com borda",
+      "ch": "cruz branca",
+      "to": "cantão com cruz",
+      "mk": "sol de oito raios"
+    }
+  },
+  {
+    "id": "verde-liso-com-simbolo",
+    "nome": "Verde liso com símbolo",
+    "membros": ["sa", "pk", "bd", "zm", "tm", "mr", "dm"],
+    "tracoDistintivo": {
+      "sa": "inscrição e espada",
+      "pk": "faixa branca no mastro",
+      "bd": "disco vermelho",
+      "zm": "canto com águia",
+      "tm": "tapete e crescente",
+      "mr": "crescente e faixas vermelhas",
+      "dm": "papagaio"
+    }
+  },
+  {
+    "id": "crescente-e-estrela",
+    "nome": "Crescente e estrela",
+    "membros": ["tr", "tn", "dz", "pk", "mr", "ly", "az", "mv", "km", "my", "uz", "tm", "sg"],
+    "tracoDistintivo": {
+      "tr": "branco solto no campo vermelho",
+      "tn": "vermelho dentro de disco branco",
+      "dz": "vermelho sobre verde e branco",
+      "pk": "branco no verde, com faixa branca no mastro",
+      "mr": "amarelo no verde, com faixas vermelhas",
+      "ly": "branco na faixa preta",
+      "az": "branco no tricolor azul, vermelho e verde",
+      "mv": "branco no verde, com moldura vermelha",
+      "km": "branco no triângulo verde, com quatro faixas",
+      "my": "amarelo no cantão azul das listras",
+      "uz": "branco no azul, com doze estrelas",
+      "tm": "branco no verde, com faixa de tapetes",
+      "sg": "branco no vermelho, com cinco estrelas"
+    }
+  },
+  {
+    "id": "triangulo-com-listras-claras",
+    "nome": "Triângulo com listras claras",
+    "membros": ["cu", "ph", "cz", "dj", "gq", "bs", "tl"],
+    "tracoDistintivo": {
+      "cu": "listras azuis",
+      "ph": "azul e vermelho",
+      "cz": "branco e vermelho",
+      "dj": "azul-claro e verde",
+      "gq": "verde, branco e vermelho com brasão",
+      "bs": "água-marinha e amarelo com triângulo preto",
+      "tl": "dois triângulos e estrela"
+    }
+  },
+  {
+    "id": "triangulo-pan-africano",
+    "nome": "Triângulo pan-africano",
+    "membros": ["st", "km", "er", "mz", "zw", "ss", "vu", "gy"],
+    "tracoDistintivo": {
+      "st": "triângulo vermelho e duas estrelas pretas no amarelo",
+      "km": "triângulo verde com crescente e quatro faixas",
+      "er": "triângulo vermelho do mastro à ponta, verde em cima e azul embaixo, ramo dourado",
+      "mz": "fuzil e enxada",
+      "zw": "pássaro no triângulo branco",
+      "ss": "triângulo azul com estrela amarela",
+      "vu": "Y amarelo deitado, bordado de preto, com triângulo preto e presa de javali",
+      "gy": "triângulos sobrepostos"
+    }
+  },
+  {
+    "id": "diagonal-oceania-caribe",
+    "nome": "Diagonal da Oceania e do Caribe",
+    "membros": ["tt", "kn", "mh", "pg", "bt", "bn", "sb"],
+    "tracoDistintivo": {
+      "tt": "preta sobre vermelho",
+      "kn": "preta com duas estrelas",
+      "mh": "dois raios",
+      "pg": "preto e vermelho com ave",
+      "bt": "dragão",
+      "bn": "faixas sobre amarelo",
+      "sb": "azul e verde com estrelas"
+    }
+  },
+  {
+    "id": "sol",
+    "nome": "Sol",
+    "membros": ["ar", "uy", "kz", "kg", "mw", "rw", "mk", "na", "ki", "ag"],
+    "tracoDistintivo": {
+      "ar": "sol com rosto no centro da faixa branca",
+      "uy": "sol com rosto no cantão",
+      "kz": "dourado em azul",
+      "kg": "em vermelho, com tenda",
+      "mw": "nascente na faixa preta",
+      "rw": "no canto, em azul",
+      "mk": "de oito raios em vermelho",
+      "na": "no cantão azul",
+      "ki": "sobre o mar",
+      "ag": "nascente em preto"
+    }
+  }
+]

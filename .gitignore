@@ -6,3 +6,5 @@ playwright-report/
 .env.local
 .claude/worktrees/
 *.tsbuildinfo
+# Originais baixados do Commons por scripts/baixar-commons.ts; o repositório guarda só a cópia processada em imagens/.
+packages/dominio-bandeiras/.cache/

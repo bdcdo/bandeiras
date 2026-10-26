@@ -1,0 +1,421 @@
+[
+  {
+    "id": "cruz-nordica",
+    "nome": "Cruz nórdica",
+    "membros": ["dk", "se", "no", "fi", "is"],
+    "tracoDistintivo": {
+      "dk": "vermelho com cruz branca",
+      "se": "azul com cruz amarela",
+      "no": "vermelho com cruz azul bordada de branco",
+      "fi": "branco com cruz azul",
+      "is": "azul com cruz vermelha bordada de branco"
+    }
+  },
+  {
+    "id": "azul-amarelo-vermelho-vertical",
+    "nome": "Azul, amarelo e vermelho na vertical",
+    "membros": ["ro", "td", "ad", "md"],
+    "tracoDistintivo": {
+      "ro": "quase idêntica ao Chade, com azul-cobalto um pouco mais claro e sem emblema",
+      "td": "quase idêntica à Romênia, com azul-anil mais escuro e sem emblema",
+      "ad": "brasão com mitra e vacas no amarelo, faixa central mais larga",
+      "md": "águia com escudo no amarelo, faixas iguais"
+    },
+    "paresIndiscerniveis": [["ro", "td"]]
+  },
+  {
+    "id": "vermelho-e-branco",
+    "nome": "Vermelho e branco",
+    "membros": ["id", "mc", "pl", "sg", "mt"],
+    "tracoDistintivo": {
+      "id": "vermelho em cima e branco embaixo, retangular (2:3)",
+      "mc": "vermelho em cima e branco embaixo, quase quadrada (4:5)",
+      "pl": "branco em cima e vermelho embaixo",
+      "sg": "vermelho em cima com crescente e cinco estrelas brancas",
+      "mt": "vertical, branco no mastro com a cruz de condecoração no canto"
+    }
+  },
+  {
+    "id": "union-jack-no-cantao",
+    "nome": "Union Jack no cantão",
+    "membros": ["au", "nz", "fj", "tv"],
+    "tracoDistintivo": {
+      "au": "azul-escuro com seis estrelas brancas",
+      "nz": "azul-escuro com quatro estrelas vermelhas bordadas de branco",
+      "fj": "azul-claro com escudo",
+      "tv": "azul-claro com nove estrelas amarelas"
+    }
+  },
+  {
+    "id": "verde-branco-laranja",
+    "nome": "Verde, branco e laranja",
+    "membros": ["ie", "ci", "in", "ne"],
+    "tracoDistintivo": {
+      "ie": "vertical, verde no mastro",
+      "ci": "vertical, laranja no mastro",
+      "in": "horizontal, açafrão em cima, com roda azul no centro",
+      "ne": "horizontal, laranja em cima, com disco laranja no centro"
+    }
+  },
+  {
+    "id": "verde-branco-vermelho",
+    "nome": "Verde, branco e vermelho",
+    "membros": ["it", "mx", "hu", "bg", "ir", "tj"],
+    "tracoDistintivo": {
+      "it": "vertical, sem emblema",
+      "mx": "vertical, com a águia sobre o cacto no centro",
+      "hu": "horizontal, vermelho em cima",
+      "bg": "horizontal, branco em cima",
+      "ir": "horizontal, verde em cima, com emblema vermelho",
+      "tj": "horizontal, vermelho em cima, com coroa e estrelas no branco largo"
+    }
+  },
+  {
+    "id": "pan-africana-vertical",
+    "nome": "Pan-africana vertical",
+    "membros": ["ml", "gn", "sn", "cm"],
+    "tracoDistintivo": {
+      "ml": "verde no mastro, sem emblema",
+      "gn": "vermelho no mastro, sem emblema",
+      "sn": "verde no mastro, como o Mali, com estrela verde no centro",
+      "cm": "vermelho no centro com estrela amarela"
+    }
+  },
+  {
+    "id": "gra-colombia",
+    "nome": "Grã-Colômbia",
+    "membros": ["co", "ve", "ec"],
+    "tracoDistintivo": {
+      "co": "só as faixas, com o amarelo ocupando a metade de cima",
+      "ve": "faixas iguais com arco de oito estrelas brancas no azul",
+      "ec": "amarelo dobrado e brasão com condor no centro"
+    }
+  },
+  {
+    "id": "azul-branco-azul",
+    "nome": "Azul, branco e azul",
+    "membros": ["hn", "sv", "ni", "ar", "gt"],
+    "tracoDistintivo": {
+      "hn": "cinco estrelas azuis no centro",
+      "sv": "brasão triangular no centro",
+      "ni": "triângulo com arco-íris no centro",
+      "ar": "sol amarelo no centro",
+      "gt": "vertical, com brasão do quetzal no centro"
+    }
+  },
+  {
+    "id": "pan-arabe-horizontal",
+    "nome": "Pan-árabe horizontal",
+    "membros": ["eg", "iq", "ye", "sy"],
+    "tracoDistintivo": {
+      "eg": "vermelho, branco e preto com águia dourada",
+      "iq": "vermelho, branco e preto com inscrição verde",
+      "ye": "vermelho, branco e preto sem símbolo",
+      "sy": "verde em cima, branco e preto, com três estrelas vermelhas"
+    }
+  },
+  {
+    "id": "pan-arabe-com-triangulo",
+    "nome": "Pan-árabe com triângulo",
+    "membros": ["jo", "sd", "kw", "ae", "ss", "om"],
+    "tracoDistintivo": {
+      "jo": "triângulo vermelho com estrela branca de sete pontas",
+      "sd": "triângulo verde no mastro",
+      "kw": "trapézio preto no mastro",
+      "ae": "faixa vertical vermelha no mastro",
+      "ss": "faixas preta, vermelha e verde com triângulo azul e estrela amarela",
+      "om": "faixa vertical vermelha com emblema, branco em cima"
+    }
+  },
+  {
+    "id": "pan-eslava",
+    "nome": "Pan-eslava",
+    "membros": ["ru", "sk", "si", "rs", "hr"],
+    "tracoDistintivo": {
+      "ru": "branco, azul e vermelho, sem brasão",
+      "sk": "branco, azul e vermelho, brasão com cruz dupla",
+      "si": "branco, azul e vermelho, brasão com montanha no canto",
+      "rs": "vermelho em cima, azul e branco, brasão com águia",
+      "hr": "vermelho, branco e azul, brasão xadrez no centro"
+    }
+  },
+  {
+    "id": "vermelho-branco-azul-horizontal",
+    "nome": "Vermelho, branco e azul na horizontal",
+    "membros": ["nl", "lu", "py", "cr", "th"],
+    "tracoDistintivo": {
+      "nl": "três faixas, azul-escuro",
+      "lu": "três faixas, azul-celeste, mais alongada",
+      "py": "três faixas com emblema circular",
+      "cr": "cinco faixas, a vermelha central dupla",
+      "th": "cinco faixas, a azul central dupla"
+    }
+  },
+  {
+    "id": "azul-branco-vermelho-branco-azul",
+    "nome": "Azul, branco, vermelho, branco e azul",
+    "membros": ["cr", "kp", "th", "kh"],
+    "tracoDistintivo": {
+      "cr": "faixa vermelha larga no centro, sem símbolo",
+      "kp": "faixa vermelha larga com estrela vermelha em disco branco, filetes brancos finos",
+      "th": "ordem invertida: vermelho fora e azul largo no centro",
+      "kh": "azul, vermelho e azul, com o templo branco no centro"
+    }
+  },
+  {
+    "id": "vermelho-branco-vermelho",
+    "nome": "Vermelho, branco e vermelho",
+    "membros": ["at", "lv", "lb", "pe", "ca"],
+    "tracoDistintivo": {
+      "at": "horizontal, faixas iguais",
+      "lv": "horizontal, carmim escuro com faixa branca fina",
+      "lb": "horizontal, cedro verde no branco",
+      "pe": "vertical, faixas iguais",
+      "ca": "vertical, branco largo com folha de bordo"
+    }
+  },
+  {
+    "id": "preto-amarelo-vermelho",
+    "nome": "Preto, amarelo e vermelho",
+    "membros": ["be", "de", "ug"],
+    "tracoDistintivo": {
+      "be": "vertical, quase quadrada",
+      "de": "horizontal, preto, vermelho e dourado, vermelho no meio",
+      "ug": "seis faixas, com grou no disco branco"
+    }
+  },
+  {
+    "id": "azul-claro-com-simbolo",
+    "nome": "Azul-claro com símbolo",
+    "membros": ["so", "fm", "kz", "pw", "bw"],
+    "tracoDistintivo": {
+      "so": "estrela branca no centro",
+      "fm": "quatro estrelas brancas",
+      "kz": "sol e águia dourados",
+      "pw": "disco amarelo",
+      "bw": "faixa preta bordada de branco"
+    }
+  },
+  {
+    "id": "diagonal-africana",
+    "nome": "Diagonal africana",
+    "membros": ["tz", "na", "cg", "cd", "sc"],
+    "tracoDistintivo": {
+      "tz": "faixa preta bordada de amarelo, subindo do mastro",
+      "na": "faixa vermelha bordada de branco, com sol no azul",
+      "cg": "faixa amarela entre verde e vermelho",
+      "cd": "faixa vermelha fina sobre azul, com estrela",
+      "sc": "cinco faixas em leque"
+    }
+  },
+  {
+    "id": "listras-com-cantao",
+    "nome": "Listras com cantão",
+    "membros": ["us", "lr", "my", "gr", "uy", "tg"],
+    "tracoDistintivo": {
+      "us": "treze listras e cinquenta estrelas",
+      "lr": "onze listras e uma estrela",
+      "my": "catorze listras, crescente e estrela",
+      "gr": "nove listras e cruz",
+      "uy": "nove listras e sol",
+      "tg": "cinco listras verdes e amarelas e estrela"
+    }
+  },
+  {
+    "id": "azul-e-amarelo",
+    "nome": "Azul e amarelo",
+    "membros": ["ua", "se", "kz", "pw", "bb", "ba"],
+    "tracoDistintivo": {
+      "ua": "duas faixas, azul em cima",
+      "se": "cruz nórdica amarela",
+      "kz": "sol e águia",
+      "pw": "disco",
+      "bb": "tridente preto",
+      "ba": "triângulo e estrelas"
+    }
+  },
+  {
+    "id": "disco-central",
+    "nome": "Disco central",
+    "membros": ["jp", "bd", "pw", "la", "kr"],
+    "tracoDistintivo": {
+      "jp": "disco vermelho em branco",
+      "bd": "disco vermelho em verde",
+      "pw": "disco amarelo em azul",
+      "la": "disco branco em azul entre faixas vermelhas",
+      "kr": "taegeuk com trigramas"
+    }
+  },
+  {
+    "id": "azul-e-vermelho-horizontal",
+    "nome": "Azul e vermelho na horizontal",
+    "membros": ["ht", "li"],
+    "tracoDistintivo": {
+      "ht": "brasão em painel branco",
+      "li": "coroa dourada"
+    }
+  },
+  {
+    "id": "verde-azul-com-faixa-clara",
+    "nome": "Verde e azul com faixa clara",
+    "membros": ["ga", "sl", "rw", "ls", "uz", "gm"],
+    "tracoDistintivo": {
+      "ga": "faixa amarela",
+      "sl": "faixa branca",
+      "rw": "azul largo com sol",
+      "ls": "chapéu tradicional",
+      "uz": "crescente e estrelas",
+      "gm": "vermelho em cima com filetes brancos"
+    }
+  },
+  {
+    "id": "preto-vermelho-verde",
+    "nome": "Preto, vermelho e verde",
+    "membros": ["ke", "mw", "ly", "af"],
+    "tracoDistintivo": {
+      "ke": "escudo e lanças",
+      "mw": "sol nascente",
+      "ly": "crescente na faixa preta",
+      "af": "vertical com emblema"
+    }
+  },
+  {
+    "id": "vermelho-e-preto",
+    "nome": "Vermelho e preto",
+    "membros": ["ao", "tt", "pg", "al"],
+    "tracoDistintivo": {
+      "ao": "engrenagem e catana",
+      "tt": "diagonal",
+      "pg": "diagonal com ave",
+      "al": "águia"
+    }
+  },
+  {
+    "id": "aspa",
+    "nome": "Aspa",
+    "membros": ["jm", "bi"],
+    "tracoDistintivo": {
+      "jm": "aspa amarela sobre verde e preto",
+      "bi": "aspa branca com três estrelas"
+    }
+  },
+  {
+    "id": "cruz-centrada",
+    "nome": "Cruz centrada",
+    "membros": ["ge", "ch", "to", "do"],
+    "tracoDistintivo": {
+      "ge": "cinco cruzes vermelhas",
+      "ch": "cruz branca em vermelho",
+      "to": "cruz no cantão",
+      "do": "cruz com brasão"
+    }
+  },
+  {
+    "id": "tricolor-vermelho-amarelo-verde",
+    "nome": "Tricolor vermelho, amarelo e verde",
+    "membros": ["gh", "bo", "lt", "mm", "et"],
+    "tracoDistintivo": {
+      "gh": "vermelho em cima, estrela preta no amarelo",
+      "bo": "vermelho em cima, sem emblema",
+      "lt": "amarelo em cima, sem emblema",
+      "mm": "amarelo em cima, estrela branca grande no centro",
+      "et": "verde em cima, emblema azul com estrela no centro"
+    }
+  },
+  {
+    "id": "triangulo-e-listras",
+    "nome": "Triângulo e listras",
+    "membros": ["cu", "ph", "cz"],
+    "tracoDistintivo": {
+      "cu": "listras azuis e brancas, triângulo vermelho com estrela",
+      "ph": "azul e vermelho, triângulo branco com sol e estrelas",
+      "cz": "branco e vermelho, triângulo azul sem símbolo"
+    }
+  },
+  {
+    "id": "estrela-amarela-em-vermelho",
+    "nome": "Estrela amarela em vermelho",
+    "membros": ["vn", "cn"],
+    "tracoDistintivo": {
+      "vn": "uma estrela grande no centro",
+      "cn": "uma estrela grande e quatro pequenas no cantão"
+    }
+  },
+  {
+    "id": "crescente-em-vermelho",
+    "nome": "Crescente em vermelho",
+    "membros": ["tr", "tn"],
+    "tracoDistintivo": {
+      "tr": "crescente e estrela brancos soltos no campo",
+      "tn": "crescente e estrela vermelhos dentro de disco branco"
+    }
+  },
+  {
+    "id": "crescente-em-verde",
+    "nome": "Crescente em verde",
+    "membros": ["pk", "mr", "tm", "mv"],
+    "tracoDistintivo": {
+      "pk": "faixa branca no mastro",
+      "mr": "crescente amarelo e faixas vermelhas",
+      "tm": "faixa de tapetes e cinco estrelas",
+      "mv": "moldura vermelha"
+    }
+  },
+  {
+    "id": "aguia-em-vermelho",
+    "nome": "Águia em vermelho",
+    "membros": ["al", "me"],
+    "tracoDistintivo": {
+      "al": "águia preta, sem borda",
+      "me": "águia dourada com borda dourada"
+    }
+  },
+  {
+    "id": "crescente-com-faixas-1",
+    "nome": "Crescente com faixas (1)",
+    "membros": ["dz", "ly", "az"],
+    "tracoDistintivo": {
+      "dz": "verde e branco na vertical, crescente vermelho",
+      "ly": "vermelho, preto e verde, crescente na faixa preta",
+      "az": "azul, vermelho e verde, crescente na faixa vermelha"
+    }
+  },
+  {
+    "id": "crescente-com-faixas-2",
+    "nome": "Crescente com faixas (2)",
+    "membros": ["km", "my", "uz"],
+    "tracoDistintivo": {
+      "km": "quatro faixas e triângulo verde com quatro estrelas",
+      "my": "listras e crescente amarelo no cantão azul",
+      "uz": "azul, branco e verde, crescente e doze estrelas no azul"
+    }
+  },
+  {
+    "id": "faixa-vertical-no-mastro",
+    "nome": "Faixa vertical no mastro",
+    "membros": ["bj", "gw", "mg"],
+    "tracoDistintivo": {
+      "bj": "faixa verde, amarelo em cima e vermelho embaixo",
+      "gw": "faixa vermelha com estrela preta, amarelo em cima e verde embaixo",
+      "mg": "faixa branca, vermelho em cima e verde embaixo"
+    }
+  },
+  {
+    "id": "diagonal-com-faixa-preta",
+    "nome": "Diagonal com faixa preta",
+    "membros": ["tt", "kn"],
+    "tracoDistintivo": {
+      "tt": "faixa preta bordada de branco sobre vermelho",
+      "kn": "faixa preta bordada de amarelo com duas estrelas, entre verde e vermelho"
+    }
+  },
+  {
+    "id": "serrilhada",
+    "nome": "Serrilhada",
+    "membros": ["bh", "qa"],
+    "tracoDistintivo": {
+      "bh": "vermelho vivo, serrilha de cinco pontas",
+      "qa": "grená, serrilha de nove pontas, bem alongada"
+    }
+  }
+]

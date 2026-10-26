@@ -1,0 +1,781 @@
+{
+  "fonte": {
+    "url": "https://unstats.un.org/unsd/methodology/m49/",
+    "consultadoEm": "2026-10-25",
+    "nota": "Atribuição factual de cada membro à sua região e sub-região da M49 (Standard country or area codes for statistical use), digitada pelo projeto a partir da página da Divisão de Estatística da ONU; nenhum arquivo da ONU é copiado. subRegiao é a Intermediate Region quando a M49 a define e, senão, a Sub-region: 22 grupos. Os nomes em pt-BR saem do Intl.DisplayNames sobre o código numérico."
+  },
+  "paises": {
+    "ad": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "ae": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "af": {
+      "regiao": "142",
+      "subRegiao": "034"
+    },
+    "ag": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "al": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "am": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "ao": {
+      "regiao": "002",
+      "subRegiao": "017"
+    },
+    "ar": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "at": {
+      "regiao": "150",
+      "subRegiao": "155"
+    },
+    "au": {
+      "regiao": "009",
+      "subRegiao": "053"
+    },
+    "az": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "ba": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "bb": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "bd": {
+      "regiao": "142",
+      "subRegiao": "034"
+    },
+    "be": {
+      "regiao": "150",
+      "subRegiao": "155"
+    },
+    "bf": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "bg": {
+      "regiao": "150",
+      "subRegiao": "151"
+    },
+    "bh": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "bi": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "bj": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "bn": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "bo": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "br": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "bs": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "bt": {
+      "regiao": "142",
+      "subRegiao": "034"
+    },
+    "bw": {
+      "regiao": "002",
+      "subRegiao": "018"
+    },
+    "by": {
+      "regiao": "150",
+      "subRegiao": "151"
+    },
+    "bz": {
+      "regiao": "019",
+      "subRegiao": "013"
+    },
+    "ca": {
+      "regiao": "019",
+      "subRegiao": "021"
+    },
+    "cd": {
+      "regiao": "002",
+      "subRegiao": "017"
+    },
+    "cf": {
+      "regiao": "002",
+      "subRegiao": "017"
+    },
+    "cg": {
+      "regiao": "002",
+      "subRegiao": "017"
+    },
+    "ch": {
+      "regiao": "150",
+      "subRegiao": "155"
+    },
+    "ci": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "cl": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "cm": {
+      "regiao": "002",
+      "subRegiao": "017"
+    },
+    "cn": {
+      "regiao": "142",
+      "subRegiao": "030"
+    },
+    "co": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "cr": {
+      "regiao": "019",
+      "subRegiao": "013"
+    },
+    "cu": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "cv": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "cy": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "cz": {
+      "regiao": "150",
+      "subRegiao": "151"
+    },
+    "de": {
+      "regiao": "150",
+      "subRegiao": "155"
+    },
+    "dj": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "dk": {
+      "regiao": "150",
+      "subRegiao": "154"
+    },
+    "dm": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "do": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "dz": {
+      "regiao": "002",
+      "subRegiao": "015"
+    },
+    "ec": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "ee": {
+      "regiao": "150",
+      "subRegiao": "154"
+    },
+    "eg": {
+      "regiao": "002",
+      "subRegiao": "015"
+    },
+    "er": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "es": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "et": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "fi": {
+      "regiao": "150",
+      "subRegiao": "154"
+    },
+    "fj": {
+      "regiao": "009",
+      "subRegiao": "054"
+    },
+    "fm": {
+      "regiao": "009",
+      "subRegiao": "057"
+    },
+    "fr": {
+      "regiao": "150",
+      "subRegiao": "155"
+    },
+    "ga": {
+      "regiao": "002",
+      "subRegiao": "017"
+    },
+    "gb": {
+      "regiao": "150",
+      "subRegiao": "154"
+    },
+    "gd": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "ge": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "gh": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "gm": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "gn": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "gq": {
+      "regiao": "002",
+      "subRegiao": "017"
+    },
+    "gr": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "gt": {
+      "regiao": "019",
+      "subRegiao": "013"
+    },
+    "gw": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "gy": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "hn": {
+      "regiao": "019",
+      "subRegiao": "013"
+    },
+    "hr": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "ht": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "hu": {
+      "regiao": "150",
+      "subRegiao": "151"
+    },
+    "id": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "ie": {
+      "regiao": "150",
+      "subRegiao": "154"
+    },
+    "il": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "in": {
+      "regiao": "142",
+      "subRegiao": "034"
+    },
+    "iq": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "ir": {
+      "regiao": "142",
+      "subRegiao": "034"
+    },
+    "is": {
+      "regiao": "150",
+      "subRegiao": "154"
+    },
+    "it": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "jm": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "jo": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "jp": {
+      "regiao": "142",
+      "subRegiao": "030"
+    },
+    "ke": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "kg": {
+      "regiao": "142",
+      "subRegiao": "143"
+    },
+    "kh": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "ki": {
+      "regiao": "009",
+      "subRegiao": "057"
+    },
+    "km": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "kn": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "kp": {
+      "regiao": "142",
+      "subRegiao": "030"
+    },
+    "kr": {
+      "regiao": "142",
+      "subRegiao": "030"
+    },
+    "kw": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "kz": {
+      "regiao": "142",
+      "subRegiao": "143"
+    },
+    "la": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "lb": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "lc": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "li": {
+      "regiao": "150",
+      "subRegiao": "155"
+    },
+    "lk": {
+      "regiao": "142",
+      "subRegiao": "034"
+    },
+    "lr": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "ls": {
+      "regiao": "002",
+      "subRegiao": "018"
+    },
+    "lt": {
+      "regiao": "150",
+      "subRegiao": "154"
+    },
+    "lu": {
+      "regiao": "150",
+      "subRegiao": "155"
+    },
+    "lv": {
+      "regiao": "150",
+      "subRegiao": "154"
+    },
+    "ly": {
+      "regiao": "002",
+      "subRegiao": "015"
+    },
+    "ma": {
+      "regiao": "002",
+      "subRegiao": "015"
+    },
+    "mc": {
+      "regiao": "150",
+      "subRegiao": "155"
+    },
+    "md": {
+      "regiao": "150",
+      "subRegiao": "151"
+    },
+    "me": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "mg": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "mh": {
+      "regiao": "009",
+      "subRegiao": "057"
+    },
+    "mk": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "ml": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "mm": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "mn": {
+      "regiao": "142",
+      "subRegiao": "030"
+    },
+    "mr": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "mt": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "mu": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "mv": {
+      "regiao": "142",
+      "subRegiao": "034"
+    },
+    "mw": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "mx": {
+      "regiao": "019",
+      "subRegiao": "013"
+    },
+    "my": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "mz": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "na": {
+      "regiao": "002",
+      "subRegiao": "018"
+    },
+    "ne": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "ng": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "ni": {
+      "regiao": "019",
+      "subRegiao": "013"
+    },
+    "nl": {
+      "regiao": "150",
+      "subRegiao": "155"
+    },
+    "no": {
+      "regiao": "150",
+      "subRegiao": "154"
+    },
+    "np": {
+      "regiao": "142",
+      "subRegiao": "034"
+    },
+    "nr": {
+      "regiao": "009",
+      "subRegiao": "057"
+    },
+    "nz": {
+      "regiao": "009",
+      "subRegiao": "053"
+    },
+    "om": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "pa": {
+      "regiao": "019",
+      "subRegiao": "013"
+    },
+    "pe": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "pg": {
+      "regiao": "009",
+      "subRegiao": "054"
+    },
+    "ph": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "pk": {
+      "regiao": "142",
+      "subRegiao": "034"
+    },
+    "pl": {
+      "regiao": "150",
+      "subRegiao": "151"
+    },
+    "pt": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "pw": {
+      "regiao": "009",
+      "subRegiao": "057"
+    },
+    "py": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "qa": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "ro": {
+      "regiao": "150",
+      "subRegiao": "151"
+    },
+    "rs": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "ru": {
+      "regiao": "150",
+      "subRegiao": "151"
+    },
+    "rw": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "sa": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "sb": {
+      "regiao": "009",
+      "subRegiao": "054"
+    },
+    "sc": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "sd": {
+      "regiao": "002",
+      "subRegiao": "015"
+    },
+    "se": {
+      "regiao": "150",
+      "subRegiao": "154"
+    },
+    "sg": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "si": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "sk": {
+      "regiao": "150",
+      "subRegiao": "151"
+    },
+    "sl": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "sm": {
+      "regiao": "150",
+      "subRegiao": "039"
+    },
+    "sn": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "so": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "sr": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "ss": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "st": {
+      "regiao": "002",
+      "subRegiao": "017"
+    },
+    "sv": {
+      "regiao": "019",
+      "subRegiao": "013"
+    },
+    "sy": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "sz": {
+      "regiao": "002",
+      "subRegiao": "018"
+    },
+    "td": {
+      "regiao": "002",
+      "subRegiao": "017"
+    },
+    "tg": {
+      "regiao": "002",
+      "subRegiao": "011"
+    },
+    "th": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "tj": {
+      "regiao": "142",
+      "subRegiao": "143"
+    },
+    "tl": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "tm": {
+      "regiao": "142",
+      "subRegiao": "143"
+    },
+    "tn": {
+      "regiao": "002",
+      "subRegiao": "015"
+    },
+    "to": {
+      "regiao": "009",
+      "subRegiao": "061"
+    },
+    "tr": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "tt": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "tv": {
+      "regiao": "009",
+      "subRegiao": "061"
+    },
+    "tz": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "ua": {
+      "regiao": "150",
+      "subRegiao": "151"
+    },
+    "ug": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "us": {
+      "regiao": "019",
+      "subRegiao": "021"
+    },
+    "uy": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "uz": {
+      "regiao": "142",
+      "subRegiao": "143"
+    },
+    "vc": {
+      "regiao": "019",
+      "subRegiao": "029"
+    },
+    "ve": {
+      "regiao": "019",
+      "subRegiao": "005"
+    },
+    "vn": {
+      "regiao": "142",
+      "subRegiao": "035"
+    },
+    "vu": {
+      "regiao": "009",
+      "subRegiao": "054"
+    },
+    "ws": {
+      "regiao": "009",
+      "subRegiao": "061"
+    },
+    "ye": {
+      "regiao": "142",
+      "subRegiao": "145"
+    },
+    "za": {
+      "regiao": "002",
+      "subRegiao": "018"
+    },
+    "zm": {
+      "regiao": "002",
+      "subRegiao": "014"
+    },
+    "zw": {
+      "regiao": "002",
+      "subRegiao": "014"
+    }
+  }
+}

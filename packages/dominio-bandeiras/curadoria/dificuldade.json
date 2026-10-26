@@ -1,0 +1,162 @@
+{
+  "ar": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "au": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: Union Jack e Cruzeiro do Sul, só a cor e o número de estrelas mudam"
+  },
+  "bh": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: serrilha branca no mastro, distinguidos pelo tom e pelo número de pontas"
+  },
+  "ca": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "ci": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: as mesmas três cores, em ordem invertida"
+  },
+  "cn": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "co": {
+    "dificuldade": 3,
+    "motivo": "trio quase idêntico: amarelo, azul e vermelho, distinguidos pela largura do amarelo e pelos símbolos"
+  },
+  "cr": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: as mesmas cinco faixas, com vermelho e azul trocados"
+  },
+  "de": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "ec": {
+    "dificuldade": 3,
+    "motivo": "trio quase idêntico: amarelo, azul e vermelho, distinguidos pela largura do amarelo e pelos símbolos"
+  },
+  "eg": {
+    "dificuldade": 3,
+    "motivo": "trio quase idêntico: vermelho, branco e preto, distinguidos só pelo símbolo no branco"
+  },
+  "es": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "fr": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "gb": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "gn": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: mesmas cores verticais, em ordem invertida"
+  },
+  "hn": {
+    "dificuldade": 3,
+    "motivo": "trio quase idêntico: azul, branco e azul, distinguidos só pelo símbolo central"
+  },
+  "id": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: mesmas cores e mesma ordem, só a proporção distingue (2:3 e 4:5)"
+  },
+  "ie": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: as mesmas três cores, em ordem invertida"
+  },
+  "iq": {
+    "dificuldade": 3,
+    "motivo": "trio quase idêntico: vermelho, branco e preto, distinguidos só pelo símbolo no branco"
+  },
+  "is": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: cruz bordada de branco, com as cores do campo e da cruz trocadas"
+  },
+  "it": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "jp": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "lu": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: mesmas faixas, só o tom do azul e a proporção mudam"
+  },
+  "mc": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: mesmas cores e mesma ordem, só a proporção distingue (2:3 e 4:5)"
+  },
+  "ml": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: mesmas cores verticais, em ordem invertida; par quase idêntico: o Senegal é a bandeira do Mali com uma estrela verde"
+  },
+  "mx": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "ni": {
+    "dificuldade": 3,
+    "motivo": "trio quase idêntico: azul, branco e azul, distinguidos só pelo símbolo central"
+  },
+  "nl": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: mesmas faixas, só o tom do azul e a proporção mudam"
+  },
+  "no": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: cruz bordada de branco, com as cores do campo e da cruz trocadas"
+  },
+  "nz": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: Union Jack e Cruzeiro do Sul, só a cor e o número de estrelas mudam"
+  },
+  "pt": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "qa": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: serrilha branca no mastro, distinguidos pelo tom e pelo número de pontas"
+  },
+  "ro": {
+    "dificuldade": 3,
+    "motivo": "par indiscernível na tela: mesmas cores e mesma ordem, só o tom do azul muda"
+  },
+  "sn": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: o Senegal é a bandeira do Mali com uma estrela verde"
+  },
+  "sv": {
+    "dificuldade": 3,
+    "motivo": "trio quase idêntico: azul, branco e azul, distinguidos só pelo símbolo central"
+  },
+  "td": {
+    "dificuldade": 3,
+    "motivo": "par indiscernível na tela: mesmas cores e mesma ordem, só o tom do azul muda"
+  },
+  "th": {
+    "dificuldade": 3,
+    "motivo": "par quase idêntico: as mesmas cinco faixas, com vermelho e azul trocados"
+  },
+  "us": {
+    "dificuldade": 1,
+    "motivo": "muito conhecida: aparece cedo como distratora dissimilar e quase nunca é confundida"
+  },
+  "ve": {
+    "dificuldade": 3,
+    "motivo": "trio quase idêntico: amarelo, azul e vermelho, distinguidos pela largura do amarelo e pelos símbolos"
+  },
+  "ye": {
+    "dificuldade": 3,
+    "motivo": "trio quase idêntico: vermelho, branco e preto, distinguidos só pelo símbolo no branco"
+  }
+}

@@ -1,0 +1,967 @@
+[
+  {
+    "codigo": "ad",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais, azul, amarelo e vermelho, a central mais larga, com um brasão de mitra e vacas no centro."
+  },
+  {
+    "codigo": "ae",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, verde, branco e preto, com uma faixa vertical vermelha junto ao mastro."
+  },
+  {
+    "codigo": "af",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais, preto, vermelho e verde, com um emblema branco de mesquita entre feixes de trigo no centro."
+  },
+  {
+    "codigo": "ag",
+    "classe": "outro",
+    "descricao": "Vermelho com um grande V de faixas preta, azul e branca, e um sol amarelo nascendo sobre o preto."
+  },
+  {
+    "codigo": "al",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Vermelho com uma águia preta de duas cabeças no centro."
+  },
+  {
+    "codigo": "am",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: vermelho, azul e laranja."
+  },
+  {
+    "codigo": "ao",
+    "classe": "faixas-horizontais",
+    "descricao": "Metade vermelha em cima e metade preta embaixo, com meia roda dentada, catana e estrela amarelas no centro."
+  },
+  {
+    "codigo": "ar",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, azul-celeste, branco e azul-celeste, com um sol amarelo de rosto humano no centro."
+  },
+  {
+    "codigo": "at",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: vermelho, branco e vermelho, sem emblema."
+  },
+  {
+    "codigo": "au",
+    "classe": "cantao",
+    "descricao": "Azul-escuro com a Union Jack no cantão, uma grande estrela branca de sete pontas abaixo dela e cinco estrelas brancas na ponta."
+  },
+  {
+    "codigo": "az",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, azul-celeste, vermelho e verde, com crescente e estrela de oito pontas brancos no vermelho."
+  },
+  {
+    "codigo": "ba",
+    "classe": "diagonal",
+    "descricao": "Azul com um triângulo amarelo e uma linha diagonal de estrelas brancas ao longo do lado maior do triângulo."
+  },
+  {
+    "codigo": "bb",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais, ultramarino, amarelo e ultramarino, com a cabeça de um tridente preto no centro."
+  },
+  {
+    "codigo": "bd",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Verde-escuro com um disco vermelho levemente deslocado para o lado do mastro."
+  },
+  {
+    "codigo": "be",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais, preto, amarelo e vermelho, em formato quase quadrado (13:15)."
+  },
+  {
+    "codigo": "bf",
+    "classe": "faixas-horizontais",
+    "descricao": "Duas faixas horizontais, vermelho em cima e verde embaixo, com uma estrela amarela de cinco pontas no centro."
+  },
+  {
+    "codigo": "bg",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: branco, verde e vermelho."
+  },
+  {
+    "codigo": "bh",
+    "classe": "outro",
+    "descricao": "Vermelho com uma faixa branca no mastro, separada por uma serrilha de cinco pontas."
+  },
+  {
+    "codigo": "bi",
+    "classe": "cruz",
+    "descricao": "Aspa branca entre triângulos vermelhos e verdes, com um disco branco central e três estrelas vermelhas de seis pontas."
+  },
+  {
+    "codigo": "bj",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixa vertical verde no mastro e duas faixas horizontais à direita, amarelo em cima e vermelho embaixo."
+  },
+  {
+    "codigo": "bn",
+    "classe": "diagonal",
+    "descricao": "Amarelo cortado por faixas diagonais branca e preta, com um emblema vermelho de crescente e guarda-sol no centro."
+  },
+  {
+    "codigo": "bo",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: vermelho, amarelo e verde, sem emblema."
+  },
+  {
+    "codigo": "br",
+    "classe": "outro",
+    "descricao": "Verde com um losango amarelo e um globo azul estrelado no centro, cortado por uma faixa branca com lema."
+  },
+  {
+    "codigo": "bs",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Três faixas horizontais, água-marinha, amarelo e água-marinha, com um triângulo preto no mastro."
+  },
+  {
+    "codigo": "bt",
+    "classe": "diagonal",
+    "descricao": "Dividida na diagonal entre amarelo, do lado do mastro, e laranja, com um dragão branco ao longo da divisa."
+  },
+  {
+    "codigo": "bw",
+    "classe": "faixas-horizontais",
+    "descricao": "Azul-claro com uma faixa horizontal preta no centro, bordada de branco em cima e embaixo."
+  },
+  {
+    "codigo": "by",
+    "classe": "faixas-horizontais",
+    "descricao": "Vermelho largo em cima e verde embaixo, com uma faixa vertical de ornamento vermelho e branco junto ao mastro."
+  },
+  {
+    "codigo": "bz",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Azul-real com faixas vermelhas finas em cima e embaixo e um disco branco com brasão e coroa de folhas no centro."
+  },
+  {
+    "codigo": "ca",
+    "classe": "faixas-verticais",
+    "descricao": "Vermelho nas laterais e um quadrado branco no centro com uma folha de bordo vermelha de onze pontas."
+  },
+  {
+    "codigo": "cd",
+    "classe": "diagonal",
+    "descricao": "Azul-celeste com uma faixa diagonal vermelha bordada de amarelo e uma estrela amarela no canto do mastro."
+  },
+  {
+    "codigo": "cf",
+    "classe": "faixas-horizontais",
+    "descricao": "Quatro faixas horizontais, azul, branco, verde e amarelo, cortadas por uma faixa vertical vermelha, e uma estrela amarela no canto."
+  },
+  {
+    "codigo": "cg",
+    "classe": "diagonal",
+    "descricao": "Dividida na diagonal por uma faixa amarela, com um triângulo verde do lado do mastro e um vermelho do lado da ponta."
+  },
+  {
+    "codigo": "ch",
+    "classe": "cruz",
+    "descricao": "Quadrada e vermelha, com uma cruz branca de braços iguais no centro."
+  },
+  {
+    "codigo": "ci",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais: laranja no mastro, branco e verde."
+  },
+  {
+    "codigo": "cl",
+    "classe": "cantao",
+    "descricao": "Branco em cima e vermelho embaixo, com um cantão azul que traz uma estrela branca de cinco pontas."
+  },
+  {
+    "codigo": "cm",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais, verde, vermelho e amarelo, com uma estrela amarela de cinco pontas no vermelho central."
+  },
+  {
+    "codigo": "cn",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Vermelho com uma grande estrela amarela no cantão e quatro estrelas menores em arco ao lado dela."
+  },
+  {
+    "codigo": "co",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais amarela, azul e vermelha, com a amarela ocupando a metade de cima."
+  },
+  {
+    "codigo": "cr",
+    "classe": "faixas-horizontais",
+    "descricao": "Cinco faixas horizontais, azul, branco, vermelho, branco e azul, com a vermelha central de largura dupla."
+  },
+  {
+    "codigo": "cu",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Cinco listras horizontais azuis e brancas e um triângulo vermelho no mastro com uma estrela branca."
+  },
+  {
+    "codigo": "cv",
+    "classe": "faixas-horizontais",
+    "descricao": "Azul com uma faixa branca e vermelha abaixo do meio e um círculo de dez estrelas amarelas perto do mastro."
+  },
+  {
+    "codigo": "cy",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Branco com o mapa da ilha em cor de cobre e dois ramos de oliveira verdes abaixo dele."
+  },
+  {
+    "codigo": "cz",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Branco em cima e vermelho embaixo, com um triângulo azul no mastro que chega ao centro."
+  },
+  {
+    "codigo": "de",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: preto, vermelho e dourado."
+  },
+  {
+    "codigo": "dj",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Azul-claro em cima e verde embaixo, com um triângulo branco no mastro e uma estrela vermelha nele."
+  },
+  {
+    "codigo": "dk",
+    "classe": "cruz",
+    "descricao": "Vermelho com uma cruz nórdica branca, deslocada para o lado do mastro."
+  },
+  {
+    "codigo": "dm",
+    "classe": "cruz",
+    "descricao": "Verde com uma cruz de faixas amarela, preta e branca e um disco vermelho central com papagaio e dez estrelas."
+  },
+  {
+    "codigo": "do",
+    "classe": "cruz",
+    "descricao": "Cruz branca centrada entre quartos azuis e vermelhos alternados, com o brasão no centro."
+  },
+  {
+    "codigo": "dz",
+    "classe": "faixas-verticais",
+    "descricao": "Metade verde no mastro e metade branca, com um crescente e uma estrela vermelhos no centro."
+  },
+  {
+    "codigo": "ec",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais amarela, azul e vermelha, com a amarela dobrada e o brasão com condor no centro."
+  },
+  {
+    "codigo": "ee",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: azul, preto e branco."
+  },
+  {
+    "codigo": "eg",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, vermelho, branco e preto, com uma águia dourada no centro."
+  },
+  {
+    "codigo": "er",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Triângulo vermelho do mastro à ponta, verde em cima e azul embaixo, com um ramo de oliveira dourado em coroa."
+  },
+  {
+    "codigo": "es",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais vermelha, amarela e vermelha, com a amarela dobrada e o brasão perto do mastro."
+  },
+  {
+    "codigo": "et",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, verde, amarelo e vermelho, com um disco azul e uma estrela amarela de raios no centro."
+  },
+  {
+    "codigo": "fi",
+    "classe": "cruz",
+    "descricao": "Branco com uma cruz nórdica azul."
+  },
+  {
+    "codigo": "fj",
+    "classe": "cantao",
+    "descricao": "Azul-claro com a Union Jack no cantão e um escudo com leão, cana, coqueiro e pomba do lado da ponta."
+  },
+  {
+    "codigo": "fm",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Azul-claro com quatro estrelas brancas de cinco pontas dispostas em losango no centro."
+  },
+  {
+    "codigo": "fr",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais: azul no mastro, branco e vermelho."
+  },
+  {
+    "codigo": "ga",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: verde, amarelo e azul."
+  },
+  {
+    "codigo": "gb",
+    "classe": "cruz",
+    "descricao": "Azul com a cruz vermelha bordada de branco sobre duas aspas sobrepostas, branca e vermelha."
+  },
+  {
+    "codigo": "gd",
+    "classe": "outro",
+    "descricao": "Borda vermelha com seis estrelas e campo de triângulos amarelos e verdes, com estrela no centro e noz-moscada perto do mastro."
+  },
+  {
+    "codigo": "ge",
+    "classe": "cruz",
+    "descricao": "Branco com uma grande cruz vermelha e quatro cruzes vermelhas menores nos quartos."
+  },
+  {
+    "codigo": "gh",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, vermelho, amarelo e verde, com uma estrela preta de cinco pontas no centro."
+  },
+  {
+    "codigo": "gm",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais vermelha, azul e verde, com a azul central bordada por filetes brancos."
+  },
+  {
+    "codigo": "gn",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais: vermelho no mastro, amarelo e verde."
+  },
+  {
+    "codigo": "gq",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Faixas horizontais verde, branca e vermelha, triângulo azul no mastro e brasão com árvore no centro."
+  },
+  {
+    "codigo": "gr",
+    "classe": "cantao",
+    "descricao": "Nove listras horizontais azuis e brancas e uma cruz branca sobre azul no cantão."
+  },
+  {
+    "codigo": "gt",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais, azul-celeste, branco e azul-celeste, com o brasão do pássaro quetzal no centro."
+  },
+  {
+    "codigo": "gw",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixa vertical vermelha no mastro com estrela preta e duas faixas horizontais, amarelo em cima e verde embaixo."
+  },
+  {
+    "codigo": "gy",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Verde com um triângulo amarelo bordado de branco e, sobre ele, um vermelho bordado de preto, ambos a partir do mastro."
+  },
+  {
+    "codigo": "hn",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, azul, branco e azul, com cinco estrelas azuis em xis no centro."
+  },
+  {
+    "codigo": "hr",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, vermelho, branco e azul, com um escudo xadrez vermelho e branco sob coroa no centro."
+  },
+  {
+    "codigo": "ht",
+    "classe": "faixas-horizontais",
+    "descricao": "Azul em cima e vermelho embaixo, com o brasão de palmeira e canhões num retângulo branco no centro."
+  },
+  {
+    "codigo": "hu",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: vermelho, branco e verde."
+  },
+  {
+    "codigo": "id",
+    "classe": "faixas-horizontais",
+    "descricao": "Duas faixas horizontais iguais, vermelho em cima e branco embaixo, na proporção 2:3."
+  },
+  {
+    "codigo": "ie",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais, verde no mastro, branco e laranja, na proporção 1:2."
+  },
+  {
+    "codigo": "il",
+    "classe": "faixas-horizontais",
+    "descricao": "Branco com duas faixas horizontais azuis e uma estrela de seis pontas azul no centro."
+  },
+  {
+    "codigo": "in",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais, açafrão, branco e verde, com uma roda azul de 24 raios no centro."
+  },
+  {
+    "codigo": "iq",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, vermelho, branco e preto, com uma inscrição verde em árabe no branco."
+  },
+  {
+    "codigo": "ir",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais verde, branca e vermelha, com emblema vermelho no centro e inscrições brancas repetidas nas bordas."
+  },
+  {
+    "codigo": "is",
+    "classe": "cruz",
+    "descricao": "Azul com uma cruz nórdica vermelha bordada de branco."
+  },
+  {
+    "codigo": "it",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais: verde no mastro, branco e vermelho."
+  },
+  {
+    "codigo": "jm",
+    "classe": "cruz",
+    "descricao": "Aspa amarela entre triângulos verdes em cima e embaixo e pretos nas laterais."
+  },
+  {
+    "codigo": "jo",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Faixas horizontais preta, branca e verde, com um triângulo vermelho no mastro e uma estrela branca de sete pontas."
+  },
+  {
+    "codigo": "jp",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Branco com um disco vermelho no centro."
+  },
+  {
+    "codigo": "ke",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais preta, vermelha e verde separadas por filetes brancos, com escudo e duas lanças no centro."
+  },
+  {
+    "codigo": "kg",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Vermelho com um sol amarelo de quarenta raios e, dentro dele, o topo de uma tenda tradicional."
+  },
+  {
+    "codigo": "kh",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais azul, vermelha e azul, com a vermelha dobrada e um templo branco de três torres no centro."
+  },
+  {
+    "codigo": "ki",
+    "classe": "outro",
+    "descricao": "Vermelho em cima com uma fragata amarela sobre sol nascente e, embaixo, ondas azuis e brancas."
+  },
+  {
+    "codigo": "km",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Quatro faixas horizontais, amarela, branca, vermelha e azul, e um triângulo verde com crescente e quatro estrelas."
+  },
+  {
+    "codigo": "kn",
+    "classe": "diagonal",
+    "descricao": "Faixa diagonal preta bordada de amarelo com duas estrelas brancas, entre um triângulo verde e um vermelho."
+  },
+  {
+    "codigo": "kp",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixa vermelha larga entre filetes brancos e faixas azuis, com uma estrela vermelha em disco branco perto do mastro."
+  },
+  {
+    "codigo": "kr",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Branco com o círculo taegeuk vermelho e azul no centro e quatro trigramas pretos nos cantos."
+  },
+  {
+    "codigo": "kw",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Faixas horizontais verde, branca e vermelha, com um trapézio preto junto ao mastro."
+  },
+  {
+    "codigo": "kz",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Azul-celeste com um sol dourado sobre uma águia em voo e uma faixa vertical de ornamento dourado no mastro."
+  },
+  {
+    "codigo": "la",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais vermelha, azul e vermelha, com a azul dobrada e um disco branco no centro."
+  },
+  {
+    "codigo": "lb",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas vermelhas em cima e embaixo e uma faixa branca de largura dupla no centro com um cedro verde."
+  },
+  {
+    "codigo": "lc",
+    "classe": "outro",
+    "descricao": "Azul-celeste com um triângulo preto bordado de branco e um triângulo amarelo menor na base dele, no centro."
+  },
+  {
+    "codigo": "li",
+    "classe": "faixas-horizontais",
+    "descricao": "Duas faixas horizontais iguais, azul em cima e vermelho embaixo, com uma coroa dourada no canto do mastro."
+  },
+  {
+    "codigo": "lk",
+    "classe": "outro",
+    "descricao": "Moldura amarela com duas faixas verticais, verde e laranja, e um painel grená com leão dourado segurando uma espada."
+  },
+  {
+    "codigo": "lr",
+    "classe": "cantao",
+    "descricao": "Onze listras horizontais vermelhas e brancas e um cantão azul com uma estrela branca."
+  },
+  {
+    "codigo": "ls",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais azul, branca e verde, com o branco largo e um chapéu tradicional preto no centro."
+  },
+  {
+    "codigo": "lt",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: amarelo, verde e vermelho."
+  },
+  {
+    "codigo": "lu",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais, vermelho, branco e azul-celeste, na proporção 3:5."
+  },
+  {
+    "codigo": "lv",
+    "classe": "faixas-horizontais",
+    "descricao": "Carmim escuro com uma faixa horizontal branca estreita no centro."
+  },
+  {
+    "codigo": "ly",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais vermelha, preta e verde, com a preta dobrada e um crescente e uma estrela brancos nela."
+  },
+  {
+    "codigo": "ma",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Vermelho com um pentagrama verde entrelaçado no centro."
+  },
+  {
+    "codigo": "mc",
+    "classe": "faixas-horizontais",
+    "descricao": "Duas faixas horizontais iguais, vermelho em cima e branco embaixo, em formato quase quadrado (4:5)."
+  },
+  {
+    "codigo": "md",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais, azul, amarelo e vermelho, com uma águia segurando um escudo com cabeça de auroque no centro."
+  },
+  {
+    "codigo": "me",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Vermelho com borda dourada e uma águia dourada de duas cabeças, com coroa e escudo, no centro."
+  },
+  {
+    "codigo": "mg",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixa vertical branca no mastro e duas faixas horizontais, vermelho em cima e verde embaixo."
+  },
+  {
+    "codigo": "mh",
+    "classe": "diagonal",
+    "descricao": "Azul com dois raios diagonais, laranja e branco, que se abrem a partir do mastro, e uma estrela branca de 24 pontas."
+  },
+  {
+    "codigo": "mk",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Vermelho com um sol amarelo cujos oito raios se alargam até as bordas."
+  },
+  {
+    "codigo": "ml",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais: verde no mastro, amarelo e vermelho."
+  },
+  {
+    "codigo": "mm",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, amarelo, verde e vermelho, com uma grande estrela branca de cinco pontas no centro."
+  },
+  {
+    "codigo": "mn",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais, vermelho, azul e vermelho, com o símbolo soyombo amarelo na faixa do mastro."
+  },
+  {
+    "codigo": "mr",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Verde com crescente e estrela amarelos e faixas vermelhas estreitas em cima e embaixo."
+  },
+  {
+    "codigo": "mt",
+    "classe": "faixas-verticais",
+    "descricao": "Duas faixas verticais, branco no mastro e vermelho, com uma cruz de condecoração cinza bordada de vermelho no canto."
+  },
+  {
+    "codigo": "mu",
+    "classe": "faixas-horizontais",
+    "descricao": "Quatro faixas horizontais iguais: vermelho, azul, amarelo e verde."
+  },
+  {
+    "codigo": "mv",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Moldura vermelha em volta de um retângulo verde com um crescente branco."
+  },
+  {
+    "codigo": "mw",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais preta, vermelha e verde, com um sol nascente vermelho de raios na faixa preta."
+  },
+  {
+    "codigo": "mx",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais, verde, branco e vermelho, com uma águia sobre um cacto devorando uma serpente no centro."
+  },
+  {
+    "codigo": "my",
+    "classe": "cantao",
+    "descricao": "Catorze listras horizontais vermelhas e brancas e um cantão azul com crescente e estrela amarelos de catorze pontas."
+  },
+  {
+    "codigo": "mz",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Faixas verde, preta e amarela com filetes brancos e um triângulo vermelho com estrela, livro, fuzil e enxada."
+  },
+  {
+    "codigo": "na",
+    "classe": "diagonal",
+    "descricao": "Faixa diagonal vermelha bordada de branco entre o azul, com sol amarelo junto ao mastro, e o verde."
+  },
+  {
+    "codigo": "ne",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, laranja, branco e verde, com um disco laranja no centro, quase quadrada (6:7)."
+  },
+  {
+    "codigo": "ng",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais: verde, branco e verde."
+  },
+  {
+    "codigo": "ni",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, azul, branco e azul, com um triângulo com arco-íris e vulcões no centro."
+  },
+  {
+    "codigo": "nl",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais, vermelho, branco e azul-escuro, na proporção 2:3."
+  },
+  {
+    "codigo": "no",
+    "classe": "cruz",
+    "descricao": "Vermelho com uma cruz nórdica azul bordada de branco."
+  },
+  {
+    "codigo": "np",
+    "classe": "outro",
+    "descricao": "Recortada em dois triângulos sobrepostos, carmim com borda azul, com uma lua branca no de cima e um sol branco no de baixo."
+  },
+  {
+    "codigo": "nr",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Azul com uma faixa horizontal amarela fina no meio e uma estrela branca de doze pontas abaixo dela, perto do mastro."
+  },
+  {
+    "codigo": "nz",
+    "classe": "cantao",
+    "descricao": "Azul-escuro com a Union Jack no cantão e quatro estrelas vermelhas bordadas de branco na ponta."
+  },
+  {
+    "codigo": "om",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas horizontais branca, vermelha e verde e uma faixa vertical vermelha no mastro com o emblema de adaga e espadas."
+  },
+  {
+    "codigo": "pa",
+    "classe": "outro",
+    "descricao": "Esquartelada: branco com estrela azul, vermelho, azul e branco com estrela vermelha."
+  },
+  {
+    "codigo": "pe",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais: vermelho, branco e vermelho."
+  },
+  {
+    "codigo": "pg",
+    "classe": "diagonal",
+    "descricao": "Dividida na diagonal: vermelho com uma ave-do-paraíso amarela em cima e preto com cinco estrelas brancas embaixo."
+  },
+  {
+    "codigo": "ph",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Azul em cima e vermelho embaixo, com um triângulo branco no mastro que traz um sol de oito raios e três estrelas amarelas."
+  },
+  {
+    "codigo": "pk",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Verde-escuro com crescente e estrela brancos e uma faixa vertical branca no mastro."
+  },
+  {
+    "codigo": "pl",
+    "classe": "faixas-horizontais",
+    "descricao": "Duas faixas horizontais iguais: branco em cima e vermelho embaixo."
+  },
+  {
+    "codigo": "pt",
+    "classe": "faixas-verticais",
+    "descricao": "Verde no mastro e vermelho maior, com a esfera armilar amarela e o escudo sobre a divisa."
+  },
+  {
+    "codigo": "pw",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Azul-claro com um disco amarelo levemente deslocado para o lado do mastro."
+  },
+  {
+    "codigo": "py",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais, vermelho, branco e azul, com um emblema circular no centro."
+  },
+  {
+    "codigo": "qa",
+    "classe": "outro",
+    "descricao": "Grená com uma faixa branca no mastro, separada por uma serrilha de nove pontas, bem alongada (11:28)."
+  },
+  {
+    "codigo": "ro",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais: azul-cobalto no mastro, amarelo e vermelho, sem emblema."
+  },
+  {
+    "codigo": "rs",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, vermelho, azul e branco, com o brasão da águia branca de duas cabeças perto do mastro."
+  },
+  {
+    "codigo": "ru",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: branco, azul e vermelho."
+  },
+  {
+    "codigo": "rw",
+    "classe": "faixas-horizontais",
+    "descricao": "Azul-celeste largo em cima com um sol amarelo no canto da ponta, e faixas amarela e verde embaixo."
+  },
+  {
+    "codigo": "sa",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Verde com uma inscrição branca em árabe e uma espada branca embaixo dela."
+  },
+  {
+    "codigo": "sb",
+    "classe": "diagonal",
+    "descricao": "Faixa diagonal amarela fina entre o azul, com cinco estrelas brancas junto ao mastro, e o verde."
+  },
+  {
+    "codigo": "sc",
+    "classe": "diagonal",
+    "descricao": "Cinco faixas em leque a partir do canto inferior do mastro: azul, amarelo, vermelho, branco e verde."
+  },
+  {
+    "codigo": "sd",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Faixas horizontais vermelha, branca e preta, com um triângulo verde no mastro."
+  },
+  {
+    "codigo": "se",
+    "classe": "cruz",
+    "descricao": "Azul com uma cruz nórdica amarela."
+  },
+  {
+    "codigo": "sg",
+    "classe": "faixas-horizontais",
+    "descricao": "Vermelho em cima e branco embaixo, com um crescente branco e cinco estrelas brancas em círculo no canto do vermelho."
+  },
+  {
+    "codigo": "si",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, branco, azul e vermelho, com o brasão de montanha e três estrelas perto do mastro."
+  },
+  {
+    "codigo": "sk",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, branco, azul e vermelho, com um escudo de cruz dupla branca sobre montanhas perto do mastro."
+  },
+  {
+    "codigo": "sl",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: verde, branco e azul."
+  },
+  {
+    "codigo": "sm",
+    "classe": "faixas-horizontais",
+    "descricao": "Duas faixas horizontais, branco em cima e azul-celeste embaixo, com o brasão de três torres no centro."
+  },
+  {
+    "codigo": "sn",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais, verde no mastro, amarelo e vermelho, com uma estrela verde no centro."
+  },
+  {
+    "codigo": "so",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Azul-celeste com uma estrela branca de cinco pontas no centro."
+  },
+  {
+    "codigo": "sr",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas verde, branca, vermelha, branca e verde, com a vermelha larga e uma estrela amarela no centro."
+  },
+  {
+    "codigo": "ss",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Faixas preta, vermelha e verde com filetes brancos e um triângulo azul no mastro com uma estrela amarela."
+  },
+  {
+    "codigo": "st",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Faixas horizontais verde, amarela e verde, um triângulo vermelho no mastro e duas estrelas pretas no amarelo."
+  },
+  {
+    "codigo": "sv",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais, azul, branco e azul, com o brasão triangular de vulcões no centro."
+  },
+  {
+    "codigo": "sy",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais, verde, branco e preto, com três estrelas vermelhas no branco."
+  },
+  {
+    "codigo": "sz",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas azul, amarela, vermelha larga, amarela e azul, com escudo preto e branco e duas lanças deitadas no vermelho."
+  },
+  {
+    "codigo": "td",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais iguais: azul-anil no mastro, amarelo e vermelho, sem emblema."
+  },
+  {
+    "codigo": "tg",
+    "classe": "cantao",
+    "descricao": "Cinco listras horizontais verdes e amarelas e um cantão vermelho com uma estrela branca."
+  },
+  {
+    "codigo": "th",
+    "classe": "faixas-horizontais",
+    "descricao": "Cinco faixas horizontais, vermelho, branco, azul, branco e vermelho, com a azul central de largura dupla."
+  },
+  {
+    "codigo": "tj",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas vermelha, branca larga e verde, com uma coroa amarela sob um arco de sete estrelas no centro."
+  },
+  {
+    "codigo": "tl",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Vermelho com um triângulo amarelo e, sobre ele, um triângulo preto menor com uma estrela branca, a partir do mastro."
+  },
+  {
+    "codigo": "tm",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Verde com uma faixa vertical vermelha de cinco desenhos de tapete perto do mastro, crescente branco e cinco estrelas."
+  },
+  {
+    "codigo": "tn",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Vermelho com um disco branco no centro que traz crescente e estrela vermelhos."
+  },
+  {
+    "codigo": "to",
+    "classe": "cantao",
+    "descricao": "Vermelho com um cantão branco que traz uma cruz vermelha."
+  },
+  {
+    "codigo": "tr",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Vermelho com crescente e estrela brancos perto do mastro."
+  },
+  {
+    "codigo": "tt",
+    "classe": "diagonal",
+    "descricao": "Vermelho com uma faixa diagonal preta bordada de branco, do alto do mastro ao canto de baixo da ponta."
+  },
+  {
+    "codigo": "tv",
+    "classe": "cantao",
+    "descricao": "Azul-claro com a Union Jack no cantão e nove estrelas amarelas do lado da ponta."
+  },
+  {
+    "codigo": "tz",
+    "classe": "diagonal",
+    "descricao": "Faixa diagonal preta bordada de amarelo, subindo do mastro para a ponta, entre verde e azul."
+  },
+  {
+    "codigo": "ua",
+    "classe": "faixas-horizontais",
+    "descricao": "Duas faixas horizontais iguais: azul em cima e amarelo embaixo."
+  },
+  {
+    "codigo": "ug",
+    "classe": "faixas-horizontais",
+    "descricao": "Seis faixas horizontais, preto, amarelo e vermelho repetidos, com um grou num disco branco no centro."
+  },
+  {
+    "codigo": "us",
+    "classe": "cantao",
+    "descricao": "Treze listras horizontais vermelhas e brancas e um cantão azul com cinquenta estrelas brancas."
+  },
+  {
+    "codigo": "uy",
+    "classe": "cantao",
+    "descricao": "Nove listras horizontais brancas e azuis e um cantão branco com um sol amarelo de rosto humano."
+  },
+  {
+    "codigo": "uz",
+    "classe": "faixas-horizontais",
+    "descricao": "Faixas azul, branca e verde separadas por filetes vermelhos, com crescente e doze estrelas brancas no azul."
+  },
+  {
+    "codigo": "vc",
+    "classe": "faixas-verticais",
+    "descricao": "Três faixas verticais, azul, amarelo largo e verde, com três losangos verdes em V no centro."
+  },
+  {
+    "codigo": "ve",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais, amarelo, azul e vermelho, com um arco de oito estrelas brancas no azul."
+  },
+  {
+    "codigo": "vn",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Vermelho com uma grande estrela amarela de cinco pontas no centro."
+  },
+  {
+    "codigo": "vu",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Vermelho em cima e verde embaixo, com um Y amarelo deitado bordado de preto e um triângulo preto com presa de javali."
+  },
+  {
+    "codigo": "ws",
+    "classe": "cantao",
+    "descricao": "Vermelho com um cantão azul que traz cinco estrelas brancas do Cruzeiro do Sul."
+  },
+  {
+    "codigo": "ye",
+    "classe": "faixas-horizontais",
+    "descricao": "Três faixas horizontais iguais: vermelho, branco e preto, sem emblema."
+  },
+  {
+    "codigo": "za",
+    "classe": "outro",
+    "descricao": "Um Y verde deitado bordado de branco e amarelo, com triângulo preto no mastro, vermelho em cima e azul embaixo."
+  },
+  {
+    "codigo": "zm",
+    "classe": "campo-liso-com-emblema",
+    "descricao": "Verde com uma águia laranja em voo e três faixas verticais, vermelha, preta e laranja, no canto de baixo da ponta."
+  },
+  {
+    "codigo": "zw",
+    "classe": "triangulo-no-mastro",
+    "descricao": "Sete faixas verde, amarela, vermelha e preta, e um triângulo branco bordado de preto com estrela vermelha e pássaro."
+  }
+]

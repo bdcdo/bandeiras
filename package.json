@@ -8,11 +8,13 @@
   "license": "MIT",
   "packageManager": "pnpm@11.5.3",
   "engines": {
-    "node": ">=24 <25"
+    "node": ">=24.3 <25"
   },
   "scripts": {
     "dev": "pnpm --filter bandeiras-web dev",
     "build": "pnpm --filter bandeiras-web build",
+    "gerar:dados": "pnpm --filter @bandeiras/dominio-bandeiras gerar:dados",
+    "gerar:icones": "node scripts/gerar-icones.mjs",
     "typecheck": "tsc -p packages/nucleo/tsconfig.src.json && tsc -p packages/nucleo/tsconfig.test.json && tsc -p packages/dominio-bandeiras/tsconfig.src.json && tsc -p packages/dominio-bandeiras/tsconfig.test.json && tsc -p apps/web/tsconfig.app.json && tsc -p apps/web/tsconfig.node.json && tsc -p apps/web/tsconfig.sw.json && tsc -p tsconfig.tooling.json",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",

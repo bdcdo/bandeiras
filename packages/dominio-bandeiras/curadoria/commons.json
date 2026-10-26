@@ -1,0 +1,780 @@
+[
+  {
+    "codigo": "ad",
+    "titulo": "Flag of Andorra.svg"
+  },
+  {
+    "codigo": "ae",
+    "titulo": "Flag of the United Arab Emirates.svg"
+  },
+  {
+    "codigo": "af",
+    "titulo": "Flag of Afghanistan (2013–2021).svg",
+    "motivo": "A ONU exibe o tricolor vertical preto-vermelho-verde com o emblema, da República Islâmica; \"Flag of Afghanistan.svg\" redireciona para a bandeira branca do Emirado Islâmico, e este título fixa o período no nome."
+  },
+  {
+    "codigo": "ag",
+    "titulo": "Flag of Antigua and Barbuda.svg"
+  },
+  {
+    "codigo": "al",
+    "titulo": "Flag of Albania.svg"
+  },
+  {
+    "codigo": "am",
+    "titulo": "Flag of Armenia.svg"
+  },
+  {
+    "codigo": "ao",
+    "titulo": "Flag of Angola.svg"
+  },
+  {
+    "codigo": "ar",
+    "titulo": "Flag of Argentina.svg"
+  },
+  {
+    "codigo": "at",
+    "titulo": "Flag of Austria.svg"
+  },
+  {
+    "codigo": "au",
+    "titulo": "Flag of Australia.svg"
+  },
+  {
+    "codigo": "az",
+    "titulo": "Flag of Azerbaijan.svg"
+  },
+  {
+    "codigo": "ba",
+    "titulo": "Flag of Bosnia and Herzegovina.svg"
+  },
+  {
+    "codigo": "bb",
+    "titulo": "Flag of Barbados.svg"
+  },
+  {
+    "codigo": "bd",
+    "titulo": "Flag of Bangladesh.svg"
+  },
+  {
+    "codigo": "be",
+    "titulo": "Flag of Belgium.svg"
+  },
+  {
+    "codigo": "bf",
+    "titulo": "Flag of Burkina Faso.svg"
+  },
+  {
+    "codigo": "bg",
+    "titulo": "Flag of Bulgaria.svg"
+  },
+  {
+    "codigo": "bh",
+    "titulo": "Flag of Bahrain.svg"
+  },
+  {
+    "codigo": "bi",
+    "titulo": "Flag of Burundi.svg"
+  },
+  {
+    "codigo": "bj",
+    "titulo": "Flag of Benin.svg"
+  },
+  {
+    "codigo": "bn",
+    "titulo": "Flag of Brunei.svg"
+  },
+  {
+    "codigo": "bo",
+    "titulo": "Flag of Bolivia.svg"
+  },
+  {
+    "codigo": "br",
+    "titulo": "Flag of Brazil.svg"
+  },
+  {
+    "codigo": "bs",
+    "titulo": "Flag of the Bahamas.svg"
+  },
+  {
+    "codigo": "bt",
+    "titulo": "Flag of Bhutan.svg"
+  },
+  {
+    "codigo": "bw",
+    "titulo": "Flag of Botswana.svg"
+  },
+  {
+    "codigo": "by",
+    "titulo": "Flag of Belarus.svg"
+  },
+  {
+    "codigo": "bz",
+    "titulo": "Flag of Belize.svg"
+  },
+  {
+    "codigo": "ca",
+    "titulo": "Flag of Canada.svg"
+  },
+  {
+    "codigo": "cd",
+    "titulo": "Flag of the Democratic Republic of the Congo.svg"
+  },
+  {
+    "codigo": "cf",
+    "titulo": "Flag of the Central African Republic.svg"
+  },
+  {
+    "codigo": "cg",
+    "titulo": "Flag of the Republic of the Congo.svg"
+  },
+  {
+    "codigo": "ch",
+    "titulo": "Flag of Switzerland.svg"
+  },
+  {
+    "codigo": "ci",
+    "titulo": "Flag of Côte d'Ivoire.svg"
+  },
+  {
+    "codigo": "cl",
+    "titulo": "Flag of Chile.svg"
+  },
+  {
+    "codigo": "cm",
+    "titulo": "Flag of Cameroon.svg"
+  },
+  {
+    "codigo": "cn",
+    "titulo": "Flag of the People's Republic of China.svg"
+  },
+  {
+    "codigo": "co",
+    "titulo": "Flag of Colombia.svg"
+  },
+  {
+    "codigo": "cr",
+    "titulo": "Flag of Costa Rica.svg"
+  },
+  {
+    "codigo": "cu",
+    "titulo": "Flag of Cuba.svg"
+  },
+  {
+    "codigo": "cv",
+    "titulo": "Flag of Cape Verde (3-2).svg",
+    "motivo": "\"Flag of Cape Verde.svg\" redireciona para esta versão em 2:3; a bandeira não tem proporção oficial, e a alternativa em 10:17 fica de fora para seguir o arquivo que o próprio Commons aponta."
+  },
+  {
+    "codigo": "cy",
+    "titulo": "Flag of Cyprus.svg"
+  },
+  {
+    "codigo": "cz",
+    "titulo": "Flag of the Czech Republic.svg"
+  },
+  {
+    "codigo": "de",
+    "titulo": "Flag of Germany.svg"
+  },
+  {
+    "codigo": "dj",
+    "titulo": "Flag of Djibouti.svg"
+  },
+  {
+    "codigo": "dk",
+    "titulo": "Flag of Denmark.svg"
+  },
+  {
+    "codigo": "dm",
+    "titulo": "Flag of Dominica.svg"
+  },
+  {
+    "codigo": "do",
+    "titulo": "Flag of the Dominican Republic.svg"
+  },
+  {
+    "codigo": "dz",
+    "titulo": "Flag of Algeria.svg"
+  },
+  {
+    "codigo": "ec",
+    "titulo": "Flag of Ecuador.svg"
+  },
+  {
+    "codigo": "ee",
+    "titulo": "Flag of Estonia.svg"
+  },
+  {
+    "codigo": "eg",
+    "titulo": "Flag of Egypt.svg"
+  },
+  {
+    "codigo": "er",
+    "titulo": "Flag of Eritrea.svg"
+  },
+  {
+    "codigo": "es",
+    "titulo": "Flag of Spain.svg"
+  },
+  {
+    "codigo": "et",
+    "titulo": "Flag of Ethiopia.svg"
+  },
+  {
+    "codigo": "fi",
+    "titulo": "Flag of Finland.svg"
+  },
+  {
+    "codigo": "fj",
+    "titulo": "Flag of Fiji.svg"
+  },
+  {
+    "codigo": "fm",
+    "titulo": "Flag of the Federated States of Micronesia.svg"
+  },
+  {
+    "codigo": "fr",
+    "titulo": "Flag of France.svg"
+  },
+  {
+    "codigo": "ga",
+    "titulo": "Flag of Gabon.svg"
+  },
+  {
+    "codigo": "gb",
+    "titulo": "Flag of the United Kingdom (3-5).svg",
+    "motivo": "\"Flag of the United Kingdom.svg\" redireciona para esta versão em 3:5, a proporção de uso em terra; a de 1:2 é a naval."
+  },
+  {
+    "codigo": "gd",
+    "titulo": "Flag of Grenada.svg"
+  },
+  {
+    "codigo": "ge",
+    "titulo": "Flag of Georgia.svg"
+  },
+  {
+    "codigo": "gh",
+    "titulo": "Flag of Ghana.svg"
+  },
+  {
+    "codigo": "gm",
+    "titulo": "Flag of The Gambia.svg"
+  },
+  {
+    "codigo": "gn",
+    "titulo": "Flag of Guinea.svg"
+  },
+  {
+    "codigo": "gq",
+    "titulo": "Flag of Equatorial Guinea.svg"
+  },
+  {
+    "codigo": "gr",
+    "titulo": "Flag of Greece.svg"
+  },
+  {
+    "codigo": "gt",
+    "titulo": "Flag of Guatemala.svg"
+  },
+  {
+    "codigo": "gw",
+    "titulo": "Flag of Guinea-Bissau.svg"
+  },
+  {
+    "codigo": "gy",
+    "titulo": "Flag of Guyana.svg"
+  },
+  {
+    "codigo": "hn",
+    "titulo": "Flag of Honduras (1949–2022, 2026–present).svg",
+    "motivo": "\"Flag of Honduras.svg\" redireciona para este arquivo, que traz o desenho de 1949 restabelecido em 2026; o título carrega os períodos de vigência."
+  },
+  {
+    "codigo": "hr",
+    "titulo": "Flag of Croatia.svg"
+  },
+  {
+    "codigo": "ht",
+    "titulo": "Flag of Haiti.svg"
+  },
+  {
+    "codigo": "hu",
+    "titulo": "Flag of Hungary.svg"
+  },
+  {
+    "codigo": "id",
+    "titulo": "Flag of Indonesia.svg"
+  },
+  {
+    "codigo": "ie",
+    "titulo": "Flag of Ireland.svg"
+  },
+  {
+    "codigo": "il",
+    "titulo": "Flag of Israel.svg"
+  },
+  {
+    "codigo": "in",
+    "titulo": "Flag of India.svg"
+  },
+  {
+    "codigo": "iq",
+    "titulo": "Flag of Iraq.svg"
+  },
+  {
+    "codigo": "ir",
+    "titulo": "Flag of Iran.svg"
+  },
+  {
+    "codigo": "is",
+    "titulo": "Flag of Iceland.svg"
+  },
+  {
+    "codigo": "it",
+    "titulo": "Flag of Italy.svg"
+  },
+  {
+    "codigo": "jm",
+    "titulo": "Flag of Jamaica.svg"
+  },
+  {
+    "codigo": "jo",
+    "titulo": "Flag of Jordan.svg"
+  },
+  {
+    "codigo": "jp",
+    "titulo": "Flag of Japan.svg"
+  },
+  {
+    "codigo": "ke",
+    "titulo": "Flag of Kenya.svg"
+  },
+  {
+    "codigo": "kg",
+    "titulo": "Flag of Kyrgyzstan.svg"
+  },
+  {
+    "codigo": "kh",
+    "titulo": "Flag of Cambodia.svg"
+  },
+  {
+    "codigo": "ki",
+    "titulo": "Flag of Kiribati.svg"
+  },
+  {
+    "codigo": "km",
+    "titulo": "Flag of the Comoros.svg"
+  },
+  {
+    "codigo": "kn",
+    "titulo": "Flag of Saint Kitts and Nevis.svg"
+  },
+  {
+    "codigo": "kp",
+    "titulo": "Flag of North Korea.svg"
+  },
+  {
+    "codigo": "kr",
+    "titulo": "Flag of South Korea.svg"
+  },
+  {
+    "codigo": "kw",
+    "titulo": "Flag of Kuwait.svg"
+  },
+  {
+    "codigo": "kz",
+    "titulo": "Flag of Kazakhstan.svg"
+  },
+  {
+    "codigo": "la",
+    "titulo": "Flag of Laos.svg"
+  },
+  {
+    "codigo": "lb",
+    "titulo": "Flag of Lebanon.svg"
+  },
+  {
+    "codigo": "lc",
+    "titulo": "Flag of Saint Lucia.svg"
+  },
+  {
+    "codigo": "li",
+    "titulo": "Flag of Liechtenstein.svg"
+  },
+  {
+    "codigo": "lk",
+    "titulo": "Flag of Sri Lanka.svg"
+  },
+  {
+    "codigo": "lr",
+    "titulo": "Flag of Liberia.svg"
+  },
+  {
+    "codigo": "ls",
+    "titulo": "Flag of Lesotho.svg"
+  },
+  {
+    "codigo": "lt",
+    "titulo": "Flag of Lithuania.svg"
+  },
+  {
+    "codigo": "lu",
+    "titulo": "Flag of Luxembourg.svg"
+  },
+  {
+    "codigo": "lv",
+    "titulo": "Flag of Latvia.svg"
+  },
+  {
+    "codigo": "ly",
+    "titulo": "Flag of Libya.svg"
+  },
+  {
+    "codigo": "ma",
+    "titulo": "Flag of Morocco.svg"
+  },
+  {
+    "codigo": "mc",
+    "titulo": "Flag of Monaco.svg"
+  },
+  {
+    "codigo": "md",
+    "titulo": "Flag of Moldova.svg"
+  },
+  {
+    "codigo": "me",
+    "titulo": "Flag of Montenegro.svg"
+  },
+  {
+    "codigo": "mg",
+    "titulo": "Flag of Madagascar.svg"
+  },
+  {
+    "codigo": "mh",
+    "titulo": "Flag of the Marshall Islands.svg"
+  },
+  {
+    "codigo": "mk",
+    "titulo": "Flag of North Macedonia.svg"
+  },
+  {
+    "codigo": "ml",
+    "titulo": "Flag of Mali.svg"
+  },
+  {
+    "codigo": "mm",
+    "titulo": "Flag of Myanmar.svg"
+  },
+  {
+    "codigo": "mn",
+    "titulo": "Flag of Mongolia.svg"
+  },
+  {
+    "codigo": "mr",
+    "titulo": "Flag of Mauritania.svg"
+  },
+  {
+    "codigo": "mt",
+    "titulo": "Flag of Malta.svg"
+  },
+  {
+    "codigo": "mu",
+    "titulo": "Flag of Mauritius.svg"
+  },
+  {
+    "codigo": "mv",
+    "titulo": "Flag of Maldives.svg"
+  },
+  {
+    "codigo": "mw",
+    "titulo": "Flag of Malawi.svg"
+  },
+  {
+    "codigo": "mx",
+    "titulo": "Flag of Mexico.svg"
+  },
+  {
+    "codigo": "my",
+    "titulo": "Flag of Malaysia.svg"
+  },
+  {
+    "codigo": "mz",
+    "titulo": "Flag of Mozambique.svg"
+  },
+  {
+    "codigo": "na",
+    "titulo": "Flag of Namibia.svg"
+  },
+  {
+    "codigo": "ne",
+    "titulo": "Flag of Niger.svg"
+  },
+  {
+    "codigo": "ng",
+    "titulo": "Flag of Nigeria.svg"
+  },
+  {
+    "codigo": "ni",
+    "titulo": "Flag of Nicaragua.svg"
+  },
+  {
+    "codigo": "nl",
+    "titulo": "Flag of the Netherlands.svg"
+  },
+  {
+    "codigo": "no",
+    "titulo": "Flag of Norway.svg"
+  },
+  {
+    "codigo": "np",
+    "titulo": "Flag of Nepal.svg"
+  },
+  {
+    "codigo": "nr",
+    "titulo": "Flag of Nauru.svg"
+  },
+  {
+    "codigo": "nz",
+    "titulo": "Flag of New Zealand.svg"
+  },
+  {
+    "codigo": "om",
+    "titulo": "Flag of Oman (2-1).svg",
+    "motivo": "O arquivo principal, \"Flag of Oman.svg\", está sob OGL-om 1.0, fora das licenças aceitas; esta versão em 2:1, em domínio público, mantém o emblema e as faixas."
+  },
+  {
+    "codigo": "pa",
+    "titulo": "Flag of Panama.svg"
+  },
+  {
+    "codigo": "pe",
+    "titulo": "Flag of Peru.svg"
+  },
+  {
+    "codigo": "pg",
+    "titulo": "Flag of Papua New Guinea.svg"
+  },
+  {
+    "codigo": "ph",
+    "titulo": "Flag of the Philippines.svg"
+  },
+  {
+    "codigo": "pk",
+    "titulo": "Flag of Pakistan.svg"
+  },
+  {
+    "codigo": "pl",
+    "titulo": "Flag of Poland.svg"
+  },
+  {
+    "codigo": "pt",
+    "titulo": "Flag of Portugal.svg"
+  },
+  {
+    "codigo": "pw",
+    "titulo": "Flag of Palau.svg"
+  },
+  {
+    "codigo": "py",
+    "titulo": "Flag of Paraguay.svg"
+  },
+  {
+    "codigo": "qa",
+    "titulo": "Flag of Qatar.svg"
+  },
+  {
+    "codigo": "ro",
+    "titulo": "Flag of Romania.svg"
+  },
+  {
+    "codigo": "rs",
+    "titulo": "Flag of Serbia.svg"
+  },
+  {
+    "codigo": "ru",
+    "titulo": "Flag of Russia.svg"
+  },
+  {
+    "codigo": "rw",
+    "titulo": "Flag of Rwanda.svg"
+  },
+  {
+    "codigo": "sa",
+    "titulo": "Flag of Saudi Arabia.svg"
+  },
+  {
+    "codigo": "sb",
+    "titulo": "Flag of the Solomon Islands.svg"
+  },
+  {
+    "codigo": "sc",
+    "titulo": "Flag of Seychelles.svg"
+  },
+  {
+    "codigo": "sd",
+    "titulo": "Flag of Sudan.svg"
+  },
+  {
+    "codigo": "se",
+    "titulo": "Flag of Sweden.svg"
+  },
+  {
+    "codigo": "sg",
+    "titulo": "Flag of Singapore.svg"
+  },
+  {
+    "codigo": "si",
+    "titulo": "Flag of Slovenia.svg"
+  },
+  {
+    "codigo": "sk",
+    "titulo": "Flag of Slovakia.svg"
+  },
+  {
+    "codigo": "sl",
+    "titulo": "Flag of Sierra Leone.svg"
+  },
+  {
+    "codigo": "sm",
+    "titulo": "Flag of San Marino.svg"
+  },
+  {
+    "codigo": "sn",
+    "titulo": "Flag of Senegal.svg"
+  },
+  {
+    "codigo": "so",
+    "titulo": "Flag of Somalia.svg"
+  },
+  {
+    "codigo": "sr",
+    "titulo": "Flag of Suriname.svg"
+  },
+  {
+    "codigo": "ss",
+    "titulo": "Flag of South Sudan.svg"
+  },
+  {
+    "codigo": "st",
+    "titulo": "Flag of São Tomé and Príncipe.svg"
+  },
+  {
+    "codigo": "sv",
+    "titulo": "Flag of El Salvador.svg"
+  },
+  {
+    "codigo": "sy",
+    "titulo": "Flag of Syria (2025-).svg",
+    "motivo": "Bandeira adotada em 2025 (verde, branco e preto, com três estrelas vermelhas na faixa branca). \"Flag of Syria.svg\" redireciona para este arquivo; a descrição o dá como oficial desde março de 2025 e o histórico mostra a revisão vigente de 21/01/2025, conferidos em 25/10/2026."
+  },
+  {
+    "codigo": "sz",
+    "titulo": "Flag of Eswatini.svg"
+  },
+  {
+    "codigo": "td",
+    "titulo": "Flag of Chad.svg"
+  },
+  {
+    "codigo": "tg",
+    "titulo": "Flag of Togo.svg"
+  },
+  {
+    "codigo": "th",
+    "titulo": "Flag of Thailand.svg"
+  },
+  {
+    "codigo": "tj",
+    "titulo": "Flag of Tajikistan.svg"
+  },
+  {
+    "codigo": "tl",
+    "titulo": "Flag of East Timor.svg"
+  },
+  {
+    "codigo": "tm",
+    "titulo": "Flag of Turkmenistan.svg"
+  },
+  {
+    "codigo": "tn",
+    "titulo": "Flag of Tunisia.svg"
+  },
+  {
+    "codigo": "to",
+    "titulo": "Flag of Tonga.svg"
+  },
+  {
+    "codigo": "tr",
+    "titulo": "Flag of Turkey.svg"
+  },
+  {
+    "codigo": "tt",
+    "titulo": "Flag of Trinidad and Tobago.svg"
+  },
+  {
+    "codigo": "tv",
+    "titulo": "Flag of Tuvalu.svg"
+  },
+  {
+    "codigo": "tz",
+    "titulo": "Flag of Tanzania.svg"
+  },
+  {
+    "codigo": "ua",
+    "titulo": "Flag of Ukraine.svg"
+  },
+  {
+    "codigo": "ug",
+    "titulo": "Flag of Uganda.svg"
+  },
+  {
+    "codigo": "us",
+    "titulo": "Flag of the United States.svg"
+  },
+  {
+    "codigo": "uy",
+    "titulo": "Flag of Uruguay.svg"
+  },
+  {
+    "codigo": "uz",
+    "titulo": "Flag of Uzbekistan.svg"
+  },
+  {
+    "codigo": "vc",
+    "titulo": "Flag of Saint Vincent and the Grenadines.svg"
+  },
+  {
+    "codigo": "ve",
+    "titulo": "Flag of Venezuela.svg"
+  },
+  {
+    "codigo": "vn",
+    "titulo": "Flag of Vietnam.svg"
+  },
+  {
+    "codigo": "vu",
+    "titulo": "Flag of Vanuatu.svg"
+  },
+  {
+    "codigo": "ws",
+    "titulo": "Flag of Samoa.svg"
+  },
+  {
+    "codigo": "ye",
+    "titulo": "Flag of Yemen.svg"
+  },
+  {
+    "codigo": "za",
+    "titulo": "Flag of South Africa.svg"
+  },
+  {
+    "codigo": "zm",
+    "titulo": "Flag of Zambia.svg"
+  },
+  {
+    "codigo": "zw",
+    "titulo": "Flag of Zimbabwe.svg"
+  }
+]
