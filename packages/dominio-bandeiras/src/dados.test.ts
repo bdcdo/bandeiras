@@ -126,7 +126,8 @@ describe('imagens', () => {
     // aberta sozinha e em toda renderização fora de <img>; a casca não consegue tirá-lo de dentro do arquivo.
     for (const nome of arquivos.filter((n) => n.endsWith('.svg'))) {
       const svg = ler(nome).toString('utf8')
-      for (const trecho of ['<title', '<desc', 'Flag of']) expect(svg.includes(trecho), `${nome}: ${trecho}`).toBe(false)
+      for (const trecho of ['<title', '<desc', 'Flag of'])
+        expect(svg.includes(trecho), `${nome}: ${trecho}`).toBe(false)
     }
   })
 

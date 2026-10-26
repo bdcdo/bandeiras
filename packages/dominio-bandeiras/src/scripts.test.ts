@@ -32,9 +32,10 @@ describe('versão do Node', () => {
       const { engines } = JSON.parse(readFileSync(new URL('package.json', pasta), 'utf8')) as {
         engines?: { node?: string }
       }
+      const rotulo = `engines.node da ${nome}: ${engines?.node ?? ''}`
       const minima = /^>=(\d+(?:\.\d+){0,2}) <25$/.exec(engines?.node ?? '')?.[1]
-      expect(minima, `engines.node da ${nome}: ${engines?.node ?? ''}`).toBeDefined()
-      expect(atende((minima ?? '').split('.').map(Number)), `engines.node da ${nome}: ${engines?.node ?? ''}`).toBe(true)
+      expect(minima, rotulo).toBeDefined()
+      expect(atende((minima ?? '').split('.').map(Number)), rotulo).toBe(true)
     }
   })
 

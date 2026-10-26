@@ -39,7 +39,8 @@ vi.mock('../scripts/comum.ts', async (importOriginal) => {
   }
 })
 
-const SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="20" viewBox="0 0 3 2"><path d="M0 0h3v2H0z"/></svg>'
+const SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="30" height="20" viewBox="0 0 3 2"><path d="M0 0h3v2H0z"/></svg>'
 
 afterAll(() => {
   if (CAMINHOS.raizDoRepositorio.startsWith(tmpdir())) rmSync(CAMINHOS.raizDoRepositorio, { recursive: true })
@@ -48,8 +49,9 @@ afterAll(() => {
 describe('gerar.ts', () => {
   it('uma validação que falha depois do processamento das imagens não deixa nada gravado', async () => {
     // Trava: se a troca de comum.ts não pegasse, o principal() gravaria no pacote de verdade.
-    for (const pasta of [CAMINHOS.cache, CAMINHOS.gerado, CAMINHOS.imagens]) expect(pasta.startsWith(tmpdir())).toBe(true)
-    for (const pasta of [CAMINHOS.cache, CAMINHOS.gerado, CAMINHOS.imagens]) mkdirSync(pasta, { recursive: true })
+    const pastas = [CAMINHOS.cache, CAMINHOS.gerado, CAMINHOS.imagens]
+    for (const pasta of pastas) expect(pasta.startsWith(tmpdir())).toBe(true)
+    for (const pasta of pastas) mkdirSync(pasta, { recursive: true })
     for (const codigo of ['br', 'zw']) writeFileSync(`${CAMINHOS.cache}${codigo}.svg`, SVG)
     writeFileSync(`${CAMINHOS.imagens}anterior.svg`, SVG)
     writeFileSync(`${CAMINHOS.gerado}vizinhos.json`, JSON.stringify({ br: ['zw'], zw: ['br'] }))
