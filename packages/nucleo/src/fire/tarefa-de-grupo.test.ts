@@ -4,12 +4,12 @@ import { desembrulhar } from '../base/resultado'
 import { somarDias, type Dias, type Instante } from '../base/tempo'
 import { TECNICAS_TODAS_LIGADAS } from '../catalogo/tecnicas'
 import { DIRECOES, type Direcao, type IdGrupo, type IdItem } from '../catalogo/tipos'
-import { montarGrafo } from '../grafo/grafo'
+import { montarGrafo, type Grafo } from '../grafo/grafo'
 import { topicoDeGrupo, topicoDeItem, type IdTopico } from '../grafo/topico'
 import { atualizarAcuracia } from '../memoria/acuracia'
 import { estadoMemoriaInicial, type EstadoMemoria } from '../memoria/estado-memoria'
 import { aplicarRepeticao } from '../memoria/modelo'
-import { PARAMETROS_PADRAO as P, type Dificuldade } from '../memoria/parametros'
+import { PARAMETROS_PADRAO as P, resolverParametros, type Dificuldade } from '../memoria/parametros'
 import { velocidade } from '../memoria/velocidade'
 import { propagarPenalidade, type ContextoDePropagacao, type Memorias } from './propagacao'
 import { aplicarTarefaDeGrupo, type RespostaDeAlvo, type TarefaDeGrupo } from './tarefa-de-grupo'
@@ -20,20 +20,24 @@ const item = (id: string): IdTopico => topicoDeItem(id as IdItem).id
 const grupo = (id: string): IdTopico => topicoDeGrupo(id as IdGrupo).id
 const [A, B, C, D, F, G] = [item('a'), item('b'), item('c'), item('d'), grupo('grupo-f'), grupo('grupo-g')] as const
 
-// O grupo F encompassa a, b, c e d; o grupo G, a e d. Uma tarefa de F com alvos a e d mexe em G pela penalidade.
-const grafo = desembrulhar(
-  montarGrafo(
-    [
-      ...['a', 'b', 'c', 'd'].map((id) => topicoDeItem(id as IdItem)),
-      topicoDeGrupo('grupo-f' as IdGrupo),
-      topicoDeGrupo('grupo-g' as IdGrupo),
-    ],
-    [
-      ...[A, B, C, D].map((para) => ({ de: F, para, peso: 1 })),
-      { de: G, para: A, peso: 1 },
-      { de: G, para: D, peso: 1 },
-    ],
-  ),
+/** O grupo F encompassa a, b, c e d com peso 1; o grupo G, os membros de `pesosDeG`, cada um com o peso dado. */
+function grafoCom(pesosDeG: ReadonlyMap<IdTopico, number>): Grafo {
+  const topicos = [
+    ...['a', 'b', 'c', 'd'].map((id) => topicoDeItem(id as IdItem)),
+    topicoDeGrupo('grupo-f' as IdGrupo),
+    topicoDeGrupo('grupo-g' as IdGrupo),
+  ]
+  const deF = [A, B, C, D].map((para) => ({ de: F, para, peso: 1 }))
+  const deG = [...pesosDeG].map(([para, peso]) => ({ de: G, para, peso }))
+  return desembrulhar(montarGrafo(topicos, [...deF, ...deG]))
+}
+
+// No grafo dos casos fixos, G encompassa a e d com peso 1. Uma tarefa de F com alvos a e d mexe em G pela penalidade.
+const grafo = grafoCom(
+  new Map([
+    [A, 1],
+    [D, 1],
+  ]),
 )
 
 // Mesmo estado do teste da propagação: duas repetições e memória 1 no instante zero; no dia devido, fator de
@@ -119,6 +123,59 @@ describe('aplicarTarefaDeGrupo', () => {
     expect(r.memorias.get(G)).toEqual(soDeA.memorias.get(G))
   })
 
+  it('escolhe a mesma penalidade em toda ordem de três erros com deltas diferentes no mesmo ascendente', () => {
+    // G encompassa a, b e d. Os deltas efetivos são -1 (errada, recordar), -0,5 (tempo esgotado, recordar) e -0,25
+    // (tempo esgotado em múltipla escolha). Em toda ordem, G recebe só a penalidade de a; uma escolha que fique com o
+    // primeiro ou o último erro da lista reprova em quatro das seis ordens.
+    const ctx = contexto({
+      grafo: grafoCom(
+        new Map([
+          [A, 1],
+          [B, 1],
+          [D, 1],
+        ]),
+      ),
+    })
+    const erros = [
+      resposta(A, P.deltaBruto.errada),
+      resposta(B, P.deltaBruto['tempo-esgotado']),
+      resposta(D, P.deltaBruto['tempo-esgotado'], 'reconhecer'),
+    ]
+    const soDeA = propagarPenalidade(ctx, todos(), { origem: A, deltaBruto: -1, elegiveis: new Set(TOPICOS) })
+    const ordens = erros.flatMap((x) =>
+      erros.filter((y) => y !== x).flatMap((y) => erros.filter((z) => z !== x && z !== y).map((z) => [x, y, z])),
+    )
+    expect(ordens).toHaveLength(6)
+    const resultados = ordens.map((ordem) => aplicar(tarefa(ordem), ctx))
+    for (const [k, r] of resultados.entries()) {
+      expect(r.memorias.get(G), `ordem ${String(k)}`).toEqual(soDeA.memorias.get(G))
+      expect([...r.memorias], `ordem ${String(k)}`).toEqual([...(resultados[0]?.memorias ?? [])])
+    }
+  })
+
+  it('no empate de delta entre dois erros, dá ao ascendente o peso de acurácia do maior fator, em qualquer ordem', () => {
+    // G encompassa a com peso 0,5 e d com peso 1. O erro de a (-1) e o tempo esgotado de d (-0,5) dão a G o mesmo
+    // delta, -0,5, com fatores 0,5 e 1. Vence o fator 1: acurácia 0,85 * (1 - 0,3 * 1) = 0,595, e não 0,7225.
+    const ctx = contexto({
+      grafo: grafoCom(
+        new Map([
+          [A, 0.5],
+          [D, 1],
+        ]),
+      ),
+    })
+    const deA = resposta(A, P.deltaBruto.errada)
+    const deD = resposta(D, P.deltaBruto['tempo-esgotado'])
+    for (const ordem of [
+      [deA, deD],
+      [deD, deA],
+    ]) {
+      const g = aplicar(tarefa(ordem), ctx).memorias.get(G)
+      expect(g?.numRepeticoes).toBeCloseTo(2 - 0.5, 9)
+      expect(g?.acuracia).toBeCloseTo(0.85 * 0.7, 12)
+    }
+  })
+
   it('aplica ao grupo uma única repetição explícita com delta 2 * acertos / alvos - 1', () => {
     const casos: [RespostaDeAlvo[], number, number][] = [
       // A conta escrita como o código a faz, para o delta esperado sair com os mesmos bits.
@@ -145,6 +202,19 @@ describe('aplicarTarefaDeGrupo', () => {
     // Delta do grupo 0: numRepeticoes não muda, e a acurácia vai a 0,7 * 0,85 + 0,3 * 0,5 = 0,745, e não a 0,595.
     expect(f?.numRepeticoes).toBe(2)
     expect(f?.acuracia).toBeCloseTo(0.7 * 0.85 + 0.3 * 0.5, 12)
+  })
+
+  it('usa cada fator no lugar dele: múltipla escolha no alvo, exposição de distrator no exibido', () => {
+    // No padrão os dois fatores e a força da acurácia implícita valem 0,5; aqui cada um tem um valor.
+    const p = desembrulhar(
+      resolverParametros({ fatorExposicaoDistrator: 0.2, fatorMultiplaEscolha: 0.35, forcaAcuraciaImplicita: 0.8 }),
+    )
+    const r = aplicar(tarefa([resposta(A, 1, 'reconhecer'), resposta(D, 1)], [B]), contexto({ parametros: p }))
+    expect(numRep(r.memorias, A)).toBeCloseTo(2 + 0.35, 9)
+    expect(numRep(r.memorias, D)).toBeCloseTo(3, 9)
+    expect(numRep(r.memorias, F)).toBeCloseTo(3, 9)
+    expect(numRep(r.memorias, B)).toBeCloseTo(2 + 0.2, 9)
+    expect(r.memorias.get(B)?.acuracia).toBeCloseTo(0.85 + 0.3 * 0.8 * 0.2 * (1 - 0.85), 12)
   })
 
   it('recusa tarefa sem alvo, com alvo repetido, fora do grupo ou sem estado', () => {
@@ -192,7 +262,8 @@ describe('interruptor fire na tarefa de grupo', () => {
   })
 })
 
-// Propriedades com estados, respostas, exibidos, elegíveis e dificuldades sorteados sobre o grafo de dois grupos.
+// Propriedades com estados, respostas, exibidos, elegíveis, dificuldades e pesos de G sorteados sobre o grafo de dois
+// grupos.
 
 const membros = [A, B, C, D]
 const estadoSorteado = fc
@@ -212,6 +283,10 @@ const estadoSorteado = fc
     condicional: s.condicional,
   }))
 const deltaSorteado = fc.constantFrom(...Object.values(P.deltaBruto))
+const deltaDeErro = fc.constantFrom(...Object.values(P.deltaBruto).filter((d) => d < 0))
+// Peso de aresta de G: 1, as frações exatas que fazem dois erros diferentes empatarem no delta com fatores diferentes
+// (-1 com peso 0,5 contra -0,5 com peso 1), ou qualquer outro na faixa do grafo.
+const pesoDeG = fc.oneof(fc.constantFrom(1, 0.5, 0.25), fc.double({ min: 0.01, max: 1, noNaN: true }))
 
 type Cenario = { ctx: ContextoDePropagacao; memorias: Memorias; tarefa: TarefaDeGrupo }
 
@@ -224,11 +299,17 @@ const cenario: fc.Arbitrary<Cenario> = fc
     exibidos: fc.subarray(membros),
     elegiveis: fc.subarray(TOPICOS),
     dificuldades: fc.array(fc.constantFrom<Dificuldade>(1, 2, 3), { minLength: TOPICOS.length, maxLength: 6 }),
+    pesoGA: pesoDeG,
+    pesoGD: pesoDeG,
   })
   .map((g) => {
     const dificuldades = new Map(TOPICOS.map((t, k) => [t, g.dificuldades[k] ?? 2]))
+    const pesosDeG = new Map([
+      [A, g.pesoGA],
+      [D, g.pesoGD],
+    ])
     return {
-      ctx: contexto({ dificuldade: (t) => dificuldades.get(t) ?? 2 }),
+      ctx: contexto({ grafo: grafoCom(pesosDeG), dificuldade: (t) => dificuldades.get(t) ?? 2 }),
       memorias: new Map(TOPICOS.map((t, k) => [t, g.estados[k] ?? pronto()])),
       tarefa: {
         grupo: F,
@@ -239,24 +320,62 @@ const cenario: fc.Arbitrary<Cenario> = fc
     }
   })
 
+/**
+ * O caso em que a ordem poderia mudar o resultado: G encompassa os quatro membros, com pesos sorteados, e é elegível, e
+ * a tarefa tem de dois a quatro alvos, todos errados. Cada erro chega a G com um delta efetivo, e a escolha da
+ * penalidade de G é o que a ordem poderia decidir.
+ */
+const variosErrosNoMesmoAscendente: fc.Arbitrary<Cenario> = fc
+  .record({
+    estados: fc.array(estadoSorteado, { minLength: TOPICOS.length, maxLength: TOPICOS.length }),
+    alvos: fc.shuffledSubarray(membros, { minLength: 2 }),
+    deltas: fc.array(deltaDeErro, { minLength: 4, maxLength: 4 }),
+    direcoes: fc.array(fc.constantFrom(...DIRECOES), { minLength: 4, maxLength: 4 }),
+    pesos: fc.array(pesoDeG, { minLength: 4, maxLength: 4 }),
+  })
+  .map((g) => ({
+    ctx: contexto({ grafo: grafoCom(new Map(membros.map((m, k) => [m, g.pesos[k] ?? 1]))) }),
+    memorias: new Map(TOPICOS.map((t, k) => [t, g.estados[k] ?? pronto()])),
+    tarefa: {
+      grupo: F,
+      respostas: g.alvos.map((alvo, k) => resposta(alvo, g.deltas[k] ?? -1, g.direcoes[k] ?? 'recordar')),
+      exibidos: new Set<IdTopico>(),
+      elegiveis: new Set([G]),
+    },
+  }))
+
+/** Um cenário e outra ordem das mesmas respostas, sorteada, junto com a ordem inversa, que troca todo par de lugar. */
+const comOrdens = (c: Cenario) =>
+  fc.record({
+    c: fc.constant(c),
+    sorteada: fc.shuffledSubarray([...c.tarefa.respostas], { minLength: c.tarefa.respostas.length }),
+    inversa: fc.constant([...c.tarefa.respostas].reverse()),
+  })
+
+function mesmaSaidaEmToda(c: Cenario, ordens: readonly (readonly RespostaDeAlvo[])[]): void {
+  const original = desembrulhar(aplicarTarefaDeGrupo(c.ctx, c.memorias, c.tarefa))
+  for (const ordem of ordens) {
+    const permutada = desembrulhar(aplicarTarefaDeGrupo(c.ctx, c.memorias, { ...c.tarefa, respostas: ordem }))
+    expect([...permutada.memorias]).toEqual([...original.memorias])
+    expect([...permutada.culpa]).toEqual([...original.culpa])
+    expect(permutada.condicionaisPenalizados).toEqual(original.condicionaisPenalizados)
+  }
+}
+
 describe('propriedades da tarefa de grupo', () => {
   it('não depende da ordem dos alvos', () => {
     fc.assert(
-      fc.property(
-        cenario.chain((c) =>
-          fc.record({
-            c: fc.constant(c),
-            ordem: fc.shuffledSubarray([...c.tarefa.respostas], { minLength: c.tarefa.respostas.length }),
-          }),
-        ),
-        ({ c, ordem }) => {
-          const original = desembrulhar(aplicarTarefaDeGrupo(c.ctx, c.memorias, c.tarefa))
-          const permutada = desembrulhar(aplicarTarefaDeGrupo(c.ctx, c.memorias, { ...c.tarefa, respostas: ordem }))
-          expect([...permutada.memorias]).toEqual([...original.memorias])
-          expect([...permutada.culpa]).toEqual([...original.culpa])
-          expect(permutada.condicionaisPenalizados).toEqual(original.condicionaisPenalizados)
-        },
-      ),
+      fc.property(cenario.chain(comOrdens), ({ c, sorteada, inversa }) => {
+        mesmaSaidaEmToda(c, [sorteada, inversa])
+      }),
+    )
+  })
+
+  it('não depende da ordem dos alvos quando vários erros chegam ao mesmo ascendente', () => {
+    fc.assert(
+      fc.property(variosErrosNoMesmoAscendente.chain(comOrdens), ({ c, sorteada, inversa }) => {
+        mesmaSaidaEmToda(c, [sorteada, inversa])
+      }),
     )
   })
 
