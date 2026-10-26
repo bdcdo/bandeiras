@@ -159,8 +159,9 @@ describe('licenças', () => {
 
 describe('nomes', () => {
   it('nomes e aliases são únicos depois da normalização, e cada um resolve exatamente um país', () => {
-    // A unicidade sobre as formas normalizadas é o que garante o "exatamente um": o índice guarda um dono por forma, e
-    // com forma repetida resolveria o primeiro dono em silêncio.
+    // carregarCatalogo já recusa forma vazia, forma repetida entre itens (ROTULO_AMBIGUO) e forma repetida no mesmo
+    // item (ROTULO_REPETIDO), e aí resolver() lança com o erro do núcleo. As conferências abaixo não dependem disso:
+    // listam, pelos próprios dados, a forma vazia e as repetidas.
     const todos = [...rotulos.values()].flat().map(normalizarRotulo)
     expect(todos.filter((r) => r === '')).toEqual([])
     const repetidos = todos.filter((r, i) => todos.indexOf(r) !== i)
