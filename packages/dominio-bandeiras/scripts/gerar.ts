@@ -11,7 +11,7 @@
  * em duas larguras.
  */
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, unlinkSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { Resvg } from '@resvg/resvg-js'
 import sharp from 'sharp'
@@ -286,7 +286,7 @@ function licencasDeDados(licencas: Licenca[], regioes: RegioesM49, versoes: Reco
   ].join('\n')
 }
 
-async function principal(): Promise<void> {
+export async function principal(): Promise<void> {
   const curadoria = lerCuradoria()
   const { nomes, regioes, familias, vizinhancas, descricoes, dificuldade } = curadoria
   const vizinhos = lerJsonSeExistir(`${CAMINHOS.gerado}vizinhos.json`) as Vizinhos | undefined
@@ -308,26 +308,13 @@ async function principal(): Promise<void> {
   const processadas: Processada[] = []
   for (const codigo of MEMBROS_EM_ORDEM) processadas.push(await processar(codigo))
 
-  // Escreve o conjunto novo e apaga de imagens/ o que não faz mais parte dele (uma bandeira que passou de SVG a WebP,
-  // por exemplo). O que sai continua no histórico do Git.
-  mkdirSync(CAMINHOS.imagens, { recursive: true })
-  const novos = new Map(processadas.flatMap((p) => [...p.arquivos]))
-  for (const nome of readdirSync(CAMINHOS.imagens)) {
-    if (!novos.has(nome)) {
-      unlinkSync(`${CAMINHOS.imagens}${nome}`)
-      console.log(`imagens/${nome} removido (fora do conjunto novo)`)
-    }
-  }
-  for (const [nome, conteudo] of novos) writeFileSync(`${CAMINHOS.imagens}${nome}`, conteudo)
-  const nomesDosArquivos = [...novos.keys()].sort()
-  const total = nomesDosArquivos.reduce((s, nome) => s + statSync(`${CAMINHOS.imagens}${nome}`).size, 0)
+  // Tudo o que vai para o disco é montado e validado antes da primeira escrita. Um falhar no meio da gravação deixaria
+  // imagens/ e hashes.json novos ao lado de bandeiras.json e LICENCAS-DE-DADOS.md velhos, com arquivos já apagados.
+  const arquivos = [...new Map(processadas.flatMap((p) => [...p.arquivos]))].sort(([a], [b]) => (a < b ? -1 : 1))
+  const total = arquivos.reduce((s, [, conteudo]) => s + conteudo.length, 0)
   if (total > TETO_DAS_IMAGENS_BYTES) {
-    falhar(`imagens/ soma ${(total / 1024 / 1024).toFixed(2)} MB, acima do teto de 6 MB`)
+    falhar(`imagens/ somaria ${(total / 1024 / 1024).toFixed(2)} MB, acima do teto de 6 MB`)
   }
-  gravarJson(
-    `${CAMINHOS.gerado}hashes.json`,
-    Object.fromEntries(nomesDosArquivos.map((nome) => [nome, sha256(readFileSync(`${CAMINHOS.imagens}${nome}`))])),
-  )
 
   const bandeiras = processadas.map(({ codigo, proporcao, imagem }) => {
     const grupos = familias.filter((f) => f.membros.includes(codigo)).map((f) => f.id)
@@ -368,16 +355,29 @@ async function principal(): Promise<void> {
     sharp: sharp.versions.sharp,
     resvg: VERSAO_DO_RESVG,
   }
-  gravarJson(`${CAMINHOS.gerado}bandeiras.json`, {
-    geradoEm: new Date().toISOString(),
-    versoes,
-    regioes: nomesDasRegioes(regioes, nomeIcu),
-    bandeiras,
-  })
-  writeFileSync(`${CAMINHOS.raizDoRepositorio}LICENCAS-DE-DADOS.md`, licencasDeDados(licencas, regioes, versoes))
+  const dados = { geradoEm: new Date().toISOString(), versoes, regioes: nomesDasRegioes(regioes, nomeIcu), bandeiras }
+  const textoDasLicencas = licencasDeDados(licencas, regioes, versoes)
+
+  // Escreve o conjunto novo e apaga de imagens/ o que não faz mais parte dele (uma bandeira que passou de SVG a WebP,
+  // por exemplo). O que sai continua no histórico do Git.
+  mkdirSync(CAMINHOS.imagens, { recursive: true })
+  const novos = new Set(arquivos.map(([nome]) => nome))
+  for (const nome of readdirSync(CAMINHOS.imagens)) {
+    if (!novos.has(nome)) {
+      unlinkSync(`${CAMINHOS.imagens}${nome}`)
+      console.log(`imagens/${nome} removido (fora do conjunto novo)`)
+    }
+  }
+  for (const [nome, conteudo] of arquivos) writeFileSync(`${CAMINHOS.imagens}${nome}`, conteudo)
+  gravarJson(
+    `${CAMINHOS.gerado}hashes.json`,
+    Object.fromEntries(arquivos.map(([nome, conteudo]) => [nome, sha256(conteudo)])),
+  )
+  gravarJson(`${CAMINHOS.gerado}bandeiras.json`, dados)
+  writeFileSync(`${CAMINHOS.raizDoRepositorio}LICENCAS-DE-DADOS.md`, textoDasLicencas)
 
   const webp = processadas.filter((p) => p.imagem.formato === 'webp').map((p) => p.codigo)
-  console.log(`${String(processadas.length)} bandeiras; ${String(nomesDosArquivos.length)} arquivos em imagens/`)
+  console.log(`${String(processadas.length)} bandeiras; ${String(arquivos.length)} arquivos em imagens/`)
   console.log(`WebP (${String(webp.length)}): ${webp.join(' ')}`)
   console.log(`total de imagens/: ${String(total)} bytes (${(total / 1024 / 1024).toFixed(2)} MB)`)
   for (const renderizador of ['resvg', 'librsvg'] as const) {
