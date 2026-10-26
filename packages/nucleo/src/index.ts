@@ -1,2 +1,5 @@
 export * from './base'
 export * from './catalogo'
+export * from './grafo'
+export * from './memoria'
+export * from './fire'
