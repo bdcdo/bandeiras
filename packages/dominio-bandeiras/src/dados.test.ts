@@ -27,9 +27,9 @@ const membros = new Set<string>(MEMBROS_ONU)
 const ordenados = (lista: Iterable<string>): string[] => [...lista].sort()
 
 /**
- * Cópia local da normalização de rótulos do plano (NFD, sem diacríticos, minúsculas, hífen, traço e apóstrofo viram
- * espaço, sem a pontuação restante, espaços colapsados, sem artigo inicial). A normalização de verdade vive no núcleo;
- * quando o domínio passar a depender dele, este teste importa a de lá e esta função sai.
+ * Versão local da normalização de rótulos (NFD, sem diacríticos, minúsculas, hífen, traço e apóstrofo viram espaço,
+ * sem a pontuação restante, espaços colapsados, sem artigo inicial). O núcleo tem a sua, `normalizarRotulo`; este
+ * pacote ainda não importa do núcleo, e quando passar a importar este teste usa a de lá e esta função sai.
  */
 function normalizar(texto: string): string {
   return texto
