@@ -17,6 +17,7 @@ import gerado from '../gerado/bandeiras.json'
 import revisoes from '../gerado/commons-revisoes.json'
 import hashes from '../gerado/hashes.json'
 import licencas from '../gerado/licencas.json'
+import vizinhosGerados from '../gerado/vizinhos.json'
 import { MEMBROS_ONU } from '../scripts/membros.ts'
 import { PADROES_VISUAIS } from './classes'
 
@@ -301,6 +302,60 @@ describe('descrições', () => {
       for (const rotulo of rotulos.get(b.codigo) ?? []) {
         expect(texto.includes(` ${normalizar(rotulo)} `), `${b.codigo}: "${rotulo}"`).toBe(false)
       }
+    }
+  })
+})
+
+describe('curadoria e gerado em sincronia', () => {
+  // Os invariantes acima olham bandeiras.json. Como o gerador roda à mão, um commit que edita a curadoria sem regenerar
+  // deixaria bandeiras.json velho e o valor novo da curadoria sem validação até a próxima regeneração. Este bloco exige
+  // que cada campo copiado da curadoria seja o que ela diz hoje, e assim os invariantes de bandeiras.json valem também
+  // para a curadoria. Grupos e dificuldade já são conferidos contra a curadoria nos blocos deles.
+  const overrides = new Map(Object.entries(nomes.overrides))
+  const aliases = new Map(Object.entries(nomes.aliases))
+  const descricaoDe = new Map(descricoes.map((d) => [d.codigo, d]))
+  const regiaoDe = new Map(Object.entries(regioesM49.paises))
+  const vizinhosDe = new Map(Object.entries(vizinhosGerados))
+
+  it('o nome é o override de nomes.json quando há override, e os aliases são os de nomes.json', () => {
+    for (const b of bandeiras) {
+      const override = overrides.get(b.codigo)
+      if (override !== undefined) expect(b.nome, b.codigo).toBe(override.nome)
+      expect(b.aliases, b.codigo).toEqual(aliases.get(b.codigo) ?? [])
+    }
+  })
+
+  it('descrição e classe são as de descricoes.json', () => {
+    for (const b of bandeiras) {
+      expect({ descricao: b.descricao, classe: b.classe }, b.codigo).toEqual({
+        descricao: descricaoDe.get(b.codigo)?.descricao,
+        classe: descricaoDe.get(b.codigo)?.classe,
+      })
+    }
+  })
+
+  it('região e sub-região são as de regioes-m49.json, e a lista de regiões sai dela', () => {
+    for (const b of bandeiras) {
+      expect({ regiao: b.regiao, subRegiao: b.subRegiao }, b.codigo).toEqual(regiaoDe.get(b.codigo))
+    }
+    const subRegioesDe = new Map<string, Set<string>>()
+    for (const { regiao, subRegiao } of regiaoDe.values()) {
+      subRegioesDe.set(regiao, (subRegioesDe.get(regiao) ?? new Set()).add(subRegiao))
+    }
+    expect(gerado.regioes.map((r) => [r.codigo, r.subRegioes.map((s) => s.codigo)])).toEqual(
+      [...subRegioesDe].sort(([a], [b]) => a.localeCompare(b)).map(([codigo, subs]) => [codigo, ordenados(subs)]),
+    )
+  })
+
+  it('os vizinhos são os de gerado/vizinhos.json, e o traço de vizinhança junta os traços das vizinhanças', () => {
+    for (const b of bandeiras) {
+      expect(b.vizinhos, b.codigo).toEqual(vizinhosDe.get(b.codigo))
+      const tracos = vizinhancas.flatMap((v) => {
+        const traco = (v.tracoDistintivo as Record<string, string | undefined>)[b.codigo]
+        return v.membros.includes(b.codigo) && traco !== undefined ? [traco] : []
+      })
+      const tracoVizinhanca = 'tracoVizinhanca' in b ? b.tracoVizinhanca : undefined
+      expect(tracoVizinhanca, b.codigo).toBe(tracos.length > 0 ? tracos.join('; ') : undefined)
     }
   })
 })
