@@ -1,7 +1,5 @@
 import type { Estimulo, IdItem } from '@bandeiras/nucleo'
-import { IMAGENS, type Imagem } from './imagens'
-
-const PASTA = '../imagens/'
+import { IMAGENS } from './imagens'
 
 // O Vite resolve o glob no build, e com `?url` o valor de cada entrada é a URL do arquivo. O `?url` não decide se a
 // URL aponta para um asset próprio, com hash no nome, ou para uma data: URI embutida no JavaScript: quem decide é o
@@ -11,16 +9,9 @@ const PASTA = '../imagens/'
 // com o nome do arquivo.
 const URL_POR_ARQUIVO: ReadonlyMap<string, string> = new Map(
   Object.entries(import.meta.glob('../imagens/*', { eager: true, query: '?url', import: 'default' })).map(
-    ([caminho, url]) => [caminho.slice(PASTA.length), url],
+    ([caminho, url]) => [caminho.slice('../imagens/'.length), url],
   ),
 )
-
-// O estímulo do núcleo tem uma URL só, e por isso a WebP sai na maior largura gravada: a imagem aparece grande na
-// pergunta e em tela de alta densidade, e a menor serve só a um `srcset` futuro.
-function arquivoDe(id: IdItem, imagem: Imagem): string {
-  if (imagem.formato === 'svg') return `${id}.svg`
-  return `${id}-${String(Math.max(...(imagem.larguras ?? [])))}.webp`
-}
 
 /**
  * A bandeira como imagem, com a proporção do registro para a casca reservar o espaço antes de a imagem carregar.
@@ -31,7 +22,9 @@ function arquivoDe(id: IdItem, imagem: Imagem): string {
 export function estimulo(id: IdItem): Estimulo {
   const imagem = IMAGENS.get(id)
   if (imagem === undefined) throw new Error(`A bandeira '${id}' não tem registro em bandeiras.json.`)
-  const arquivo = arquivoDe(id, imagem)
+  // O estímulo do núcleo tem uma URL só, e por isso a WebP sai na maior largura gravada: a imagem aparece grande na
+  // pergunta e em tela de alta densidade, e a menor serve só a um `srcset` futuro.
+  const arquivo = imagem.formato === 'svg' ? `${id}.svg` : `${id}-${String(Math.max(...(imagem.larguras ?? [])))}.webp`
   const url = URL_POR_ARQUIVO.get(arquivo)
   if (url === undefined) throw new Error(`A bandeira '${id}' não tem o arquivo imagens/${arquivo}.`)
   return { tipo: 'imagem', url, proporcao: imagem.proporcao }
