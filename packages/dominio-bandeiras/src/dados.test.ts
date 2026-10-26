@@ -335,6 +335,20 @@ describe('curadoria e gerado em sincronia', () => {
     }
   })
 
+  // O teste acima não pega o caso inverso: um override apagado de nomes.json sem regenerar deixa em bandeiras.json o nome
+  // antigo do override, e o valor do ICU que ele escondia só é validado na regeneração. Sem override, o nome tem de ser o
+  // do ICU. Outro ICU pode trazer outro nome do CLDR sem que a curadoria mude, e a comparação daria falso vermelho; por
+  // isso ela só roda com o ICU que gerou bandeiras.json, o do Node fixado no .nvmrc, que é o do CI.
+  it.skipIf(process.versions['icu'] !== gerado.versoes.icu)(
+    'sem override, o nome é o do ICU que gerou os dados',
+    () => {
+      const icu = new Intl.DisplayNames(['pt-BR'], { type: 'region' })
+      for (const b of bandeiras) {
+        expect(b.nome, b.codigo).toBe(overrides.get(b.codigo)?.nome ?? icu.of(b.codigo.toUpperCase()))
+      }
+    },
+  )
+
   it('descrição e classe são as de descricoes.json', () => {
     for (const b of bandeiras) {
       expect({ descricao: b.descricao, classe: b.classe }, b.codigo).toEqual({
