@@ -3,9 +3,12 @@ import { IMAGENS, type Imagem } from './imagens'
 
 const PASTA = '../imagens/'
 
-// O Vite resolve o glob no build: cada arquivo de imagens/ vira um asset com hash no nome, e o valor é a URL final dele.
-// Com `eager`, o mapa existe já na carga do módulo, sem import dinâmico; com `?url`, nenhuma imagem entra no bundle de
-// JavaScript. As chaves vêm como '../imagens/br.svg' e ficam só com o nome do arquivo.
+// O Vite resolve o glob no build, e com `?url` o valor de cada entrada é a URL do arquivo. O `?url` não decide se a
+// URL aponta para um asset próprio, com hash no nome, ou para uma data: URI embutida no JavaScript: quem decide é o
+// build.assetsInlineLimit de quem empacota. O padrão do Vite embute todo arquivo com menos de 4096 bytes, que são a
+// maior parte das SVG; a casca fixa 0 em apps/web/vite.config.ts, e é isso que deixa cada bandeira como arquivo. Com
+// `eager`, o mapa existe já na carga do módulo, sem import dinâmico. As chaves vêm como '../imagens/br.svg' e ficam só
+// com o nome do arquivo.
 const URL_POR_ARQUIVO: ReadonlyMap<string, string> = new Map(
   Object.entries(import.meta.glob('../imagens/*', { eager: true, query: '?url', import: 'default' })).map(
     ([caminho, url]) => [caminho.slice(PASTA.length), url],
