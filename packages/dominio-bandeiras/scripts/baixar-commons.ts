@@ -1,8 +1,8 @@
 /**
  * Baixa do Wikimedia Commons o SVG original de cada bandeira e fixa a revisão e a licença de cada arquivo.
  *
- * Quando rodar: à mão, como primeiro passo de `pnpm gerar:dados`, nunca no install nem no CI. Precisa de rede; antes,
- * conferir a rede ativa como manda a regra do projeto para coleta em fonte externa.
+ * Quando rodar: à mão, como primeiro passo de `pnpm gerar:dados`, nunca no install nem no CI. Precisa de rede: até 4
+ * consultas em lote à API (193 títulos, 50 por lote) e até 193 downloads do Commons.
  *
  * Entrada: curadoria/commons.json (título do arquivo por código). Saída: .cache/commons/<codigo>.svg (fora do Git),
  * gerado/commons-revisoes.json ({ codigo, titulo, sha1, timestamp, url }) e gerado/licencas.json.
