@@ -120,23 +120,31 @@ describe('aplicarTarefaDeGrupo', () => {
   })
 
   it('aplica ao grupo uma única repetição explícita com delta 2 * acertos / alvos - 1', () => {
-    const casos: [RespostaDeAlvo[], number][] = [
+    const casos: [RespostaDeAlvo[], number, number][] = [
       // A conta escrita como o código a faz, para o delta esperado sair com os mesmos bits.
-      [[resposta(A, 1), resposta(B, 1), resposta(C, -1)], (2 * 2) / 3 - 1],
-      [[resposta(A, -1), resposta(B, -1)], -1],
-      [[resposta(A, 1, 'reconhecer')], 1],
+      [[resposta(A, 1), resposta(B, 1), resposta(C, -1)], (2 * 2) / 3 - 1, 2 / 3],
+      [[resposta(A, -1), resposta(B, -1)], -1, 0],
+      [[resposta(A, 1, 'reconhecer')], 1, 1],
     ]
-    for (const [respostas, delta] of casos) {
+    for (const [respostas, delta, fracaoDeAcertos] of casos) {
       const r = aplicar(tarefa(respostas, [D]))
       const e = pronto()
       const esperado = atualizarAcuracia(
         aplicarRepeticao(e, { deltaBruto: delta, agora: DEVIDO, velocidade: 1, origem: 'explicita' }, P),
-        delta > 0,
+        fracaoDeAcertos,
         1,
         P,
       )
       expect(r.memorias.get(F)).toEqual(esperado)
     }
+  })
+
+  it('dá à acurácia do grupo a fração de acertos: metade dos alvos certos não pesa como erro', () => {
+    const r = aplicar(tarefa([resposta(A, 1), resposta(B, -1)], [C]))
+    const f = r.memorias.get(F)
+    // Delta do grupo 0: numRepeticoes não muda, e a acurácia vai a 0,7 * 0,85 + 0,3 * 0,5 = 0,745, e não a 0,595.
+    expect(f?.numRepeticoes).toBe(2)
+    expect(f?.acuracia).toBeCloseTo(0.7 * 0.85 + 0.3 * 0.5, 12)
   })
 
   it('recusa tarefa sem alvo, com alvo repetido, fora do grupo ou sem estado', () => {
@@ -262,7 +270,7 @@ describe('propriedades da tarefa de grupo', () => {
         const v = velocidade(e, ctx.dificuldade(F), P, ctx.tecnicas)
         const esperado = atualizarAcuracia(
           aplicarRepeticao(e, { deltaBruto: delta, agora: ctx.agora, velocidade: v, origem: 'explicita' }, P),
-          delta > 0,
+          acertos / t.respostas.length,
           1,
           P,
         )

@@ -5,21 +5,24 @@ import { limitar } from './limitar'
 import type { Parametros } from './parametros'
 
 /**
- * Uma evidência a mais na acurácia, em média exponencial: `acuracia' = (1 - a) * acuracia + a * (correta ? 1 : 0)`, com
- * `a = alfaAcuracia * peso`. O peso é 1 para a resposta ao próprio tópico e menor para a evidência que chega pelo grafo.
- * Com a direção, a acurácia dela recebe a mesma evidência; as outras direções ficam como estavam.
+ * Uma evidência a mais na acurácia, em média exponencial: `acuracia' = (1 - a) * acuracia + a * acerto`, com
+ * `a = alfaAcuracia * peso` e `acerto` 1 na resposta certa e 0 na errada. Uma evidência composta, como a tarefa de grupo
+ * em que só parte dos alvos sai certa, entra com a fração de acertos. O peso é 1 para a resposta ao próprio tópico e
+ * menor para a evidência que chega pelo grafo. Com a direção, a acurácia dela recebe a mesma evidência; as outras
+ * direções ficam como estavam.
  *
- * `a` é limitado a [0, 1] para a média nunca sair de [0, 1], qualquer que seja o peso recebido.
+ * `a` e a fração são limitados a [0, 1] para a média nunca sair de [0, 1], quaisquer que sejam os valores recebidos.
  */
 export function atualizarAcuracia(
   e: EstadoMemoria,
-  correta: boolean,
+  acerto: boolean | number,
   peso: number,
   parametros: Parametros,
   direcao?: Direcao,
 ): EstadoMemoria {
   const a = limitar(parametros.alfaAcuracia * peso, 0, 1)
-  const media = (atual: number): number => (1 - a) * atual + a * (correta ? 1 : 0)
+  const alvo = typeof acerto === 'number' ? limitar(acerto, 0, 1) : acerto ? 1 : 0
+  const media = (atual: number): number => (1 - a) * atual + a * alvo
   return {
     ...e,
     acuracia: media(e.acuracia),

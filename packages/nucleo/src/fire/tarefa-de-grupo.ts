@@ -57,6 +57,8 @@ function problemas(ctx: ContextoDePropagacao, memorias: Memorias, tarefa: Tarefa
  *    acurácia do alvo e a da direção da pergunta recebem a resposta. O erro de cada alvo sobe como penalidade aos
  *    ascendentes elegíveis, menos F.
  * 2. F recebe uma única repetição explícita, com rawDelta `2 * acertos / k - 1`: 1 se acertou todos, -1 se errou todos.
+ *    A acurácia de F recebe a fração de acertos, `acertos / k`: com metade dos alvos certos, o delta é 0 e F não ganha
+ *    nem perde repetição, e a acurácia vai na direção de 0,5, e não de 0 como num erro de todos.
  * 3. Se esse rawDelta for positivo, o crédito implícito desce de F só aos membros exibidos que não foram alvo, com
  *    `fatorExposicaoDistrator`. O alvo já teve a evidência dele no passo 1, e nada conta duas vezes.
  *
@@ -123,7 +125,7 @@ export function aplicarTarefaDeGrupo(
   const eGrupo = penalizado.memorias.get(tarefa.grupo)
   if (eGrupo !== undefined) {
     const repetido = explicita(eGrupo, tarefa.grupo, deltaDoGrupo)
-    depoisDoGrupo.set(tarefa.grupo, atualizarAcuracia(repetido, deltaDoGrupo > 0, 1, parametros))
+    depoisDoGrupo.set(tarefa.grupo, atualizarAcuracia(repetido, acertos / tarefa.respostas.length, 1, parametros))
   }
 
   // Passo 3: o crédito implícito aos membros exibidos que não foram alvo.

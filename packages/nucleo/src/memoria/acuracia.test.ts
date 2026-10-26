@@ -17,6 +17,16 @@ describe('atualizarAcuracia', () => {
     expect(atualizarAcuracia(e, true, 1, P).nAvaliacoes).toBe(1)
   })
 
+  it('com a fração de acertos de uma evidência composta, puxa a acurácia para essa fração', () => {
+    const e = estadoMemoriaInicial(0.85)
+    expect(atualizarAcuracia(e, 0.5, 1, P).acuracia).toBeCloseTo(0.7 * 0.85 + 0.3 * 0.5, 12)
+    expect(atualizarAcuracia(e, 1, 1, P).acuracia).toBe(atualizarAcuracia(e, true, 1, P).acuracia)
+    expect(atualizarAcuracia(e, 0, 1, P).acuracia).toBe(atualizarAcuracia(e, false, 1, P).acuracia)
+    // Fora de [0, 1], a fração é trazida para dentro.
+    expect(atualizarAcuracia(e, 2, 1, P).acuracia).toBe(atualizarAcuracia(e, 1, 1, P).acuracia)
+    expect(atualizarAcuracia(e, -1, 1, P).acuracia).toBe(atualizarAcuracia(e, 0, 1, P).acuracia)
+  })
+
   it('com a direção, muda a acurácia dela e deixa as outras direções', () => {
     const e = atualizarAcuracia(estadoMemoriaInicial(0.5), false, 1, P, 'recordar')
     expect(e.acuraciaPorDirecao).toEqual({ reconhecer: 0.5, produzir: 0.5, recordar: 0.35 })
