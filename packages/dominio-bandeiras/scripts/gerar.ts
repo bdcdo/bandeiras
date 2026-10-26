@@ -90,7 +90,7 @@ const garantirViewBox: CustomPlugin = {
   }),
 }
 
-function otimizar(codigo: string, original: string): string {
+export function otimizar(codigo: string, original: string): string {
   try {
     return optimize(original, { floatPrecision: 3, plugins: [garantirViewBox, 'preset-default'] }).data
   } catch (erro) {

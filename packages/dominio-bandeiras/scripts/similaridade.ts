@@ -6,7 +6,10 @@
  *
  * Entrada: os originais em .cache/commons/ (baixar-commons os deixa lá) e a curadoria. A entrada é o original, e não
  * imagens/, porque este passo roda antes de gerar.ts produzir imagens/; o gate de fidelidade de gerar.ts garante que o
- * processado e o original rasterizam igual (até 0,5% dos pixels), então a medida vale para os dois.
+ * processado e o original rasterizam igual (até 0,5% dos pixels), então a medida vale para os dois. A exceção são os
+ * códigos de GATE_SO_PELO_LIBRSVG, cujo original o resvg não desenha por inteiro (no Paquistão, a estrela): para eles a
+ * medida rasteriza o otimizado, montado em memória com a mesma função de gerar.ts, que o resvg desenha completo e que o
+ * gate pelo librsvg confere contra o original.
  *
  * A medida tem duas partes. A grade 3x3 de cor média em Lab pega onde está cada cor (vermelho em cima, faixa azul no
  * meio), com distância perceptual: no Lab, uma diferença de 10 entre dois vermelhos parece tão grande quanto entre dois
@@ -21,6 +24,7 @@
 import { readFileSync } from 'node:fs'
 import { Resvg } from '@resvg/resvg-js'
 import { CAMINHOS, falhar, gravarJson, lerCuradoria, type Familia, type Vizinhanca, type Vizinhos } from './comum.ts'
+import { GATE_SO_PELO_LIBRSVG, otimizar } from './gerar.ts'
 import { MEMBROS_EM_ORDEM } from './membros.ts'
 
 /** Largura da rasterização de análise. A grade 3x3 e a orientação não precisam de detalhe; 120 px basta e é rápido. */
@@ -58,7 +62,7 @@ function rgbParaLab(r: number, g: number, b: number): Lab {
   return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)]
 }
 
-function rasterizar(svg: Buffer): { largura: number; altura: number; lab: Lab[] } {
+function rasterizar(svg: Buffer | string): { largura: number; altura: number; lab: Lab[] } {
   // Fundo branco: a parte transparente (o recorte do Nepal) conta como o branco da página.
   const imagem = new Resvg(svg, {
     fitTo: { mode: 'width', value: LARGURA_DE_ANALISE },
@@ -83,7 +87,9 @@ function somaDeVariancias(cores: Lab[]): number {
   return total
 }
 
-function assinar(codigo: string, svg: Buffer): Assinatura {
+/** Assinatura do original do Commons; nos códigos de GATE_SO_PELO_LIBRSVG, do otimizado (ver o cabeçalho). */
+export function assinar(codigo: string, original: Buffer): Assinatura {
+  const svg = GATE_SO_PELO_LIBRSVG.has(codigo) ? otimizar(codigo, original.toString('utf8')) : original
   const { largura, altura, lab } = rasterizar(svg)
   const pixel = (x: number, y: number): Lab => lab[y * largura + x] ?? [0, 0, 0]
 

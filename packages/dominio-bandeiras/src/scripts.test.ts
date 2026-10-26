@@ -1,9 +1,12 @@
 /**
  * Contratos dos scripts do gerador que o teste de dados não alcança, porque não aparecem no que fica commitado: a versão
- * de Node em que eles rodam.
+ * de Node em que eles rodam e a assinatura de similaridade das bandeiras que o resvg não desenha por inteiro.
  */
+import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import revisoes from '../gerado/commons-revisoes.json'
+import { assinar } from '../scripts/similaridade.ts'
 
 const RAIZ = new URL('../../../', import.meta.url)
 const PACOTE = new URL('../', import.meta.url)
@@ -39,5 +42,40 @@ describe('versão do Node', () => {
     const versao = readFileSync(new URL('.nvmrc', RAIZ), 'utf8').trim()
     expect(versao).toMatch(/^24\.\d+\.\d+$/)
     expect(atende(versao.split('.').map(Number)), versao).toBe(true)
+  })
+})
+
+describe('assinatura de similaridade', () => {
+  // O original do Paquistão no Commons, byte a byte (domínio público): a estrela é um polígono com coordenadas na casa
+  // das centenas de milhares sob scale(0.00001557408), e o resvg não a desenha neste arquivo.
+  const PAQUISTAO = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
+    '<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="-75 -40 120 80" version="1.1">',
+    '<title>Flag of Pakistan</title>',
+    '  <rect x="-75" y="-40" width="120" height="80" fill="#fff"/>',
+    '  <rect x="-45" y="-40" width="90" height="80" fill="#01411C"/>',
+    '  <circle r="24" fill="#fff"/>',
+    '  <circle r="22" cx="-7" cy="-40" fill="#01411C" transform="rotate(-41.63354, 45, -40)"/>',
+    '<polygon points="0,-513674 301930,415571 -488533,-158734 488533,-158734 -301930,415571" fill="#fff" transform="rotate(-41.63354) translate(16) rotate(18) scale(0.00001557408)"/>',
+    '</svg>',
+    '',
+  ].join('\n')
+
+  it('o original do teste é a revisão do Paquistão fixada em commons-revisoes.json', () => {
+    const fixada = revisoes.find((r) => r.codigo === 'pk')?.sha1
+    expect(createHash('sha1').update(PAQUISTAO).digest('hex')).toBe(fixada)
+  })
+
+  it('a assinatura do Paquistão inclui a estrela', () => {
+    // Com e sem a estrela, a grade 3x3 tem de mudar. Ela fica quase toda na célula da direita da linha do meio e ocupa
+    // poucos por cento dela: o branco sobre o verde muda a cor média dessa célula em cerca de 5 ΔE.
+    const com = assinar('pk', Buffer.from(PAQUISTAO)).grade
+    const sem = assinar('pk', Buffer.from(PAQUISTAO.replace(/<polygon[^>]*\/>/, ''))).grade
+    const deltas = com.map((c, i) => {
+      const s = sem[i] ?? [0, 0, 0]
+      return Math.hypot(c[0] - s[0], c[1] - s[1], c[2] - s[2])
+    })
+    expect(Math.max(...deltas)).toBeGreaterThan(1)
   })
 })
