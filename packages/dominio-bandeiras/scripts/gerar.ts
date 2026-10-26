@@ -332,7 +332,7 @@ async function principal(): Promise<void> {
   const bandeiras = processadas.map(({ codigo, proporcao, imagem }) => {
     const grupos = familias.filter((f) => f.membros.includes(codigo)).map((f) => f.id)
     const daVizinhanca = vizinhancas.filter((v) => v.membros.includes(codigo))
-    // Regra única dos pontos de contrato: 1 fora de grupo e de vizinhança; 2 em um grupo ou só em vizinhança; 3 em
+    // Regra única da dificuldade a priori: 1 fora de grupo e de vizinhança; 2 em um grupo ou só em vizinhança; 3 em
     // dois ou mais grupos. curadoria/dificuldade.json sobrepõe, com motivo, os pares quase idênticos e as conhecidas.
     const pelaRegra = grupos.length >= 2 ? 3 : grupos.length === 1 || daVizinhanca.length > 0 ? 2 : 1
     const descricao = descricaoPorCodigo.get(codigo)
