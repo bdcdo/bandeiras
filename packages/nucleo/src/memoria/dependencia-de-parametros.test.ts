@@ -24,10 +24,13 @@ import { ehTopicoLento, velocidade } from './velocidade'
 // padrão, e uma troca entre dois deles dá os mesmos números em todo teste que roda com os padrões. A régua declara, para
 // cada fórmula da camada, de quais caminhos de parâmetro ela depende, inclusive pelas fórmulas que chama, e confere duas
 // coisas. Primeiro, que a fórmula lê exatamente esses caminhos, registrados por um Proxy; segundo, que cada um deles,
-// ajustado sozinho por `resolverParametros`, muda a saída em ao menos um dos cenários fixos. Uma troca reprova as duas: o
-// caminho trocado deixa de mover a saída, e o que entrou no lugar dele aparece entre os lidos sem estar declarado. Uma
-// fórmula que passe a ler um caminho novo reprova a primeira até ele entrar na lista dela, com um cenário em que mova a
-// saída.
+// ajustado sozinho por `resolverParametros`, muda a saída em ao menos um dos cenários fixos. Trocar todas as leituras de um
+// caminho por outro reprova a primeira, porque o caminho declarado deixa de ser lido. A régua não garante pegar a troca
+// parcial, em que só uma das leituras de um caminho lido em mais de um lugar passa a ler outro caminho declarado, nem a
+// permuta de dois caminhos declarados: nas duas, os dois continuam lidos e movendo a saída. Essas trocas ficam com casos
+// fixos em `modelo.test.ts`, como o da guarda de `decaimentoPorAtraso`, e com as propriedades de parâmetros sorteados.
+// Uma fórmula que passe a ler um caminho novo reprova a primeira até ele entrar na lista dela, com um cenário em que mova
+// a saída.
 
 /**
  * Os parâmetros, com cada caminho lido anotado em `lidos`. O Proxy envolve uma cópia rasa de cada nível, e não o objeto
