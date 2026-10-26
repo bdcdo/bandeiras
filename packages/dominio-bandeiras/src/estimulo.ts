@@ -1,5 +1,5 @@
 import type { Estimulo, IdItem } from '@bandeiras/nucleo'
-import { IMAGENS, type Imagem } from './dados'
+import { IMAGENS, type Imagem } from './imagens'
 
 const PASTA = '../imagens/'
 
