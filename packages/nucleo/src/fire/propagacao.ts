@@ -4,6 +4,7 @@ import type { ArestaEncompassing, Grafo } from '../grafo/grafo'
 import type { IdTopico } from '../grafo/topico'
 import { atualizarAcuracia } from '../memoria/acuracia'
 import type { EstadoMemoria } from '../memoria/estado-memoria'
+import { limitar } from '../memoria/limitar'
 import { aplicarRepeticao } from '../memoria/modelo'
 import type { Dificuldade, Parametros } from '../memoria/parametros'
 import { ehTopicoLento, velocidade } from '../memoria/velocidade'
@@ -54,7 +55,7 @@ function fatoresAlcancados(
     for (const a of arestas.get(t) ?? []) {
       const proximo = destino(a)
       const fator = chegada * a.peso * passagem(proximo)
-      if (fator > 0 && fator > (fatores.get(proximo) ?? 0)) fatores.set(proximo, fator)
+      if (fator > (fatores.get(proximo) ?? 0)) fatores.set(proximo, fator)
     }
   }
   fatores.delete(origem)
@@ -106,7 +107,7 @@ export function propagarCredito(ctx: ContextoDePropagacao, memorias: Memorias, c
   const fatores = fatoresAlcancados(ctx.grafo, credito.origem, 'desce', (t) => {
     const e = memorias.get(t)
     if (e === undefined || ehTopicoLento(e, ctx.dificuldade(t), parametros, tecnicas)) return 0
-    return Math.min(1, Math.max(0, credito.exposicao(t)))
+    return limitar(credito.exposicao(t), 0, 1)
   })
   const novas = new Map(memorias)
   for (const [t, fator] of fatores) {

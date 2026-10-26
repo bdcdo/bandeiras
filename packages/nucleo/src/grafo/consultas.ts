@@ -12,7 +12,7 @@ function fecho(
   for (let i = 0; i < fila.length; i++) {
     for (const a of arestas.get(fila[i] as IdTopico) ?? []) {
       const proximo = vizinho(a)
-      if (proximo !== t && !alcancados.has(proximo)) {
+      if (!alcancados.has(proximo)) {
         alcancados.add(proximo)
         fila.push(proximo)
       }
