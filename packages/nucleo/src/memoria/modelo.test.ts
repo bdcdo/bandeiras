@@ -118,6 +118,12 @@ describe('intervaloIdeal', () => {
     expect(Number(I(4).toFixed(2))).toBe(10.65)
   })
 
+  it('parte do intervalo base, e não de 1 nem do teto de memória, que valem o mesmo nos padrões', () => {
+    const p = ajustados({ intervaloBaseDias: 0.5 })
+    expect(I(1, p)).toBe(0.5)
+    expect(I(2, p)).toBeCloseTo(1.1, 12)
+  })
+
   it('para no teto de um ano', () => {
     expect(I(8)).toBeCloseTo(2.2 ** 7, 9)
     expect(I(9)).toBe(365)
