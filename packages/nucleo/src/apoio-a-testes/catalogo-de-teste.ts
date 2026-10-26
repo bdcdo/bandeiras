@@ -27,7 +27,7 @@ export function idDeTeste(k: number): IdItem {
   return (volta === 0 ? letra : `${letra}${String(volta)}`) as IdItem
 }
 
-const unicos = (xs: readonly number[], n: number): number[] => [...new Set(xs.filter((x) => x >= 0 && x < n))]
+const unicos = (xs: readonly number[]): number[] => [...new Set(xs)]
 
 /**
  * Catálogo fixo dos casos escritos à mão, com doze itens de `a` a `l`:
@@ -64,10 +64,9 @@ export function catalogoFixo(): Catalogo {
 }
 
 export function catalogoDe(espec: EspecificacaoDeCatalogo): Catalogo {
-  const n = espec.classes.length
   const id = (k: number): string => idDeTeste(k)
   const grupos: GrupoBruto[] = espec.grupos.flatMap((g, j) => {
-    const membros = unicos(g.membros, n)
+    const membros = unicos(g.membros)
     if (membros.length < 2) return []
     const ids = membros.map(id)
     const [a, b] = ids
@@ -82,7 +81,7 @@ export function catalogoDe(espec: EspecificacaoDeCatalogo): Catalogo {
     ]
   })
   const vizinhancas: VizinhancaBruta[] = espec.vizinhancas.flatMap((v, j) => {
-    const ids = unicos(v, n).map(id)
+    const ids = unicos(v).map(id)
     if (ids.length < 2) return []
     return [
       {
@@ -103,7 +102,7 @@ export function catalogoDe(espec: EspecificacaoDeCatalogo): Catalogo {
     dificuldadeAPriori: 2,
     descricao: `Descrição de ${id(k)}`,
     classe: `classe-${String(classe)}`,
-    vizinhos: unicos(espec.vizinhos[k] ?? [], n)
+    vizinhos: unicos(espec.vizinhos[k] ?? [])
       .filter((v) => v !== k)
       .map(id),
   }))

@@ -32,7 +32,7 @@ export type Formula = Readonly<{
  * congelado: sobre uma propriedade congelada, o Proxy é obrigado a devolver o próprio valor dela, e não poderia devolver
  * o espião do objeto aninhado no lugar.
  */
-export function espiao(p: Parametros, lidos: Set<string>): Parametros {
+function espiao(p: Parametros, lidos: Set<string>): Parametros {
   const espiar = (alvo: object, prefixo: string): object =>
     new Proxy(
       { ...alvo },

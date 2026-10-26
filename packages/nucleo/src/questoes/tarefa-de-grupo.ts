@@ -64,7 +64,7 @@ function montarExibidos(
   const exibidos: IdItem[] = []
   const barrados = new Set<IdItem>()
   const incluir = (id: IdItem): void => {
-    if (exibidos.includes(id) || barrados.has(id) || ctx.pendentesNovas.has(id) || !catalogo.itens.has(id)) return
+    if (exibidos.includes(id) || barrados.has(id) || ctx.pendentesNovas.has(id)) return
     exibidos.push(id)
     for (const parceiro of parceirosIndiscerniveis(id, catalogo)) barrados.add(parceiro)
   }
