@@ -18,6 +18,7 @@ import revisoes from '../gerado/commons-revisoes.json'
 import hashes from '../gerado/hashes.json'
 import licencas from '../gerado/licencas.json'
 import vizinhosGerados from '../gerado/vizinhos.json'
+import type { RegioesM49 } from '../scripts/comum.ts'
 import { MEMBROS_ONU } from '../scripts/membros.ts'
 import { PADROES_VISUAIS } from './classes'
 
@@ -319,12 +320,23 @@ describe('descrições', () => {
 describe('curadoria e gerado em sincronia', () => {
   // Os invariantes acima olham bandeiras.json. Como o gerador roda à mão, um commit que edita a curadoria sem regenerar
   // deixaria bandeiras.json velho e o valor novo da curadoria sem validação até a próxima regeneração. Este bloco exige
-  // que cada campo copiado da curadoria seja o que ela diz hoje, e assim os invariantes de bandeiras.json valem também
-  // para a curadoria. Grupos e dificuldade já são conferidos contra a curadoria nos blocos deles.
+  // que cada campo de bandeiras.json tirado da curadoria seja o que ela diz hoje, e assim os invariantes de
+  // bandeiras.json valem também para a curadoria. Grupos e dificuldade já são conferidos contra a curadoria nos blocos
+  // deles.
+  //
+  // O nome de país, de região ou de sub-região sem override vem do ICU, e a comparação desses nomes só roda com o ICU
+  // que gerou bandeiras.json, o do Node fixado no .nvmrc, que é o do CI. Outro ICU pode trazer outro nome do CLDR sem
+  // que a curadoria mude, e a comparação daria falso vermelho. Num Node com outro ICU, os dois testes do ICU ficam
+  // pulados e só os overrides são conferidos.
+  const comIcuDosDados = process.versions['icu'] === gerado.versoes.icu
   const overrides = new Map(Object.entries(nomes.overrides))
   const aliases = new Map(Object.entries(nomes.aliases))
   const descricaoDe = new Map(descricoes.map((d) => [d.codigo, d]))
   const regiaoDe = new Map(Object.entries(regioesM49.paises))
+  // A anotação dá ao teste o campo opcional nomesDeRegiao, que o gerador lê e que o regioes-m49.json de hoje não traz.
+  const curadoriaDeRegioes: RegioesM49 = regioesM49
+  const nomesDeRegiao = new Map(Object.entries(curadoriaDeRegioes.nomesDeRegiao ?? {}))
+  const regioesESubRegioes = [...gerado.regioes, ...gerado.regioes.flatMap((r) => r.subRegioes)]
   const vizinhosDe = new Map(Object.entries(vizinhosGerados))
 
   it('o nome é o override de nomes.json quando há override, e os aliases são os de nomes.json', () => {
@@ -337,17 +349,13 @@ describe('curadoria e gerado em sincronia', () => {
 
   // O teste acima não pega o caso inverso: um override apagado de nomes.json sem regenerar deixa em bandeiras.json o nome
   // antigo do override, e o valor do ICU que ele escondia só é validado na regeneração. Sem override, o nome tem de ser o
-  // do ICU. Outro ICU pode trazer outro nome do CLDR sem que a curadoria mude, e a comparação daria falso vermelho; por
-  // isso ela só roda com o ICU que gerou bandeiras.json, o do Node fixado no .nvmrc, que é o do CI.
-  it.skipIf(process.versions['icu'] !== gerado.versoes.icu)(
-    'sem override, o nome é o do ICU que gerou os dados',
-    () => {
-      const icu = new Intl.DisplayNames(['pt-BR'], { type: 'region' })
-      for (const b of bandeiras) {
-        expect(b.nome, b.codigo).toBe(overrides.get(b.codigo)?.nome ?? icu.of(b.codigo.toUpperCase()))
-      }
-    },
-  )
+  // do ICU.
+  it.skipIf(!comIcuDosDados)('sem override, o nome é o do ICU que gerou os dados', () => {
+    const icu = new Intl.DisplayNames(['pt-BR'], { type: 'region' })
+    for (const b of bandeiras) {
+      expect(b.nome, b.codigo).toBe(overrides.get(b.codigo)?.nome ?? icu.of(b.codigo.toUpperCase()))
+    }
+  })
 
   it('descrição e classe são as de descricoes.json', () => {
     for (const b of bandeiras) {
@@ -369,6 +377,20 @@ describe('curadoria e gerado em sincronia', () => {
     expect(gerado.regioes.map((r) => [r.codigo, r.subRegioes.map((s) => s.codigo)])).toEqual(
       [...subRegioesDe].sort(([a], [b]) => a.localeCompare(b)).map(([codigo, subs]) => [codigo, ordenados(subs)]),
     )
+  })
+
+  it('todo override de nomesDeRegiao em regioes-m49.json é o nome de uma região ou sub-região', () => {
+    // Um override de código que não é região nem sub-região dos membros também reprova: o gerador o ignoraria.
+    const nomeDe = new Map(regioesESubRegioes.map((r) => [r.codigo, r.nome]))
+    for (const [codigo, override] of nomesDeRegiao) expect(nomeDe.get(codigo), codigo).toBe(override.nome)
+  })
+
+  // Como nos nomes de país, o teste acima não pega o override apagado sem regenerar.
+  it.skipIf(!comIcuDosDados)('sem override, o nome de região e de sub-região é o do ICU que gerou os dados', () => {
+    const icu = new Intl.DisplayNames(['pt-BR'], { type: 'region' })
+    for (const { codigo, nome } of regioesESubRegioes) {
+      expect(nome, codigo).toBe(nomesDeRegiao.get(codigo)?.nome ?? icu.of(codigo))
+    }
   })
 
   it('os vizinhos são os de gerado/vizinhos.json, e o traço de vizinhança junta os traços das vizinhanças', () => {
