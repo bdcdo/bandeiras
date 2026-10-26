@@ -2,6 +2,14 @@
  * Invariantes dos dados commitados do domínio: curadoria/, gerado/ e imagens/. O gerador roda à mão e este teste é o
  * que valida o resultado no CI; por isso ele lê os arquivos como estão no repositório, sem regenerar nada.
  */
+import {
+  carregarCatalogo,
+  desembrulhar,
+  indiceDeRotulos,
+  normalizarRotulo,
+  resolverRotulo,
+  type IdItem,
+} from '@bandeiras/nucleo'
 import { createHash } from 'node:crypto'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
@@ -21,6 +29,7 @@ import vizinhosGerados from '../gerado/vizinhos.json'
 import type { RegioesM49 } from '../scripts/comum.ts'
 import { MEMBROS_ONU } from '../scripts/membros.ts'
 import { PADROES_VISUAIS } from './classes'
+import { DADOS_DE_CATALOGO } from './dados'
 
 const PASTA_IMAGENS = new URL('../imagens/', import.meta.url)
 const bandeiras = gerado.bandeiras
@@ -28,29 +37,19 @@ const codigos = bandeiras.map((b) => b.codigo)
 const membros = new Set<string>(MEMBROS_ONU)
 const ordenados = (lista: Iterable<string>): string[] => [...lista].sort()
 
-/**
- * Versão local da normalização de rótulos (NFD, sem diacríticos, minúsculas, hífen, traço e apóstrofo viram espaço,
- * sem a pontuação restante, espaços colapsados, sem artigo inicial). O núcleo tem a sua, `normalizarRotulo`; este
- * pacote ainda não importa do núcleo, e quando passar a importar este teste usa a de lá e esta função sai.
- */
-function normalizar(texto: string): string {
-  return texto
-    .normalize('NFD')
-    .replace(/\p{M}/gu, '')
-    .toLowerCase()
-    .replace(/[-‐-―'‘’`´]/g, ' ')
-    .replace(/[^\p{L}\p{N}\s]/gu, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .replace(/^(o|a|os|as) /, '')
-}
-
 /** Todos os rótulos aceitos de cada bandeira: o nome exibido e os aliases. */
 const rotulos = new Map(bandeiras.map((b) => [b.codigo, [b.nome, ...b.aliases]]))
 
-function resolver(texto: string): string[] {
-  const alvo = normalizar(texto)
-  return [...rotulos].filter(([, lista]) => lista.some((r) => normalizar(r) === alvo)).map(([codigo]) => codigo)
+let indice: ReadonlyMap<string, IdItem> | undefined
+
+/**
+ * O texto resolvido como o núcleo resolve o que a pessoa digita: pela normalização dele, sobre o índice de rótulos do
+ * catálogo carregado a partir destes mesmos dados. O índice nasce na primeira chamada, e não na carga do arquivo, para
+ * um catálogo recusado reprovar só os testes que resolvem rótulo, com o erro do núcleo na mensagem.
+ */
+function resolver(texto: string): string | undefined {
+  indice ??= indiceDeRotulos(desembrulhar(carregarCatalogo(DADOS_DE_CATALOGO)).itens.values())
+  return resolverRotulo(indice, texto)
 }
 
 function sha256(conteudo: Buffer): string {
@@ -160,20 +159,23 @@ describe('licenças', () => {
 
 describe('nomes', () => {
   it('nomes e aliases são únicos depois da normalização, e cada um resolve exatamente um país', () => {
-    const todos = [...rotulos.values()].flat().map(normalizar)
+    // carregarCatalogo já recusa forma vazia, forma repetida entre itens (ROTULO_AMBIGUO) e forma repetida no mesmo
+    // item (ROTULO_REPETIDO), e aí resolver() lança com o erro do núcleo. As conferências abaixo não dependem disso:
+    // listam, pelos próprios dados, a forma vazia e as repetidas.
+    const todos = [...rotulos.values()].flat().map(normalizarRotulo)
     expect(todos.filter((r) => r === '')).toEqual([])
     const repetidos = todos.filter((r, i) => todos.indexOf(r) !== i)
     expect(repetidos).toEqual([])
     for (const [codigo, lista] of rotulos) {
-      for (const rotulo of lista) expect(resolver(rotulo), rotulo).toEqual([codigo])
+      for (const rotulo of lista) expect(resolver(rotulo), rotulo).toBe(codigo)
     }
   })
 
   it('a grafia com e sem hífen resolve o mesmo país, e "Congo" solto não resolve nenhum', () => {
-    expect(resolver('Guiné Bissau')).toEqual(['gw'])
-    expect(resolver('Guiné-Bissau')).toEqual(['gw'])
-    expect(resolver('guine bissau')).toEqual(['gw'])
-    expect(resolver('Congo')).toEqual([])
+    expect(resolver('Guiné Bissau')).toBe('gw')
+    expect(resolver('Guiné-Bissau')).toBe('gw')
+    expect(resolver('guine bissau')).toBe('gw')
+    expect(resolver('Congo')).toBeUndefined()
   })
 
   it('todo override e todo alias de nomes.json é de um membro', () => {
@@ -309,9 +311,9 @@ describe('descrições', () => {
       expect(b.descricao.trim(), b.codigo).not.toBe('')
       expect(b.descricao.length, b.codigo).toBeLessThanOrEqual(160)
       // Casamento por palavra inteira sobre o texto normalizado: "Guiné" não pode aparecer na descrição da Guiné.
-      const texto = ` ${normalizar(b.descricao)} `
+      const texto = ` ${normalizarRotulo(b.descricao)} `
       for (const rotulo of rotulos.get(b.codigo) ?? []) {
-        expect(texto.includes(` ${normalizar(rotulo)} `), `${b.codigo}: "${rotulo}"`).toBe(false)
+        expect(texto.includes(` ${normalizarRotulo(rotulo)} `), `${b.codigo}: "${rotulo}"`).toBe(false)
       }
     }
   })

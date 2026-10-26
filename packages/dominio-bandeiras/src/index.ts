@@ -1,1 +1,5 @@
 export { PADROES_VISUAIS, type PadraoVisual } from './classes'
+export { DADOS_DE_CATALOGO, VERSAO_DADOS } from './dados'
+export { dominio } from './dominio'
+export { IMAGENS } from './imagens'
+export { VOCABULARIO } from './vocabulario'
