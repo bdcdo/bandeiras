@@ -51,9 +51,14 @@ const TETO_DAS_IMAGENS_BYTES = 6 * 1024 * 1024
  *
  * pk: a estrela é um polígono com coordenadas na casa das centenas de milhares sob scale(0.00001557408), e o resvg não a
  * desenha no original. O preset do svgo aplica a transformação às coordenadas, e aí o resvg passa a desenhá-la (0,82%
- * dos pixels a 480 px). No librsvg, original e otimizado têm a mesma estrela.
+ * dos pixels a 480 px). No librsvg, original e otimizado têm a mesma estrela (0,001% dos pixels diferentes).
+ *
+ * A isenção do pk é um desvio aceito da regra de conferir pelos dois renderizadores: quem erra ali é o resvg, que não
+ * desenha o original, e não o svgo, cuja otimização o librsvg confere. Isentar tira do código a conferência pelo resvg,
+ * que também desenha o WebP e a assinatura de similaridade; por isso src/gerar.test.ts fixa este conjunto, e um código
+ * só entra aqui com a mesma demonstração: o resvg não desenha o original e o librsvg aprova a otimização.
  */
-const GATE_SO_PELO_LIBRSVG: ReadonlySet<string> = new Set(['pk'])
+export const GATE_SO_PELO_LIBRSVG: ReadonlySet<string> = new Set(['pk'])
 
 // O pacote não exporta o package.json; ele fica ao lado do ponto de entrada que o resolvedor devolve.
 const VERSAO_DO_RESVG = (

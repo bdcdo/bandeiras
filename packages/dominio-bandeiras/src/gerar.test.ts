@@ -11,7 +11,7 @@ import { tmpdir } from 'node:os'
 import { afterAll, describe, expect, it, vi } from 'vitest'
 import type * as Comum from '../scripts/comum.ts'
 import { CAMINHOS } from '../scripts/comum.ts'
-import { principal } from '../scripts/gerar.ts'
+import { GATE_SO_PELO_LIBRSVG, principal } from '../scripts/gerar.ts'
 
 vi.mock('../scripts/membros.ts', () => ({ MEMBROS_EM_ORDEM: ['br', 'zw'] }))
 vi.mock('../scripts/comum.ts', async (importOriginal) => {
@@ -60,5 +60,10 @@ describe('gerar.ts', () => {
     expect(readdirSync(CAMINHOS.imagens)).toEqual(['anterior.svg'])
     expect(readdirSync(CAMINHOS.gerado).sort()).toEqual(['licencas.json', 'vizinhos.json'])
     expect(existsSync(`${CAMINHOS.raizDoRepositorio}LICENCAS-DE-DADOS.md`)).toBe(false)
+  })
+
+  it('só o Paquistão é isento do gate pelo resvg', () => {
+    // A isenção é um desvio aceito, com a razão no comentário da constante; um código novo nela tem de passar por aqui.
+    expect([...GATE_SO_PELO_LIBRSVG]).toEqual(['pk'])
   })
 })
