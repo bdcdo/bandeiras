@@ -14,7 +14,7 @@ minimumReleaseAge: 10080
 blockExoticSubdeps: true
 # Impede que uma atualização afrouxe as travas acima em silêncio.
 trustPolicy: no-downgrade
-# O campo engines de cada package.json reprova Node fora de >=24 <25. No pnpm 11 o .npmrc só é lido para autenticação,
+# O campo engines de cada package.json reprova Node fora da faixa que ele declara. No pnpm 11 o .npmrc só é lido para autenticação,
 # registry e proxy, e um engine-strict ali é descartado em silêncio; por isso a chave fica aqui e o repositório não tem
 # .npmrc.
 engineStrict: true
