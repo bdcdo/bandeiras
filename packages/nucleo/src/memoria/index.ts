@@ -1,0 +1,5 @@
+export * from './acuracia'
+export * from './estado-memoria'
+export * from './modelo'
+export * from './parametros'
+export * from './velocidade'
