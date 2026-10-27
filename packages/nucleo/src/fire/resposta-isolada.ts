@@ -1,4 +1,5 @@
 import type { Direcao } from '../catalogo/tipos'
+import { fechoAscendente } from '../grafo/consultas'
 import type { IdTopico } from '../grafo/topico'
 import { atualizarAcuracia } from '../memoria/acuracia'
 import { deltaExplicito, repeticaoExplicita } from './explicita'
@@ -24,6 +25,11 @@ export type RespostaIsolada = Readonly<{
 const temArestas = (arestas: ReadonlyMap<IdTopico, readonly unknown[]>, t: IdTopico): boolean =>
   (arestas.get(t)?.length ?? 0) > 0
 
+function algumElegivel(fecho: ReadonlySet<IdTopico>, elegiveis: ReadonlySet<IdTopico>): boolean {
+  for (const t of fecho) if (elegiveis.has(t)) return true
+  return false
+}
+
 /**
  * Atualiza a memória depois de uma resposta isolada, em ordem fixa:
  *
@@ -35,9 +41,10 @@ const temArestas = (arestas: ReadonlyMap<IdTopico, readonly unknown[]>, t: IdTop
  *    penalidade de cada alvo da tarefa de grupo: a resposta que mostra menos do alvo mostra menos também do que ele
  *    encompassa.
  *
- * A propagação só roda quando o alvo tem aresta no sentido dela. Sem aresta, ela não alcançaria ninguém e daria o mesmo
- * mapa e a mesma culpa; pular é só para não percorrer a ordem topológica inteira a cada resposta, que é o custo que
- * domina a reconstrução de um log longo.
+ * A propagação só roda quando o alvo tem aresta no sentido dela e, no erro, quando algum ascendente é elegível. Sem
+ * aresta, ou sem elegível no fecho ascendente, ela não mudaria ninguém e daria o mesmo mapa e a mesma culpa; pular é só
+ * para não percorrer a ordem topológica inteira a cada resposta, que é o custo que domina a reconstrução de um log
+ * longo. O fecho de um item costuma ter um ou dois grupos, e percorrê-lo custa menos que a propagação que ele evita.
  *
  * A culpa é a de `propagarPenalidade` no erro e vazia no acerto. Alvo sem estado de memória não muda nada: quem chama
  * cria o estado antes, quando a resposta conta para a memória.
@@ -60,7 +67,7 @@ export function aplicarRespostaIsolada(
       : depois
     return { memorias: finais, culpa: new Set(), condicionaisPenalizados: [] }
   }
-  if (!temArestas(grafo.arestasAcima, r.alvo)) {
+  if (!temArestas(grafo.arestasAcima, r.alvo) || !algumElegivel(fechoAscendente(grafo, r.alvo), r.elegiveis)) {
     return { memorias: depois, culpa: new Set([r.alvo]), condicionaisPenalizados: [] }
   }
   return propagarPenalidade(ctx, depois, { origem: r.alvo, deltaBruto: delta, elegiveis: r.elegiveis })
