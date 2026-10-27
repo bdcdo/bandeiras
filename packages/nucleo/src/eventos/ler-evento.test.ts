@@ -131,8 +131,8 @@ describe('lerEvento recusa', () => {
     ['fuso além de um dia', META, ['fusoMinutos'], 1441, 'envelope', 'fusoMinutos: fora de ±1440'],
     ['fuso aquém de um dia', META, ['fusoMinutos'], -1441, 'envelope', 'fusoMinutos: fora de ±1440'],
     ['fuso em texto', META, ['fusoMinutos'], '180', 'envelope', 'fusoMinutos: não é número'],
-    // Tipo que esta versão não conhece, inclusive parametros-alterados, que saiu da união: os parâmetros vêm do contexto
-    // da redução e valem para o passado inteiro do log, e nenhum evento os grava.
+    // Tipo que esta versão não conhece, inclusive parametros-alterados, que a união não tem: os parâmetros vêm do
+    // contexto da redução e valem para o passado inteiro do log, e nenhum evento os grava.
     ['tipo de versão futura', META, ['tipo'], 'x-futuro', 'tipo-desconhecido', "'x-futuro'"],
     ['parametros-alterados', META, ['tipo'], 'parametros-alterados', 'tipo-desconhecido', "'parametros-alterados'"],
     // Perfil.
