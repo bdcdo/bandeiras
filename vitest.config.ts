@@ -1,9 +1,18 @@
-import { defineConfig } from 'vitest/config'
+import { configDefaults, defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
     projects: [
-      { test: { name: 'nucleo', root: './packages/nucleo', include: ['src/**/*.test.ts'], environment: 'node' } },
+      {
+        // O teste de desempenho roda só por vitest.desempenho.config.ts, fora do laço rápido e da porta única.
+        test: {
+          name: 'nucleo',
+          root: './packages/nucleo',
+          include: ['src/**/*.test.ts'],
+          exclude: [...configDefaults.exclude, 'src/**/*.desempenho.test.ts'],
+          environment: 'node',
+        },
+      },
       {
         test: {
           name: 'dominio',
