@@ -18,6 +18,7 @@ import descricoes from '../curadoria/descricoes.json'
 import dificuldade from '../curadoria/dificuldade.json'
 import familias from '../curadoria/familias.json'
 import fora from '../curadoria/fora.json'
+import inscricoesJson from '../curadoria/inscricoes.json'
 import nomes from '../curadoria/nomes.json'
 import regioesM49 from '../curadoria/regioes-m49.json'
 import vizinhancas from '../curadoria/vizinhancas.json'
@@ -26,7 +27,8 @@ import revisoes from '../gerado/commons-revisoes.json'
 import hashes from '../gerado/hashes.json'
 import licencas from '../gerado/licencas.json'
 import vizinhosGerados from '../gerado/vizinhos.json'
-import type { RegioesM49 } from '../scripts/comum.ts'
+import type { Inscricao, RegioesM49 } from '../scripts/comum.ts'
+import { fraseDaModificacao } from '../scripts/inscricoes.ts'
 import { MEMBROS_ONU } from '../scripts/membros.ts'
 import { PADROES_VISUAIS } from './classes'
 import { DADOS_DE_CATALOGO } from './dados'
@@ -116,6 +118,10 @@ describe('imagens', () => {
     // revertido. O arquivo da Moldávia passou por reversões seguidas entre desenhos antigos e o atual. Uma regeneração
     // que mudasse qualquer um dos quatro tem de reprovar aqui e passar por conferência à mão, com estes valores
     // atualizados no mesmo commit.
+    //
+    // No Afeganistão e na Bolívia, o arquivo processado é o derivado sem a inscrição com o nome do país (a palavra na
+    // fita sob o emblema e BOLIVIA na borda do oval), apagada pelas operações de curadoria/inscricoes.json. Uma entrada
+    // apagada de lá, ou uma operação que passe a tirar outra coisa, muda estes hashes e reprova aqui.
     const sha1 = new Map(revisoes.map((r) => [r.codigo, r.sha1]))
     expect(sha1.get('sy')).toBe('ce342b675fcf2604f3cad0355397d72caf52a658')
     expect(sha1.get('af')).toBe('636a7f0a49f4793da6f75d7f503d28c9e1330f84')
@@ -123,10 +129,10 @@ describe('imagens', () => {
     expect(sha1.get('md')).toBe('869c141fd01ec0ae4f6d911b535b1e6e18049e74')
     expect(sha256(ler('md.svg'))).toBe('2f9be5f7c39226728f38793f9886924bcfcae9545535e510d727cf7d058873f3')
     expect(sha256(ler('sy.svg'))).toBe('b42626405b126101b9ae0915acfd8cd7c9a5e0e93c6122a9e23c436f7dc412a8')
-    expect(sha256(ler('af-480.webp'))).toBe('0cdcdf79f6c7dbcb31d0cb34367fb027c8ef6b45902e3c30c27b1e584c44fd95')
-    expect(sha256(ler('af-960.webp'))).toBe('83b2dc272fded42c2adb71a8221e9c53704978130356de1ca0a25fb5637d84d3')
-    expect(sha256(ler('bo-480.webp'))).toBe('d01a6654c5bce6205ad70e15a318406e44754f33b64e7d11a576219d956eb723')
-    expect(sha256(ler('bo-960.webp'))).toBe('67847bc3d765420190130efbd2bf8c88eb5330a10ee4a72c464569d22ded3c32')
+    expect(sha256(ler('af-480.webp'))).toBe('11cd1ab57ecd11f34439cf1836385957c73a88491aefdee9f41f5b47401cf280')
+    expect(sha256(ler('af-960.webp'))).toBe('c6e027ee186b78ad0c396e2ebe3c2e886d4a4d0fd990a163873eef1098e150e4')
+    expect(sha256(ler('bo-480.webp'))).toBe('e0169d830fa0ce4cb8ce22834c671f560606cd18d9523def546b505f02c8efd4')
+    expect(sha256(ler('bo-960.webp'))).toBe('c39a5206775d84b8dfb7c03dfd67083526104a4ee7a6c62e60a2dae8fe3076aa')
   })
 
   it('nenhum SVG traz o nome do país em <title>, <desc> ou texto "Flag of"', () => {
@@ -161,6 +167,53 @@ describe('licenças', () => {
     for (const l of licencas) {
       expect(aceita(l.licenca), `${l.codigo}: ${l.licenca}`).toBe(true)
       if (ATRIBUICAO.has(l.licenca)) expect(l.autor.trim(), l.codigo).not.toBe('')
+    }
+  })
+})
+
+describe('inscrições com o nome do país', () => {
+  // A anotação dá ao JSON o tipo que o gerador lê; o teste confere o conteúdo campo a campo.
+  const inscricoes: Inscricao[] = inscricoesJson as Inscricao[]
+  const dentroDaImagem = (r: { x0: number; y0: number; x1: number; y1: number }): boolean =>
+    r.x0 >= 0 && r.y0 >= 0 && r.x1 <= 1 && r.y1 <= 1 && r.x0 < r.x1 && r.y0 < r.y1
+
+  it('inscricoes.json tem exatamente as oito bandeiras que escrevem o nome do país', () => {
+    // A lista vem do levantamento visual das 193 imagens em 26/10/2026, feito por dois leitores independentes que
+    // concordaram nas 193. Outras doze escrevem lema, data ou fórmula religiosa (ad, br, bz, es, gq, gt, ht, iq, ir, mt,
+    // sa, sm); não nomeiam o país e ficam como estão. Quando uma bandeira nova, ou um arquivo novo do Commons, escrever o
+    // nome do país, ela entra em curadoria/inscricoes.json com as operações que apagam a inscrição e entra aqui, no mesmo
+    // commit; `pnpm gerar:dados` confere a remoção pelo gate de gerar.ts.
+    const codigos = inscricoes.map((i) => i.codigo)
+    expect(new Set(codigos).size, 'código repetido').toBe(codigos.length)
+    for (const codigo of codigos) expect(membros.has(codigo), codigo).toBe(true)
+    expect(ordenados(codigos)).toEqual(['af', 'bn', 'bo', 'do', 'eg', 'ni', 'py', 'sv'])
+  })
+
+  it('cada entrada tem texto, lugar, caixa dentro da imagem e operações completas', () => {
+    for (const i of inscricoes) {
+      expect(i.texto.trim(), i.codigo).not.toBe('')
+      expect(i.lugar.trim(), i.codigo).not.toBe('')
+      if (i.traducao !== undefined) expect(i.traducao.trim(), i.codigo).not.toBe('')
+      expect(dentroDaImagem(i.caixa), `${i.codigo}: caixa`).toBe(true)
+      expect(i.operacoes.length, i.codigo).toBeGreaterThanOrEqual(1)
+      for (const [n, op] of i.operacoes.entries()) {
+        const rotulo = `${i.codigo}: operação ${String(n + 1)}`
+        expect(op.descricao.trim(), rotulo).not.toBe('')
+        expect(['elementos', 'subcaminhos'], rotulo).toContain(op.remover)
+        expect(Object.keys(op.atributos).length, rotulo).toBeGreaterThanOrEqual(1)
+        expect(Number.isInteger(op.esperados) && op.esperados >= 1, rotulo).toBe(true)
+        if (op.remover === 'subcaminhos') expect(op.dentroDe, rotulo).toBeDefined()
+        for (const r of op.dentroDe ?? []) expect(dentroDaImagem(r), `${rotulo}: dentroDe`).toBe(true)
+      }
+    }
+  })
+
+  it('licencas.json registra a modificação nas bandeiras de inscricoes.json, e só nelas, com a frase da curadoria', () => {
+    // Como bandeiras.json, licencas.json é gerado à mão; este teste pega a curadoria editada sem regenerar.
+    const frase = new Map(inscricoes.map((i) => [i.codigo, fraseDaModificacao(i)]))
+    for (const l of licencas) {
+      const modificacao = 'modificacao' in l ? l.modificacao : undefined
+      expect(modificacao, l.codigo).toBe(frase.get(l.codigo))
     }
   })
 })
