@@ -7,7 +7,7 @@
     "caixa": { "x0": 0.43, "y0": 0.76, "x1": 0.57, "y1": 0.83 },
     "operacoes": [
       {
-        "descricao": "os 10 subcaminhos do path branco do emblema (717 subcaminhos, cor herdada do grupo) que cabem na fita: os quatro traços das letras e os seis pontos; o contorno da fita e o trigo ficam",
+        "descricao": "os subcaminhos do path branco do emblema (cor herdada do grupo) que cabem na fita: os traços das letras e os pontos; o contorno da fita e o trigo ficam",
         "remover": "subcaminhos",
         "atributos": { "fill": "#fffffd" },
         "subcaminhos": 717,
@@ -24,7 +24,7 @@
     "caixa": { "x0": 0.4, "y0": 0.68, "x1": 0.59, "y1": 0.8 },
     "operacoes": [
       {
-        "descricao": "os 16 subcaminhos do path amarelo que junta as letras da fita e as do lema (35 subcaminhos) e que cabem na fita; os três retângulos seguem a curva da fita e deixam de fora as letras do lema, que descem até perto dela",
+        "descricao": "os subcaminhos do path amarelo que junta as letras da fita e as do lema e que cabem na fita; os retângulos seguem a curva da fita e deixam de fora as letras do lema, que descem até perto dela",
         "remover": "subcaminhos",
         "atributos": { "class": "B" },
         "subcaminhos": 35,
@@ -36,7 +36,7 @@
         "esperados": 16
       },
       {
-        "descricao": "os 8 paths amarelos de retoque das letras da fita, que cabem inteiros nos mesmos retângulos",
+        "descricao": "os paths amarelos de retoque das letras da fita, que cabem inteiros nos mesmos retângulos",
         "remover": "elementos",
         "atributos": { "class": "B" },
         "dentroDe": [
@@ -47,7 +47,7 @@
         "esperados": 8
       },
       {
-        "descricao": "o subcaminho de retoque da fita no path amarelo de 2 subcaminhos; o outro subcaminho é do lema e fica",
+        "descricao": "no path amarelo que junta o retoque de uma letra da fita e um pedaço do lema, o subcaminho do retoque; o do lema fica",
         "remover": "subcaminhos",
         "atributos": { "class": "B" },
         "subcaminhos": 2,
@@ -67,7 +67,7 @@
     "caixa": { "x0": 0.45, "y0": 0.43, "x1": 0.55, "y1": 0.53 },
     "operacoes": [
       {
-        "descricao": "as sete sombras pretas das letras, que cabem na borda azul do oval (três retângulos: lado esquerdo, topo e lado direito); as estrelas da metade de baixo ficam",
+        "descricao": "as sombras pretas das letras, que cabem na borda azul do oval (os retângulos seguem o lado esquerdo, o topo e o lado direito da borda); as estrelas da metade de baixo ficam",
         "remover": "elementos",
         "atributos": { "fill": null },
         "dentroDe": [
@@ -78,7 +78,7 @@
         "esperados": 7
       },
       {
-        "descricao": "as sete letras douradas e um retalho dourado que a borda azul cobre por inteiro (tirá-lo não muda nenhum pixel, e ele cabe na caixa da letra I, por isso nenhum retângulo o separa dela)",
+        "descricao": "as letras douradas e um retalho dourado que a borda azul cobre por inteiro (tirá-lo não muda nenhum pixel, e ele cabe na caixa da letra I, por isso nenhum retângulo o separa dela)",
         "remover": "elementos",
         "atributos": { "fill": "#f0e53c" },
         "dentroDe": [
@@ -97,7 +97,7 @@
     "caixa": { "x0": 0.46, "y0": 0.56, "x1": 0.54, "y1": 0.6 },
     "operacoes": [
       {
-        "descricao": "o path amarelo das letras, de 29 subcaminhos, na fita de baixo; o de cima, do mesmo amarelo e também de 29 subcaminhos, é o lema DIOS PATRIA LIBERTAD e fica",
+        "descricao": "o path amarelo das letras, na fita de baixo; o de cima, do mesmo amarelo e com o mesmo total de subcaminhos, é o lema DIOS PATRIA LIBERTAD e fica",
         "remover": "elementos",
         "atributos": { "fill": "#eac102" },
         "subcaminhos": 29,
@@ -114,7 +114,7 @@
     "caixa": { "x0": 0.44, "y0": 0.61, "x1": 0.57, "y1": 0.66 },
     "operacoes": [
       {
-        "descricao": "o path amarelo de 25 subcaminhos com as letras da legenda; o contorno da base fica",
+        "descricao": "o path amarelo com as letras da legenda; o contorno da base fica",
         "remover": "elementos",
         "atributos": { "class": "B C" },
         "subcaminhos": 25,
@@ -129,7 +129,7 @@
     "caixa": { "x0": 0.4, "y0": 0.34, "x1": 0.6, "y1": 0.66 },
     "operacoes": [
       {
-        "descricao": "o path dourado de 51 subcaminhos com as letras e os dois traços da legenda; o contorno dourado do triângulo, da mesma cor e com 2 subcaminhos, fica",
+        "descricao": "o path dourado com as letras e os traços da legenda; o contorno dourado do triângulo, da mesma cor e com outro total de subcaminhos, fica",
         "remover": "elementos",
         "atributos": { "fill": "#c8a400" },
         "subcaminhos": 51,
@@ -144,7 +144,7 @@
     "caixa": { "x0": 0.43, "y0": 0.39, "x1": 0.57, "y1": 0.57 },
     "operacoes": [
       {
-        "descricao": "o único path sem cor de preenchimento (preto), de 31 subcaminhos, com as letras do anel; os três círculos ficam",
+        "descricao": "o path sem cor de preenchimento (preto) com as letras do anel; os círculos ficam",
         "remover": "elementos",
         "atributos": { "fill": null },
         "subcaminhos": 31,
@@ -159,7 +159,7 @@
     "caixa": { "x0": 0.4, "y0": 0.34, "x1": 0.6, "y1": 0.66 },
     "operacoes": [
       {
-        "descricao": "o path amarelo de 58 subcaminhos com as letras da legenda",
+        "descricao": "o path amarelo com as letras da legenda",
         "remover": "elementos",
         "atributos": { "fill": "#fc0" },
         "subcaminhos": 58,

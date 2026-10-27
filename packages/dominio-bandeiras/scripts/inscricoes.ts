@@ -28,7 +28,7 @@
  * borda do oval" e confere na imagem, e uma revisão nova do arquivo que embaralhe a ordem dos elementos não muda o que
  * é escolhido. Se o arquivo mudar de um jeito que o traço já não ache o que a curadoria declarou, a contagem não bate e
  * a derivação lança, nomeando o código e a operação. O campo `descricao` de cada operação diz em palavras o que ela
- * acha, para a revisão comparar com a imagem.
+ * acha, para a revisão comparar com a imagem, sem repetir as contagens de `esperados` e `subcaminhos`.
  *
  * Os dois tipos de operação:
  *

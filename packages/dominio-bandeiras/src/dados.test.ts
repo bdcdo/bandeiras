@@ -218,6 +218,8 @@ describe('inscrições com o nome do país', () => {
       for (const [n, op] of i.operacoes.entries()) {
         const rotulo = `${i.codigo}: operação ${String(n + 1)}`
         expect(op.descricao.trim(), rotulo).not.toBe('')
+        // A contagem mora em esperados e subcaminhos; repetida na frase, ela desatualiza em silêncio quando o campo muda.
+        expect(op.descricao, `${rotulo}: descricao com número`).not.toMatch(/\d/)
         expect(['elementos', 'subcaminhos'], rotulo).toContain(op.remover)
         expect(Object.keys(op.atributos).length, rotulo).toBeGreaterThanOrEqual(1)
         expect(Number.isInteger(op.esperados) && op.esperados >= 1, rotulo).toBe(true)
