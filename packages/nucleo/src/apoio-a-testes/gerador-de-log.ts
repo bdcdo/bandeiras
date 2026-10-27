@@ -788,7 +788,9 @@ function acaoLivre(r: Roteirista): void {
         const chave = chaveDePar(x, y)
         return (r.estado.confusoes.get(chave) ?? 0) > (r.estado.confusoesRemediadas.get(chave) ?? 0)
       }
-      const par = sabidos.flatMap((x, k) => sabidos.slice(k + 1).map((y) => [x, y] as const)).find(([x, y]) => pendente(x, y))
+      const par = sabidos
+        .flatMap((x, k) => sabidos.slice(k + 1).map((y) => [x, y] as const))
+        .find(([x, y]) => pendente(x, y))
       if (par !== undefined) remediacao(r, par[0], par[1])
       return
     }

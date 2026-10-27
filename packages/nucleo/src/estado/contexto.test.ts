@@ -97,7 +97,9 @@ describe('criarContextoDeReducao', () => {
       ),
     )
     const certo = desembrulhar(reconstruir(comGrupos, comErro)).estado
-    expect(certo.memorias.get(F)).not.toStrictEqual(desembrulhar(reconstruir(comGrupos, semErro)).estado.memorias.get(F))
+    expect(certo.memorias.get(F)).not.toStrictEqual(
+      desembrulhar(reconstruir(comGrupos, semErro)).estado.memorias.get(F),
+    )
     expect(instantaneoDoEstado(desembrulhar(reconstruir(montado, comErro)).estado)).toStrictEqual(
       instantaneoDoEstado(certo),
     )

@@ -203,7 +203,11 @@ describe('reconstruir: deduplicação', () => {
     const invertido = (valor: unknown): unknown => {
       if (Array.isArray(valor)) return valor.map(invertido)
       if (typeof valor !== 'object' || valor === null) return valor
-      return Object.fromEntries(Object.entries(valor).toReversed().map(([chave, v]) => [chave, invertido(v)]))
+      return Object.fromEntries(
+        Object.entries(valor)
+          .toReversed()
+          .map(([chave, v]) => [chave, invertido(v)]),
+      )
     }
     const resposta = c.eventos.find((e) => e.tipo === 'resposta-registrada')
     if (resposta === undefined) throw new Error('resposta esperada')

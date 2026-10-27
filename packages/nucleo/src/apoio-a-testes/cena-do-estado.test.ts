@@ -7,7 +7,8 @@ function folhas(p: Parametros): Map<string, number> {
   const saida = new Map<string, number>()
   for (const [chave, valor] of Object.entries(p)) {
     if (typeof valor === 'number') saida.set(chave, valor)
-    else for (const [sub, v] of Object.entries(valor as Readonly<Record<string, number>>)) saida.set(`${chave}.${sub}`, v)
+    else
+      for (const [sub, v] of Object.entries(valor as Readonly<Record<string, number>>)) saida.set(`${chave}.${sub}`, v)
   }
   return saida
 }

@@ -1,14 +1,7 @@
 import { ok, type Resultado } from '../base/resultado'
 import type { Tecnicas } from '../catalogo/tecnicas'
 import type { Catalogo } from '../catalogo/tipos'
-import {
-  construirGrafo,
-  topicoDeGrupo,
-  topicoDeItem,
-  type ErroDeGrafo,
-  type Grafo,
-  type IdTopico,
-} from '../grafo'
+import { construirGrafo, topicoDeGrupo, topicoDeItem, type ErroDeGrafo, type Grafo, type IdTopico } from '../grafo'
 import type { Dificuldade, Parametros } from '../memoria'
 
 /**

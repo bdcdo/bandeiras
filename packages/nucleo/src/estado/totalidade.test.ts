@@ -251,7 +251,11 @@ const LINHAS: readonly Linha[] = [
   {
     linha: 'resposta errada confundida com item fora do catálogo tem efeito normal e não conta confusão',
     preparar: (c) => abrirSessaoNaCena(c),
-    corpo: respostaErrada({ tarefaId: 'avulsa', passo: 0, uso: REVISAO, questao: questaoDigitada(I('k')) }, 'errada', I('zz')),
+    corpo: respostaErrada(
+      { tarefaId: 'avulsa', passo: 0, uso: REVISAO, questao: questaoDigitada(I('k')) },
+      'errada',
+      I('zz'),
+    ),
     efeito: (antes, e) => ({
       ...comumDaResposta(antes, e),
       memorias: new Map(antes.memorias).set(T('k'), atualizarAcuracia(inicial(antes, T('k')), false, 1, P, 'recordar')),

@@ -83,7 +83,9 @@ function casosDoLivre(log: readonly Evento[]): string[] {
   for (const e of log) aparelhosPorEm.set(e.em, (aparelhosPorEm.get(e.em) ?? new Set()).add(e.dispositivo))
   return [
     [...aparelhosPorEm.values()].some((aparelhos) => aparelhos.size > 1) ? 'em igual entre aparelhos' : '',
-    log.slice(1).some((e) => e.tipo === 'perfil-criado' || e.tipo === 'perfil-reiniciado') ? 'perfil no meio do log' : '',
+    log.slice(1).some((e) => e.tipo === 'perfil-criado' || e.tipo === 'perfil-reiniciado')
+      ? 'perfil no meio do log'
+      : '',
     log.length > 10 ? 'mais de dez eventos' : '',
   ].filter((caso) => caso !== '')
 }

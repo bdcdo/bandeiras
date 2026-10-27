@@ -135,7 +135,12 @@ describe('lição', () => {
       questaoDigitada(I('k')),
     ]
     questoes.forEach((questao, passo) => {
-      const corpo = respostaCerta({ tarefaId: licao.id, passo, uso: { tipo: 'licao', kp: (passo + 1) as 1 | 2 | 3 }, questao })
+      const corpo = respostaCerta({
+        tarefaId: licao.id,
+        passo,
+        uso: { tipo: 'licao', kp: (passo + 1) as 1 | 2 | 3 },
+        questao,
+      })
       if (passo < 2) emitirUm(c, corpo)
       else emitirNaCena(c, corpo, { tipo: 'licao-concluida', tarefaId: licao.id, topico: T('k'), acelerada: false })
     })
