@@ -103,9 +103,9 @@ describe('lição', () => {
     const m = memoria(c, T('k'))
     expect(m).toStrictEqual(memoriaDaLicao(T('k'), [true, true, true], fim.em))
     expect(fase(m, P)).toBe('aprendendo')
-    // O vencimento da lição, preso em número: um intervalo ideal de `intervaloBaseDias` 1,3 crescido pela velocidade do
+    // O vencimento da lição, preso em número: um intervalo ideal de `intervaloBaseDias` 1,15 crescido pela velocidade do
     // tópico, acima de 1 depois de três acertos. Sem a repetição, o tópico não teria vencimento.
-    expect(((devidoEm(m, P) ?? 0) - fim.em) / DIA).toBeCloseTo(1.5787, 4)
+    expect(((devidoEm(m, P) ?? 0) - fim.em) / DIA).toBeCloseTo(1.3966, 4)
     expect(statusDaLicao(c.estado, T('k'))).toStrictEqual({
       status: 'concluida',
       em: fim.em,
@@ -266,9 +266,9 @@ describe('XP', () => {
   })
 
   it('o chute sistemático lê as qualidades de antes da tarefa, e não a janela do fechamento', () => {
-    // Com janela 3: [perfeita x3] da lição, dois chutes avulsos, a tarefa abre com [perfeita, chute, chute], uma
-    // resposta avulsa perfeita entra no meio, e a tarefa fecha com um chute. Antes da tarefa mais ela dá três chutes na
-    // janela; a janela do fechamento, [chute, perfeita, chute] mais o chute, daria dois.
+    // Com janela 7 e três chutes nela: [perfeita x3] da lição e dois chutes avulsos, e a tarefa abre com
+    // [perfeita x3, chute, chute]; cinco respostas avulsas perfeitas entram no meio, e a tarefa fecha com um chute. Antes
+    // da tarefa mais ela dá três chutes na janela; a janela do fechamento, [chute, perfeita x5] mais o chute, daria dois.
     const c = novaCena(ctx)
     abrirSessaoNaCena(c, [I('k')])
     licaoDeItem(c, I('k'))
@@ -278,7 +278,8 @@ describe('XP', () => {
     const questao = questaoDigitada(I('k'))
     const revisao = tarefaRegistrada('revisao', [T('k')], [passoDe(questao, REVISAO)])
     emitirUm(c, { tipo: 'tarefa-iniciada', tarefa: revisao })
-    emitirUm(c, respostaCerta(avulsa))
+    expect([P.janelaChuteSistematico, P.chutesNasUltimasSistematico]).toStrictEqual([7, 3])
+    for (let k = 0; k < 5; k += 1) emitirUm(c, respostaCerta(avulsa))
     emitirUm(c, respostaErrada({ tarefaId: revisao.id, passo: 0, uso: REVISAO, questao }, 'chute'))
     const [[, xp] = ['', 0]] = somenteXp(c.estado)
     expect(xp).toBeCloseTo(XP_DA_LICAO + P.minutosPorQuestao * P.multiplicadorXpChute, 9)

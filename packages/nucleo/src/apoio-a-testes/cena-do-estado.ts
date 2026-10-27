@@ -208,15 +208,18 @@ export function abrirSessaoNaCena(cena: Cena, novasPrevistas: readonly IdItem[] 
 
 /**
  * Os ajustes dos casos fixos. Vários padrões coincidem (há muitos 0,5 e 1), e um caso rodado com os padrões passaria com
- * a fórmula lendo um parâmetro no lugar de outro de mesmo valor; estes têm valores que nenhum outro tem.
+ * a fórmula lendo um parâmetro no lugar de outro de mesmo valor; cada valor daqui difere do padrão do próprio parâmetro
+ * e de todo outro número de `PARAMETROS_DOS_CASOS`, e o teste ao lado reprova o ajuste que coincidir. A janela de chute
+ * fica em 7, e não em 3, porque 3 é o padrão de `chutesNasUltimasSistematico`, que a conta do chute lê junto com ela, e
+ * `RELACOES` pede a janela de pelo menos esse tamanho.
  */
 export const AJUSTES_DOS_CASOS = {
   fatorMultiplaEscolha: 0.4,
   fatorExposicaoDistrator: 0.7,
-  intervaloBaseDias: 1.3,
+  intervaloBaseDias: 1.15,
   minutosLicao: 1.7,
   multiplicadorXpChute: -0.6,
-  janelaChuteSistematico: 3,
+  janelaChuteSistematico: 7,
 } as const satisfies AjustesDeParametros
 
 /** `AJUSTES_DOS_CASOS` com os ajustes a mais que o caso pede. */
