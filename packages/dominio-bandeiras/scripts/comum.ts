@@ -52,6 +52,41 @@ export type Descricao = { codigo: string; classe: string; descricao: string }
 
 export type OverridesDeDificuldade = Record<string, { dificuldade: 1 | 2 | 3; motivo: string }>
 
+/** Retângulo em frações da imagem, de 0 a 1, a partir do canto de cima à esquerda. */
+export type CaixaNaImagem = { x0: number; y0: number; x1: number; y1: number }
+
+/** Uma operação de curadoria/inscricoes.json; o significado de cada campo está em scripts/inscricoes.ts. */
+export type OperacaoDeInscricao = {
+  /** O que a operação acha, em palavras, para quem revisa a curadoria comparar com a imagem. */
+  descricao: string
+  remover: 'elementos' | 'subcaminhos'
+  /** Traço herdado que o elemento tem de ter; null é atributo ausente no elemento e nos ancestrais. */
+  atributos: Record<string, string | null>
+  /** Total de subcaminhos do path, quando a cor sozinha não separa um path de outro. */
+  subcaminhos?: number
+  /** Região da busca: a forma tem de caber inteira num destes retângulos. */
+  dentroDe?: CaixaNaImagem[]
+  /** Quantos elementos (remover elementos) ou subcaminhos (remover subcaminhos) a operação tem de achar. */
+  esperados: number
+}
+
+/** Bandeira que escreve o nome do país no desenho, e como apagar a inscrição. */
+export type Inscricao = {
+  codigo: string
+  /** O que está escrito, transcrito como no desenho. */
+  texto: string
+  /** Tradução para o português, quando a escrita não é latina. */
+  traducao?: string
+  /** Onde a inscrição fica, em palavras, para entrar numa frase depois de uma vírgula ("na fita sob o escudo"). */
+  lugar: string
+  /**
+   * Região da imagem fora da qual a remoção não pode mudar nenhum pixel, justa na inscrição; o gate de gerar.ts confere
+   * as duas coisas.
+   */
+  caixa: CaixaNaImagem
+  operacoes: OperacaoDeInscricao[]
+}
+
 export type RevisaoCommons = { codigo: string; titulo: string; sha1: string; timestamp: string; url: string }
 
 export type Licenca = {
@@ -62,6 +97,8 @@ export type Licenca = {
   /** null quando o Commons não dá URL de licença, o caso do domínio público. */
   urlLicenca: string | null
   urlPagina: string
+  /** O que o projeto mudou no desenho, quando mudou; frase gerada da curadoria por fraseDaModificacao (inscricoes.ts). */
+  modificacao?: string
 }
 
 /** Vizinhos de cada bandeira, na ordem em que a casca e o núcleo devem consultá-los. */
@@ -94,6 +131,7 @@ export function lerCuradoria() {
     fora: lerJson(c + 'fora.json') as Fora,
     descricoes: lerJson(c + 'descricoes.json') as Descricao[],
     dificuldade: lerJson(c + 'dificuldade.json') as OverridesDeDificuldade,
+    inscricoes: lerJson(c + 'inscricoes.json') as Inscricao[],
   }
 }
 

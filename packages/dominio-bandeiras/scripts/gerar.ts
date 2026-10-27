@@ -5,8 +5,11 @@
  * Quando rodar: em `pnpm gerar:dados`, depois de baixar-commons e similaridade. Roda à mão; o teste de dados valida o
  * que ele deixou commitado. Imagem que mudou exige conferência à mão e o hash novo no mesmo commit.
  *
- * Por bandeira: recusa SVG com <text> ou <image> (texto depende da fonte instalada para rasterizar igual em todo
- * lugar, e <image> embute bitmap que o svgo não otimiza); passa o svgo; rasteriza o original e o otimizado em dois
+ * Por bandeira: nas que escrevem o nome do país (curadoria/inscricoes.json), apaga a inscrição (inscricoes.ts) e
+ * reprova se a remoção mudou algum pixel fora da caixa da curadoria ou não chegou perto das bordas dela (conferirRemocao,
+ * abaixo); daí em diante, tudo opera sobre esse derivado, que
+ * é o que o aluno vê. Recusa SVG com <text> ou <image> (texto depende da fonte instalada para rasterizar igual em todo
+ * lugar, e <image> embute bitmap que o svgo não otimiza); passa o svgo; rasteriza a entrada e o otimizado em dois
  * renderizadores e reprova se o svgo mudou a imagem em algum deles; grava o SVG otimizado ou, acima de 100 KB, um WebP
  * em duas larguras.
  */
@@ -23,10 +26,12 @@ import {
   lerCuradoria,
   lerJson,
   lerJsonSeExistir,
+  type Inscricao,
   type Licenca,
   type RegioesM49,
   type Vizinhos,
 } from './comum.ts'
+import { derivar } from './inscricoes.ts'
 import { MEMBROS_EM_ORDEM } from './membros.ts'
 
 /** Largura do gate de fidelidade: a largura da bandeira na tela do celular, com folga. */
@@ -38,6 +43,11 @@ const FRACAO_MAXIMA_DIFERENTE = 0.005
 /** Acima disto, depois do svgo, o SVG vira WebP: brasões detalhados pesam centenas de KB em vetor e pouco em raster. */
 const LIMITE_DO_SVG_BYTES = 100 * 1024
 const LARGURAS_DO_WEBP = [480, 960] as const
+/**
+ * Largura do gate da remoção: a do WebP maior, onde a inscrição tem mais pixels e um resto de letra fica mais visível.
+ * As bandeiras que viram SVG não têm largura fixa; nelas a medida a 960 px vale como amostra de tela grande.
+ */
+const LARGURA_DO_GATE_DA_REMOCAO = Math.max(...LARGURAS_DO_WEBP)
 /**
  * Qualidade do WebP com perda. As bandeiras são chapadas com bordas nítidas; smartSubsample evita que o vermelho e o
  * azul borrem nas bordas, o defeito mais visível do subamostramento de cor.
@@ -169,6 +179,78 @@ function proporcaoDaBandeira(codigo: string, svg: string): number {
   return Math.round((largura / altura) * 1000) / 1000
 }
 
+/**
+ * Folga máxima, em fração da largura ou da altura da imagem, entre cada borda da caixa declarada e o pixel mudado mais
+ * perto dela. A caixa justa é o que dá sentido à regra de não mudar nada fora dela: em ni e sv a legenda circular cerca o
+ * emblema, e uma caixa larga aceitaria uma operação que tirasse o contorno do triângulo ou um pedaço do brasão no lugar
+ * das letras. Medida a 960 px, a maior folga das oito curadorias de hoje é 0,015; tirar o contorno do triângulo de ni
+ * no lugar da legenda deixa folga de 0,034 a 0,098.
+ */
+const FOLGA_MAXIMA_DA_CAIXA = 0.02
+
+/**
+ * Gate da remoção. Rasteriza original e derivado pelo resvg na mesma largura e conta os pixels em que algum canal mudou,
+ * sem tolerância: tirar um elemento do SVG não mexe em pixel que ele não cobria, e reescrever a árvore pelo svgo sem
+ * plugin de otimização não muda nada na imagem (conferido nos oito originais). Reprova em três casos: algum pixel mudou
+ * fora da caixa, que é desenho que não devia ter saído; nenhum pixel mudou, e a operação teria achado o que declarou sem
+ * que isso aparecesse na imagem; ou a mudança fica a mais de FOLGA_MAXIMA_DA_CAIXA de alguma borda da caixa, e aí ou a
+ * caixa é larga demais para a inscrição, ou a operação tirou outra coisa, menor, lá dentro.
+ *
+ * O gate não distingue duas remoções que ocupam a mesma região: tirar a legenda de ni junto com o contorno do triângulo,
+ * que ela cerca, passa por ele. O que fecha esse caso é o hash do arquivo processado de cada uma das oito, fixado em
+ * src/dados.test.ts, que reprova no CI qualquer mudança no que sai até alguém conferir a imagem.
+ */
+export function conferirRemocao(inscricao: Inscricao, original: string, derivado: string): number {
+  const antes = rasterizar(original, LARGURA_DO_GATE_DA_REMOCAO)
+  const depois = rasterizar(derivado, LARGURA_DO_GATE_DA_REMOCAO)
+  const { codigo, caixa } = inscricao
+  if (antes.largura !== depois.largura || antes.altura !== depois.altura) {
+    falhar(`${codigo}: a remoção da inscrição mudou o tamanho rasterizado`)
+  }
+  // Pixel (x, y) cobre o intervalo [x, x + 1); fica dentro da caixa quando toca nela.
+  const [x0, x1] = [Math.floor(caixa.x0 * antes.largura), Math.ceil(caixa.x1 * antes.largura)]
+  const [y0, y1] = [Math.floor(caixa.y0 * antes.altura), Math.ceil(caixa.y1 * antes.altura)]
+  let dentro = 0
+  let fora = 0
+  // Retângulo, em pixels, que contém todos os pixels mudados.
+  let [mudouX0, mudouY0, mudouX1, mudouY1] = [Infinity, Infinity, -Infinity, -Infinity]
+  for (let i = 0; i < antes.pixels.length; i += 4) {
+    if (antes.pixels.readUInt32LE(i) === depois.pixels.readUInt32LE(i)) continue
+    const pixel = i / 4
+    const [x, y] = [pixel % antes.largura, Math.floor(pixel / antes.largura)]
+    if (x >= x0 && x < x1 && y >= y0 && y < y1) dentro++
+    else fora++
+    mudouX0 = Math.min(mudouX0, x)
+    mudouY0 = Math.min(mudouY0, y)
+    mudouX1 = Math.max(mudouX1, x + 1)
+    mudouY1 = Math.max(mudouY1, y + 1)
+  }
+  const largura = String(LARGURA_DO_GATE_DA_REMOCAO)
+  if (fora > 0) {
+    falhar(
+      `${codigo}: a remoção da inscrição mudou ${String(fora)} pixels fora da caixa de curadoria/inscricoes.json, ` +
+        `a ${largura} px; ou a caixa não cobre a inscrição, ou a operação tirou outra parte do desenho`,
+    )
+  }
+  if (dentro === 0) falhar(`${codigo}: a remoção da inscrição não mudou nenhum pixel dentro da caixa, a ${largura} px`)
+  const folgas = {
+    esquerda: mudouX0 / antes.largura - caixa.x0,
+    topo: mudouY0 / antes.altura - caixa.y0,
+    direita: caixa.x1 - mudouX1 / antes.largura,
+    base: caixa.y1 - mudouY1 / antes.altura,
+  }
+  const largas = Object.entries(folgas).filter(([, folga]) => folga > FOLGA_MAXIMA_DA_CAIXA)
+  if (largas.length > 0) {
+    falhar(
+      `${codigo}: a mudança fica longe da borda da caixa de curadoria/inscricoes.json (` +
+        largas.map(([borda, folga]) => `${borda} ${folga.toFixed(3)}`).join(', ') +
+        `; máximo ${String(FOLGA_MAXIMA_DA_CAIXA)}), a ${largura} px; ou a caixa é larga demais para a inscrição, ` +
+        'ou a operação tirou outra parte do desenho, menor, dentro dela',
+    )
+  }
+  return dentro
+}
+
 function sha256(conteudo: Buffer): string {
   return createHash('sha256').update(conteudo).digest('hex')
 }
@@ -176,19 +258,39 @@ function sha256(conteudo: Buffer): string {
 type Imagem = { formato: 'svg' } | { formato: 'webp'; larguras: number[] }
 /** Fração de pixels diferentes entre original e otimizado em cada renderizador; resvg ausente nos códigos isentos. */
 type Gate = { resvg?: number; librsvg: number }
-type Processada = { codigo: string; proporcao: number; imagem: Imagem; arquivos: Map<string, Buffer>; gate: Gate }
+type Processada = {
+  codigo: string
+  proporcao: number
+  imagem: Imagem
+  arquivos: Map<string, Buffer>
+  gate: Gate
+  /** Pixels que a remoção da inscrição mudou, na largura do gate dela; undefined nas bandeiras sem inscrição. */
+  remocao: number | undefined
+}
 
-async function processar(codigo: string): Promise<Processada> {
+/** O derivado sem a inscrição; uma operação que não acha o que declarou encerra a geração com a mensagem dela. */
+export function semInscricao(inscricao: Inscricao, original: string): string {
+  try {
+    return derivar(inscricao, original).svg
+  } catch (erro) {
+    falhar(erro instanceof Error ? erro.message : String(erro))
+  }
+}
+
+async function processar(codigo: string, inscricao: Inscricao | undefined): Promise<Processada> {
   const caminho = `${CAMINHOS.cache}${codigo}.svg`
   if (!existsSync(caminho)) falhar(`${codigo}: original ausente em .cache/commons/; rode baixar-commons.ts antes`)
   const original = readFileSync(caminho, 'utf8')
-  const proibido = /<(?:[\w-]+:)?(text|image)[\s/>]/.exec(original)?.[1]
+  // Daqui em diante, `entrada` é o que o aluno vê: o derivado sem a inscrição, ou o próprio original.
+  const entrada = inscricao === undefined ? original : semInscricao(inscricao, original)
+  const remocao = inscricao === undefined ? undefined : conferirRemocao(inscricao, original, entrada)
+  const proibido = /<(?:[\w-]+:)?(text|image)[\s/>]/.exec(entrada)?.[1]
   if (proibido !== undefined) {
     falhar(`${codigo}: o SVG tem <${proibido}>; escolha outro título em curadoria/commons.json`)
   }
 
-  const otimizado = otimizar(codigo, original)
-  const antes = rasterizar(original, LARGURA_DO_GATE)
+  const otimizado = otimizar(codigo, entrada)
+  const antes = rasterizar(entrada, LARGURA_DO_GATE)
   const depois = rasterizar(otimizado, LARGURA_DO_GATE)
   if (antes.largura !== depois.largura || antes.altura !== depois.altura) {
     falhar(
@@ -199,7 +301,7 @@ async function processar(codigo: string): Promise<Processada> {
   // deles desenha passaria por um gate de renderizador único.
   const gate: Gate = {
     librsvg: fracaoDiferente(
-      await rasterizarPeloLibrsvg(original, antes.largura, antes.altura),
+      await rasterizarPeloLibrsvg(entrada, antes.largura, antes.altura),
       await rasterizarPeloLibrsvg(otimizado, antes.largura, antes.altura),
     ),
     ...(GATE_SO_PELO_LIBRSVG.has(codigo) ? {} : { resvg: fracaoDiferente(antes.pixels, depois.pixels) }),
@@ -215,7 +317,8 @@ async function processar(codigo: string): Promise<Processada> {
   const proporcao = proporcaoDaBandeira(codigo, otimizado)
   const bytes = Buffer.from(otimizado)
   if (bytes.length <= LIMITE_DO_SVG_BYTES) {
-    return { codigo, proporcao, imagem: { formato: 'svg' }, arquivos: new Map([[`${codigo}.svg`, bytes]]), gate }
+    const arquivos = new Map([[`${codigo}.svg`, bytes]])
+    return { codigo, proporcao, imagem: { formato: 'svg' }, arquivos, gate, remocao }
   }
   // O raster sai do resvg e o sharp só codifica: o WebP mostra o que o gate do resvg conferiu. Um código isento desse
   // gate não pode virar WebP, porque o resvg não desenha o original dele por inteiro.
@@ -229,7 +332,7 @@ async function processar(codigo: string): Promise<Processada> {
       .asPng()
     arquivos.set(`${codigo}-${String(largura)}.webp`, await sharp(png).webp(OPCOES_DO_WEBP).toBuffer())
   }
-  return { codigo, proporcao, imagem: { formato: 'webp', larguras: [...LARGURAS_DO_WEBP] }, arquivos, gate }
+  return { codigo, proporcao, imagem: { formato: 'webp', larguras: [...LARGURAS_DO_WEBP] }, arquivos, gate, remocao }
 }
 
 /**
@@ -263,6 +366,19 @@ function licencasDeDados(licencas: Licenca[], regioes: RegioesM49, versoes: Reco
     const licenca = l.urlLicenca === null ? celula(l.licenca) : `[${celula(l.licenca)}](${l.urlLicenca})`
     return `| ${l.codigo} | [${celula(l.titulo)}](${l.urlPagina}) | ${celula(l.autor) || 'não informado'} | ${licenca} |`
   })
+  // A frase de cada bandeira modificada vem de licencas.json, onde baixar-commons.ts a grava a partir da curadoria.
+  const modificadas = licencas.flatMap((l) => (l.modificacao === undefined ? [] : [`- ${l.codigo}: ${l.modificacao}`]))
+  const secaoDasModificadas =
+    modificadas.length === 0
+      ? []
+      : [
+          '',
+          '### Bandeiras modificadas pelo projeto',
+          '',
+          'Estas bandeiras escrevem o nome do país no próprio desenho, e a pergunta que mostra a imagem e pede o nome entregaria a resposta. O projeto apagou só essa inscrição; lema, data e o resto do emblema ficam como no arquivo do Commons. O que sai de cada uma está em `packages/dominio-bandeiras/curadoria/inscricoes.json`.',
+          '',
+          ...modificadas,
+        ]
   return [
     '# Licenças dos dados',
     '',
@@ -270,11 +386,12 @@ function licencasDeDados(licencas: Licenca[], regioes: RegioesM49, versoes: Reco
     '',
     '## Imagens das bandeiras',
     '',
-    'Cada bandeira vem de um arquivo do Wikimedia Commons, processado pelo projeto (otimização com svgo e, para os arquivos grandes, conversão para WebP). Título, autor e licença de cada arquivo estão abaixo; a revisão usada fica fixada por sha1 em `packages/dominio-bandeiras/gerado/commons-revisoes.json`.',
+    'Cada bandeira vem de um arquivo do Wikimedia Commons, processado pelo projeto (otimização com svgo e, para os arquivos grandes, conversão para WebP; nas bandeiras listadas em "Bandeiras modificadas pelo projeto", também a remoção da inscrição com o nome do país). Título, autor e licença de cada arquivo estão abaixo; a revisão usada fica fixada por sha1 em `packages/dominio-bandeiras/gerado/commons-revisoes.json`.',
     '',
     '| Código | Arquivo no Commons | Autor | Licença |',
     '| --- | --- | --- | --- |',
     ...linhas,
+    ...secaoDasModificadas,
     '',
     '## Nomes dos países e das regiões',
     '',
@@ -322,8 +439,9 @@ export async function principal(): Promise<void> {
     return nome
   }
 
+  const inscricaoPorCodigo = new Map(curadoria.inscricoes.map((i) => [i.codigo, i]))
   const processadas: Processada[] = []
-  for (const codigo of MEMBROS_EM_ORDEM) processadas.push(await processar(codigo))
+  for (const codigo of MEMBROS_EM_ORDEM) processadas.push(await processar(codigo, inscricaoPorCodigo.get(codigo)))
 
   // Tudo o que vai para o disco é montado e validado antes da primeira escrita. Um falhar no meio da gravação deixaria
   // imagens/ e hashes.json novos ao lado de bandeiras.json e LICENCAS-DE-DADOS.md velhos, com arquivos já apagados.
@@ -406,6 +524,14 @@ export async function principal(): Promise<void> {
     }
   }
   console.log(`gate só pelo librsvg: ${[...GATE_SO_PELO_LIBRSVG].join(' ')}`)
+  for (const { codigo, remocao } of processadas) {
+    if (remocao !== undefined) {
+      console.log(
+        `inscrição apagada em ${codigo}: ${String(remocao)} pixels mudaram a ${String(LARGURA_DO_GATE_DA_REMOCAO)} px, ` +
+          'todos dentro da caixa',
+      )
+    }
+  }
 }
 
 if (import.meta.main) await principal()

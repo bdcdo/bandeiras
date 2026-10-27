@@ -4,7 +4,7 @@ Arquivo gerado por `packages/dominio-bandeiras/scripts/gerar.ts`; não editar à
 
 ## Imagens das bandeiras
 
-Cada bandeira vem de um arquivo do Wikimedia Commons, processado pelo projeto (otimização com svgo e, para os arquivos grandes, conversão para WebP). Título, autor e licença de cada arquivo estão abaixo; a revisão usada fica fixada por sha1 em `packages/dominio-bandeiras/gerado/commons-revisoes.json`.
+Cada bandeira vem de um arquivo do Wikimedia Commons, processado pelo projeto (otimização com svgo e, para os arquivos grandes, conversão para WebP; nas bandeiras listadas em "Bandeiras modificadas pelo projeto", também a remoção da inscrição com o nome do país). Título, autor e licença de cada arquivo estão abaixo; a revisão usada fica fixada por sha1 em `packages/dominio-bandeiras/gerado/commons-revisoes.json`.
 
 | Código | Arquivo no Commons | Autor | Licença |
 | --- | --- | --- | --- |
@@ -201,6 +201,19 @@ Cada bandeira vem de um arquivo do Wikimedia Commons, processado pelo projeto (o
 | za | [Flag of South Africa.svg](https://commons.wikimedia.org/wiki/File:Flag_of_South_Africa.svg) | Flag design by Frederick Brownell , image by Wikimedia Commons users | Public domain |
 | zm | [Flag of Zambia.svg](https://commons.wikimedia.org/wiki/File:Flag_of_Zambia.svg) | Gabriel Ellison | Public domain |
 | zw | [Flag of Zimbabwe.svg](https://commons.wikimedia.org/wiki/File:Flag_of_Zimbabwe.svg) | See File history below for details. | Public domain |
+
+### Bandeiras modificadas pelo projeto
+
+Estas bandeiras escrevem o nome do país no próprio desenho, e a pergunta que mostra a imagem e pede o nome entregaria a resposta. O projeto apagou só essa inscrição; lema, data e o resto do emblema ficam como no arquivo do Commons. O que sai de cada uma está em `packages/dominio-bandeiras/curadoria/inscricoes.json`.
+
+- af: O projeto apagou do desenho a inscrição com o nome do país, "افغانستان" (Afeganistão), na fita sob o emblema; o resto é o do arquivo original.
+- bn: O projeto apagou do desenho a inscrição com o nome do país, "بروني دارالسلام" (Brunei Darussalam, em jawi), na fita sob o crescente; o resto é o do arquivo original.
+- bo: O projeto apagou do desenho a inscrição com o nome do país, "BOLIVIA", na metade de cima da borda azul do oval do brasão; o resto é o do arquivo original.
+- do: O projeto apagou do desenho a inscrição com o nome do país, "REPUBLICA DOMINICANA", na fita vermelha sob o escudo; o resto é o do arquivo original.
+- eg: O projeto apagou do desenho a inscrição com o nome do país, "جمهورية مصر العربية" (República Árabe do Egito), na base sob a águia; o resto é o do arquivo original.
+- ni: O projeto apagou do desenho a inscrição com o nome do país, "REPUBLICA DE NICARAGUA, AMERICA CENTRAL", na legenda circular em volta do triângulo; o resto é o do arquivo original.
+- py: O projeto apagou do desenho a inscrição com o nome do país, "REPUBLICA DEL PARAGUAY", no anel do selo; o resto é o do arquivo original.
+- sv: O projeto apagou do desenho a inscrição com o nome do país, "REPÚBLICA DE EL SALVADOR EN LA AMÉRICA CENTRAL", na legenda circular em volta do brasão; o resto é o do arquivo original.
 
 ## Nomes dos países e das regiões
 

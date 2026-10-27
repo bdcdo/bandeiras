@@ -1,0 +1,170 @@
+[
+  {
+    "codigo": "af",
+    "texto": "افغانستان",
+    "traducao": "Afeganistão",
+    "lugar": "na fita sob o emblema",
+    "caixa": { "x0": 0.43, "y0": 0.76, "x1": 0.57, "y1": 0.83 },
+    "operacoes": [
+      {
+        "descricao": "os subcaminhos do path branco do emblema (cor herdada do grupo) que cabem na fita: os traços das letras e os pontos; o contorno da fita e o trigo ficam",
+        "remover": "subcaminhos",
+        "atributos": { "fill": "#fffffd" },
+        "subcaminhos": 717,
+        "dentroDe": [{ "x0": 0.43, "y0": 0.76, "x1": 0.57, "y1": 0.825 }],
+        "esperados": 10
+      }
+    ]
+  },
+  {
+    "codigo": "bn",
+    "texto": "بروني دارالسلام",
+    "traducao": "Brunei Darussalam, em jawi",
+    "lugar": "na fita sob o crescente",
+    "caixa": { "x0": 0.4, "y0": 0.68, "x1": 0.59, "y1": 0.8 },
+    "operacoes": [
+      {
+        "descricao": "os subcaminhos do path amarelo que junta as letras da fita e as do lema e que cabem na fita; os retângulos seguem a curva da fita e deixam de fora as letras do lema, que descem até perto dela",
+        "remover": "subcaminhos",
+        "atributos": { "class": "B" },
+        "subcaminhos": 35,
+        "dentroDe": [
+          { "x0": 0.41, "y0": 0.69, "x1": 0.49, "y1": 0.78 },
+          { "x0": 0.478, "y0": 0.74, "x1": 0.548, "y1": 0.79 },
+          { "x0": 0.528, "y0": 0.686, "x1": 0.582, "y1": 0.772 }
+        ],
+        "esperados": 16
+      },
+      {
+        "descricao": "os paths amarelos de retoque das letras da fita, que cabem inteiros nos mesmos retângulos",
+        "remover": "elementos",
+        "atributos": { "class": "B" },
+        "dentroDe": [
+          { "x0": 0.41, "y0": 0.69, "x1": 0.49, "y1": 0.78 },
+          { "x0": 0.478, "y0": 0.74, "x1": 0.548, "y1": 0.79 },
+          { "x0": 0.528, "y0": 0.686, "x1": 0.582, "y1": 0.772 }
+        ],
+        "esperados": 8
+      },
+      {
+        "descricao": "no path amarelo que junta o retoque de uma letra da fita e um pedaço do lema, o subcaminho do retoque; o do lema fica",
+        "remover": "subcaminhos",
+        "atributos": { "class": "B" },
+        "subcaminhos": 2,
+        "dentroDe": [
+          { "x0": 0.41, "y0": 0.69, "x1": 0.49, "y1": 0.78 },
+          { "x0": 0.478, "y0": 0.74, "x1": 0.548, "y1": 0.79 },
+          { "x0": 0.528, "y0": 0.686, "x1": 0.582, "y1": 0.772 }
+        ],
+        "esperados": 1
+      }
+    ]
+  },
+  {
+    "codigo": "bo",
+    "texto": "BOLIVIA",
+    "lugar": "na metade de cima da borda azul do oval do brasão",
+    "caixa": { "x0": 0.45, "y0": 0.43, "x1": 0.55, "y1": 0.53 },
+    "operacoes": [
+      {
+        "descricao": "as sombras pretas das letras, que cabem na borda azul do oval (os retângulos seguem o lado esquerdo, o topo e o lado direito da borda); as estrelas da metade de baixo ficam",
+        "remover": "elementos",
+        "atributos": { "fill": null },
+        "dentroDe": [
+          { "x0": 0.455, "y0": 0.46, "x1": 0.478, "y1": 0.52 },
+          { "x0": 0.474, "y0": 0.43, "x1": 0.527, "y1": 0.465 },
+          { "x0": 0.522, "y0": 0.46, "x1": 0.545, "y1": 0.52 }
+        ],
+        "esperados": 7
+      },
+      {
+        "descricao": "as letras douradas e um retalho dourado que a borda azul cobre por inteiro (tirá-lo não muda nenhum pixel, e ele cabe na caixa da letra I, por isso nenhum retângulo o separa dela)",
+        "remover": "elementos",
+        "atributos": { "fill": "#f0e53c" },
+        "dentroDe": [
+          { "x0": 0.455, "y0": 0.46, "x1": 0.478, "y1": 0.52 },
+          { "x0": 0.474, "y0": 0.43, "x1": 0.527, "y1": 0.465 },
+          { "x0": 0.522, "y0": 0.46, "x1": 0.545, "y1": 0.52 }
+        ],
+        "esperados": 8
+      }
+    ]
+  },
+  {
+    "codigo": "do",
+    "texto": "REPUBLICA DOMINICANA",
+    "lugar": "na fita vermelha sob o escudo",
+    "caixa": { "x0": 0.46, "y0": 0.56, "x1": 0.54, "y1": 0.6 },
+    "operacoes": [
+      {
+        "descricao": "o path amarelo das letras, na fita de baixo; o de cima, do mesmo amarelo e com o mesmo total de subcaminhos, é o lema DIOS PATRIA LIBERTAD e fica",
+        "remover": "elementos",
+        "atributos": { "fill": "#eac102" },
+        "subcaminhos": 29,
+        "dentroDe": [{ "x0": 0.44, "y0": 0.47, "x1": 0.59, "y1": 0.67 }],
+        "esperados": 1
+      }
+    ]
+  },
+  {
+    "codigo": "eg",
+    "texto": "جمهورية مصر العربية",
+    "traducao": "República Árabe do Egito",
+    "lugar": "na base sob a águia",
+    "caixa": { "x0": 0.44, "y0": 0.61, "x1": 0.57, "y1": 0.66 },
+    "operacoes": [
+      {
+        "descricao": "o path amarelo com as letras da legenda; o contorno da base fica",
+        "remover": "elementos",
+        "atributos": { "class": "B C" },
+        "subcaminhos": 25,
+        "esperados": 1
+      }
+    ]
+  },
+  {
+    "codigo": "ni",
+    "texto": "REPUBLICA DE NICARAGUA, AMERICA CENTRAL",
+    "lugar": "na legenda circular em volta do triângulo",
+    "caixa": { "x0": 0.4, "y0": 0.34, "x1": 0.6, "y1": 0.66 },
+    "operacoes": [
+      {
+        "descricao": "o path dourado com as letras e os traços da legenda; o contorno dourado do triângulo, da mesma cor e com outro total de subcaminhos, fica",
+        "remover": "elementos",
+        "atributos": { "fill": "#c8a400" },
+        "subcaminhos": 51,
+        "esperados": 1
+      }
+    ]
+  },
+  {
+    "codigo": "py",
+    "texto": "REPUBLICA DEL PARAGUAY",
+    "lugar": "no anel do selo",
+    "caixa": { "x0": 0.43, "y0": 0.39, "x1": 0.57, "y1": 0.57 },
+    "operacoes": [
+      {
+        "descricao": "o path sem cor de preenchimento (preto) com as letras do anel; os círculos ficam",
+        "remover": "elementos",
+        "atributos": { "fill": null },
+        "subcaminhos": 31,
+        "esperados": 1
+      }
+    ]
+  },
+  {
+    "codigo": "sv",
+    "texto": "REPÚBLICA DE EL SALVADOR EN LA AMÉRICA CENTRAL",
+    "lugar": "na legenda circular em volta do brasão",
+    "caixa": { "x0": 0.4, "y0": 0.34, "x1": 0.6, "y1": 0.66 },
+    "operacoes": [
+      {
+        "descricao": "o path amarelo com as letras da legenda",
+        "remover": "elementos",
+        "atributos": { "fill": "#fc0" },
+        "subcaminhos": 58,
+        "esperados": 1
+      }
+    ]
+  }
+]
