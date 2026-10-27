@@ -92,7 +92,8 @@ describe('emitir', () => {
     )
     const [antigo] = antes.eventos
     if (antigo === undefined) throw new Error('evento esperado')
-    const corpo: CorpoDeEvento = { ...antigo, xp: 30, dispositivo: 'intruso', fusoMinutos: -600 }
+    const reaproveitado = { ...antigo, xp: 30, dispositivo: 'intruso', fusoMinutos: -600 }
+    const corpo: CorpoDeEvento = reaproveitado
     const t = desembrulhar(emitir(ctx, antes.estado, [corpo], origem(INICIO_DA_CENA)))
     const [novo] = t.eventos
     expect([novo?.em, novo?.dispositivo, novo?.fusoMinutos]).toStrictEqual([
