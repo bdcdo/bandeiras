@@ -9,6 +9,7 @@ import {
   type Roteiro,
 } from '../apoio-a-testes/gerador-de-log'
 import { instantaneoDoEstado } from '../apoio-a-testes/instantaneo-do-estado'
+import { avaliarResposta, NORMAS_DE_LATENCIA_VAZIAS } from '../avaliacao'
 import { desembrulhar } from '../base/resultado'
 import { sorteioComSemente, type SorteioComSemente } from '../base/sorteio-com-semente'
 import type { Instante } from '../base/tempo'
@@ -31,10 +32,12 @@ import type { EstadoMotor, Transicao } from './tipos'
 // O tamanho das listas de escolhas é explícito. No tamanho padrão, o fast-check 4 não gera lista com mais de 10
 // elementos, qualquer que seja o maxLength: o roteiro nunca passaria da parte obrigatória, que consome umas trezentas
 // escolhas, e o log livre teria um ou dois eventos. Com `size: 'max'` o comprimento vai até o maxLength. O roteiro pede
-// ao menos 400 escolhas para toda execução chegar à parte livre, a única com chute, "não sei", tempo esgotado e avaliação
-// trocada; o teto de 800 rende umas centenas de eventos a mais e mantém cada execução abaixo de um décimo de segundo. As
-// propriedades contam, nas próprias execuções, quantas chegaram a cada caso, e reprovam se algum não aparece: um gerador
-// que deixe de chegar a eles reprova em vez de passar por vacuidade.
+// ao menos 400 escolhas para toda execução chegar à parte livre, a única com chute, "não sei", avaliação trocada e
+// deltaBruto adulterado; o teto de 800 rende umas centenas de eventos a mais e mantém cada execução abaixo de um décimo
+// de segundo. As propriedades conferem, nas próprias execuções, que chegaram a cada caso de `CASOS_DO_ROTEIRO` e de
+// `CASOS_DO_LIVRE`, e reprovam se algum não aparece: um gerador que deixe de chegar a eles reprova em vez de passar por
+// vacuidade. Cada caso do roteiro aparece em boa parte das execuções, e o tempo esgotado em todas, porque a parte
+// obrigatória o emite; nenhum depende de uma execução rara para aparecer nas sessenta.
 
 const catalogo = catalogoFixo()
 const contexto = (cat: Catalogo = catalogo, tecnicas: Tecnicas = TECNICAS_TODAS_LIGADAS): ContextoDeReducao =>
@@ -47,7 +50,10 @@ const DIA = 86_400_000
 const CASOS_DO_ROTEIRO = [
   'parte livre',
   'chute',
-  'não sei ou tempo esgotado',
+  'não sei',
+  'tempo esgotado',
+  'avaliação trocada',
+  'deltaBruto adulterado',
   'relógio parado, fracionário ou atrás',
   'remediação de par confundido na parte livre',
 ]
@@ -55,10 +61,24 @@ const CASOS_DO_LIVRE = ['em igual entre aparelhos', 'perfil no meio do log', 'ma
 
 /** Os casos de `CASOS_DO_ROTEIRO` a que o roteiro chega. */
 function casosDoRoteiro(roteiro: Roteiro): string[] {
-  const qualidades = new Set(
-    roteiro.passos.flatMap((p) =>
-      p.corpos.flatMap((c) => (c.tipo === 'resposta-registrada' && c.avaliacao ? [c.avaliacao.qualidade] : [])),
+  const respostas = roteiro.passos.flatMap((p) =>
+    p.corpos.flatMap((c) =>
+      c.tipo === 'resposta-registrada' && c.avaliacao !== undefined
+        ? [{ questao: c.questao, resposta: c.resposta, avaliacao: c.avaliacao }]
+        : [],
     ),
+  )
+  const qualidades = new Set(respostas.map((c) => c.avaliacao.qualidade))
+  // Se a resposta gravada acerta ou erra não depende das normas de latência, que só separam as qualidades do acerto: a
+  // reavaliação sobre normas vazias diz se a avaliação gravada contradiz a resposta, o que só a troca produz.
+  const trocada = respostas.some(
+    (c) =>
+      desembrulhar(avaliarResposta(c.questao, c.resposta, catalogo, NORMAS_DE_LATENCIA_VAZIAS, PARAMETROS_PADRAO))
+        .correta !== c.avaliacao.correta,
+  )
+  // O roteiro avalia sob os parâmetros padrão, em que nenhuma qualidade tem deltaBruto zero: o triplo sempre difere.
+  const adulterado = respostas.some(
+    (c) => c.avaliacao.deltaBruto !== PARAMETROS_PADRAO.deltaBruto[c.avaliacao.qualidade],
   )
   const anomalo = roteiro.passos.some((p, k) => {
     const antes = roteiro.passos[k - 1]?.origem.agora
@@ -67,7 +87,10 @@ function casosDoRoteiro(roteiro: Roteiro): string[] {
   return [
     roteiro.passos.length > roteiro.inicioDaParteLivre ? 'parte livre' : '',
     qualidades.has('chute') ? 'chute' : '',
-    qualidades.has('nao-sei') || qualidades.has('tempo-esgotado') ? 'não sei ou tempo esgotado' : '',
+    qualidades.has('nao-sei') ? 'não sei' : '',
+    qualidades.has('tempo-esgotado') ? 'tempo esgotado' : '',
+    trocada ? 'avaliação trocada' : '',
+    adulterado ? 'deltaBruto adulterado' : '',
     anomalo ? 'relógio parado, fracionário ou atrás' : '',
     roteiro.passos
       .slice(roteiro.inicioDaParteLivre)

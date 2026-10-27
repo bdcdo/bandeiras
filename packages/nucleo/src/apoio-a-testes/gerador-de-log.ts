@@ -318,8 +318,8 @@ export type PassoDoRoteiro = Readonly<{ corpos: NaoVazio<CorpoDeEvento>; origem:
 /**
  * Um roteiro: o perfil e os passos. O estado vivo é `iniciarPerfil` com o início, seguido de `emitir` de cada passo; o
  * log é a concatenação dos eventos de cada transição. `inicioDaParteLivre` é o índice do primeiro passo da parte
- * livre, igual ao número de passos quando as escolhas acabaram antes dela: é por ele que a propriedade confere que
- * chegou ao chute, ao "não sei" e às avaliações trocadas, que só a parte livre emite.
+ * livre, igual ao número de passos quando as escolhas acabaram antes dela: é por ele que a propriedade confere que o
+ * roteiro chegou à parte livre, a única que emite o chute, o "não sei", a avaliação trocada e o deltaBruto adulterado.
  */
 export type Roteiro = Readonly<{
   inicio: Readonly<{ corpo: CorpoDoTipo<'perfil-criado'>; origem: Origem }>
@@ -402,13 +402,16 @@ function outroAprendido(r: Roteirista, alvo: IdItem): IdItem | undefined {
 /** O que responde a uma questão: toda resposta menos `continuar`, que fecha apresentação. */
 type RespostaDeQuestao = Exclude<Resposta, Readonly<{ tipo: 'continuar' }>>
 
-/** A resposta que acerta, ou que erra, a questão; o chute e o "não sei" só saem na parte livre. */
+/**
+ * A resposta que acerta, ou que erra, a questão; o chute e o "não sei" só saem na parte livre. O erro numa questão com
+ * limite é o tempo esgotado sempre na parte obrigatória, para todo roteiro ter um, e às vezes na livre.
+ */
 function respostaPara(r: Roteirista, questao: Questao, certa: boolean): RespostaDeQuestao {
   const { f } = r
   const { formato, itemAlvo } = questao
   const latencia = (2000 + f.ate(4000)) as Milis
   if (!certa && r.livre && f.chance(15)) return { tipo: 'nao-sei' }
-  if (!certa && r.livre && questao.limiteMs !== undefined && f.chance(30)) return { tipo: 'tempo-esgotado' }
+  if (!certa && questao.limiteMs !== undefined && (!r.livre || f.chance(30))) return { tipo: 'tempo-esgotado' }
   switch (formato.tipo) {
     case 'rotulo-digitado': {
       if (certa) return { tipo: 'texto', texto: rotulo(r, itemAlvo), latencia }
@@ -587,12 +590,17 @@ const questaoIsolada = (r: Roteirista, pedido: PedidoDeTarefaFixa, limiteMs?: Mi
   uso: { tipo: pedido.tipo },
 })
 
-function revisao(r: Roteirista, item: IdItem, limiteMs?: Milis): void {
-  tarefaFixa(r, {
-    tipo: 'revisao',
-    alvos: [topicoDeItem(item).id],
-    passos: [questaoIsolada(r, { tipo: 'revisao', item }, limiteMs)],
-  })
+/** A revisão de um item, numa questão só; `errada` diz que a parte obrigatória a erra. */
+function revisao(r: Roteirista, item: IdItem, limiteMs?: Milis, errada = false): void {
+  tarefaFixa(
+    r,
+    {
+      tipo: 'revisao',
+      alvos: [topicoDeItem(item).id],
+      passos: [questaoIsolada(r, { tipo: 'revisao', item }, limiteMs)],
+    },
+    new Set(errada ? [0] : []),
+  )
 }
 
 function quiz(r: Roteirista, itens: readonly IdItem[], erradas: ReadonlySet<number>): void {
@@ -681,9 +689,9 @@ function tarefaDeGrupo(r: Roteirista, grupo: IdGrupo, tipo: 'licao' | 'revisao-g
  * A parte obrigatória, que todo roteiro tem, para as propriedades exercitarem cada caminho sempre, e não só quando o
  * sorteio ajuda: o diagnóstico, encerrado ou pulado; a lição com a sondagem errada, com o KP1 refeito, acelerada e
  * adiada e refeita; a meta trocada em dois dias; o quiz com um erro que confunde dois itens aprendidos e a remediação
- * do par; a revisão com e sem limite; a lição de família, a tarefa de grupo completa e a interrompida; e a troca de
- * aparelho e de fuso. O grupo é o primeiro com quatro membros ou mais, ou o primeiro, e os membros dele são as primeiras
- * lições.
+ * do par; a revisão com limite, que erra pelo tempo esgotado, e a sem limite; a lição de família, a tarefa de grupo
+ * completa e a interrompida; e a troca de aparelho e de fuso. O grupo é o primeiro com quatro membros ou mais, ou o
+ * primeiro, e os membros dele são as primeiras lições.
  */
 function parteObrigatoria(r: Roteirista): void {
   const grupos = [...r.catalogo.grupos.values()]
@@ -739,7 +747,7 @@ function parteObrigatoria(r: Roteirista): void {
     quiz(r, [c, d, e], new Set([0]))
     const confundido = outroAprendido(r, c)
     if (confundido !== undefined) remediacao(r, c, confundido)
-    revisao(r, c, 8000 as Milis)
+    revisao(r, c, 8000 as Milis, true)
     revisao(r, d)
   }
   proximoDia(r, false)
