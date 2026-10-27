@@ -16,8 +16,8 @@
     "nome": "Azul, amarelo e vermelho na vertical",
     "membros": ["ro", "td", "ad", "md"],
     "tracoDistintivo": {
-      "ro": "quase idêntica ao Chade, com azul-cobalto um pouco mais claro e sem emblema",
-      "td": "quase idêntica à Romênia, com azul-anil mais escuro e sem emblema",
+      "ro": "quase idêntica à outra bandeira do par, com azul-cobalto um pouco mais claro e sem emblema",
+      "td": "quase idêntica à outra bandeira do par, com azul-anil mais escuro e sem emblema",
       "ad": "brasão com mitra e vacas no amarelo, faixa central mais larga",
       "md": "águia com escudo no amarelo, faixas iguais"
     },
@@ -77,7 +77,7 @@
     "tracoDistintivo": {
       "ml": "verde no mastro, sem emblema",
       "gn": "vermelho no mastro, sem emblema",
-      "sn": "verde no mastro, como o Mali, com estrela verde no centro",
+      "sn": "verde no mastro, com estrela verde no centro",
       "cm": "vermelho no centro com estrela amarela"
     }
   },

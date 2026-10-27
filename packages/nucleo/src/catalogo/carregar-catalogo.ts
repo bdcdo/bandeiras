@@ -1,7 +1,7 @@
 import { hashFnv1a } from '../base/hash'
 import type { NaoVazio } from '../base/nao-vazio'
 import { erro, ok, type Resultado } from '../base/resultado'
-import { formasNormalizadas, normalizarRotulo } from './normalizacao'
+import { citaForma, formasNormalizadas, normalizarRotulo } from './normalizacao'
 import type {
   Catalogo,
   DadosDeCatalogo,
@@ -302,6 +302,36 @@ const VERIFICACOES = [
     codigo: 'VIZINHO_REPETIDO',
     descricao: 'vizinho repetido',
     ocorrencias: ({ dados }) => emCada('item', dados.itens, (i) => repetidos(i.vizinhos)),
+  },
+
+  // 8. Traços distintivos. O feedback mostra o traço do alvo, também no acerto; um traço que nomeasse outro item daria a
+  // resposta de outra questão, como a seguinte da tarefa de grupo, ou nomearia um item que o feedback não revela, como o
+  // parceiro indiscernível. Citar o próprio item não revela nada além da resposta.
+  {
+    codigo: 'TRACO_CITA_OUTRO_ITEM',
+    descricao: 'traço distintivo que cita o rótulo ou um alias de outro item',
+    ocorrencias: ({ dados }) => {
+      const formas = dados.itens.map((i) => ({ id: i.id, formas: formasNormalizadas(i) }))
+      const deConjunto = (tipo: string, c: Conjunto) =>
+        Object.entries(c.tracoDistintivo).map(([dono, texto]) => ({
+          onde: `${tipo} ${aspas(c.id)}, traço de ${aspas(dono)}`,
+          dono,
+          texto,
+        }))
+      const tracos = [
+        ...dados.grupos.flatMap((g) => deConjunto('grupo', g)),
+        ...dados.vizinhancas.flatMap((v) => deConjunto('vizinhança', v)),
+        ...dados.itens.flatMap((i) =>
+          i.tracoVizinhanca === undefined
+            ? []
+            : [{ onde: `item ${aspas(i.id)}, traço de vizinhança`, dono: i.id, texto: i.tracoVizinhanca }],
+        ),
+      ]
+      return tracos.flatMap(({ onde, dono, texto }) => {
+        const citados = formas.filter((f) => f.id !== dono && f.formas.some((forma) => citaForma(texto, forma)))
+        return citados.length === 0 ? [] : [`${onde}: cita ${citados.map((f) => aspas(f.id)).join(', ')}`]
+      })
+    },
   },
 ] as const satisfies readonly Verificacao[]
 

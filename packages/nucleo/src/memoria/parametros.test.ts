@@ -47,7 +47,31 @@ describe('PARAMETROS_PADRAO', () => {
       acuraciaMinimaCronometrada: 0.9,
       limiteCronometradoMinMs: 3000,
       fatorLimiteCronometrado: 1.5,
+      opcoesMultiplaEscolha: 4,
+      usosMaximosComoDistrator: 2,
+      tentativasDeOpcoesNovas: 5,
+      opcoesMinimasDeGrupo: 4,
+      janelaNormasDeLatencia: 20,
+      amostrasMinimasDeLatencia: 8,
+      minutosLicao: 1.5,
+      minutosLicaoAcelerada: 0.5,
+      minutosPorQuestao: 0.17,
+      folgaSobreMedianaMs: 3000,
+      multiplicadorXpPerfeita: 1.2,
+      acertoMinimoXpCheio: 0.8,
+      multiplicadorXpCheio: 1,
+      acertoMinimoXpParcial: 0.5,
+      multiplicadorXpParcial: 0.5,
+      multiplicadorXpInsuficiente: 0,
+      multiplicadorXpChute: -0.5,
+      chutesNaTarefaSistematico: 2,
+      chutesNasUltimasSistematico: 3,
+      janelaChuteSistematico: 10,
+      horaViradaDoDia: 4,
     })
+    // A meta diária padrão é o orçamento padrão da sessão, porque o XP é calibrado em minutos; não há outro parâmetro
+    // com o mesmo número.
+    expect(Object.keys(PARAMETROS_PADRAO).filter((chave) => /meta/i.test(chave))).toEqual([])
     expect(Object.keys(PARAMETROS_PADRAO.deltaBruto)).toEqual([...QUALIDADES_DE_RESPOSTA])
   })
 
@@ -163,6 +187,36 @@ describe('resolverParametros', () => {
     })
     expect(codigo({ 'deltaBruto.perfeita': 0.4 })).toBe('PARAMETRO_INVALIDO')
     expect(codigo({ limiarDevido: 0.2, tetoMemoria: 1.25 })).toBe('PARAMETRO_INVALIDO')
+  })
+
+  it('recusa as faixas das camadas de questões, avaliação e gamificação', () => {
+    expect(codigo({ opcoesMultiplaEscolha: 1 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ opcoesMultiplaEscolha: 2 })).toBeUndefined()
+    expect(codigo({ opcoesMinimasDeGrupo: 2 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ opcoesMinimasDeGrupo: 3 })).toBeUndefined()
+    expect(codigo({ usosMaximosComoDistrator: 0 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ tentativasDeOpcoesNovas: 1.5 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ amostrasMinimasDeLatencia: 0 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ multiplicadorXpChute: 0.1 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ multiplicadorXpChute: 0 })).toBeUndefined()
+    expect(codigo({ acertoMinimoXpCheio: 1.1 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ horaViradaDoDia: 24 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ horaViradaDoDia: -1 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ horaViradaDoDia: 0 })).toBeUndefined()
+    expect(codigo({ horaViradaDoDia: 4.5 })).toBeUndefined()
+  })
+
+  it('recusa as relações das normas de latência, do XP e do chute sistemático', () => {
+    expect(codigo({ amostrasMinimasDeLatencia: 21 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ amostrasMinimasDeLatencia: 20 })).toBeUndefined()
+    expect(codigo({ minutosLicaoAcelerada: 1.6 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ acertoMinimoXpParcial: 0.9 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ multiplicadorXpInsuficiente: 0.6 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ multiplicadorXpParcial: 1.1 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ multiplicadorXpCheio: 1.3 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ multiplicadorXpCheio: 1.2 })).toBeUndefined()
+    expect(codigo({ chutesNasUltimasSistematico: 11 })).toBe('PARAMETRO_INVALIDO')
+    expect(codigo({ chutesNasUltimasSistematico: 10 })).toBeUndefined()
   })
 
   it('confere a chave desconhecida antes do valor inválido', () => {

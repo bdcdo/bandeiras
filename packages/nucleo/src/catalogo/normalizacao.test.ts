@@ -1,6 +1,13 @@
 import fc from 'fast-check'
 import { describe, expect, it } from 'vitest'
-import { casaComRotulo, formasNormalizadas, indiceDeRotulos, normalizarRotulo, resolverRotulo } from './normalizacao'
+import {
+  casaComRotulo,
+  citaForma,
+  formasNormalizadas,
+  indiceDeRotulos,
+  normalizarRotulo,
+  resolverRotulo,
+} from './normalizacao'
 import type { IdItem, Item } from './tipos'
 
 // Texto com tudo o que a normalização trata (acentos compostos e decompostos, maiúsculas, hífen, traços, apóstrofos,
@@ -193,6 +200,20 @@ describe('casaComRotulo', () => {
         },
       ),
     )
+  })
+})
+
+describe('citaForma', () => {
+  it('acha a forma como palavras inteiras, com a frase normalizada', () => {
+    expect(citaForma('Verde no mastro, como o Mali, com estrela', 'mali')).toBe(true)
+    expect(citaForma('quase idêntica à Romênia', 'romenia')).toBe(true)
+    expect(citaForma('Faixa como a da Guiné-Bissau', 'guine bissau')).toBe(true)
+    expect(citaForma('Mali', 'mali')).toBe(true)
+  })
+
+  it('não acha pedaço de palavra', () => {
+    expect(citaForma('Parecida com a Somália', 'mali')).toBe(false)
+    expect(citaForma('Malinesa', 'mali')).toBe(false)
   })
 })
 

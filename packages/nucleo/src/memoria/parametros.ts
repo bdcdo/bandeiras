@@ -66,6 +66,27 @@ export type Parametros = Readonly<{
   acuraciaMinimaCronometrada: number
   limiteCronometradoMinMs: number
   fatorLimiteCronometrado: number
+  opcoesMultiplaEscolha: number
+  usosMaximosComoDistrator: number
+  tentativasDeOpcoesNovas: number
+  opcoesMinimasDeGrupo: number
+  janelaNormasDeLatencia: number
+  amostrasMinimasDeLatencia: number
+  minutosLicao: number
+  minutosLicaoAcelerada: number
+  minutosPorQuestao: number
+  folgaSobreMedianaMs: number
+  multiplicadorXpPerfeita: number
+  acertoMinimoXpCheio: number
+  multiplicadorXpCheio: number
+  acertoMinimoXpParcial: number
+  multiplicadorXpParcial: number
+  multiplicadorXpInsuficiente: number
+  multiplicadorXpChute: number
+  chutesNaTarefaSistematico: number
+  chutesNasUltimasSistematico: number
+  janelaChuteSistematico: number
+  horaViradaDoDia: number
 }>
 
 /** Congela o objeto e cada objeto dentro dele, para nenhum chamador mexer nos valores padrão de todos. */
@@ -162,6 +183,49 @@ export const PARAMETROS_PADRAO: Parametros = congelar({
   // Limite da questão cronometrada: o maior entre este piso e o fator vezes a mediana do próprio usuário no formato.
   limiteCronometradoMinMs: 3000,
   fatorLimiteCronometrado: 1.5,
+  // Opções da múltipla escolha, o alvo inclusive: o alvo e três distratores, 25% de acerto ao acaso, aceitável no
+  // andaime da lição logo depois da apresentação.
+  opcoesMultiplaEscolha: 4,
+  // Vezes que um item pode ser distrator numa sessão. Item visto muitas vezes como opção errada passa a ser descartado
+  // por familiaridade, sem conhecimento, e a questão vaza a resposta por eliminação.
+  usosMaximosComoDistrator: 2,
+  // Sorteios de distratores tentados antes de aceitar um conjunto de opções já mostrado na sessão. Com o pool pequeno,
+  // repetir o conjunto em outra ordem é melhor que não ter questão.
+  tentativasDeOpcoesNovas: 5,
+  // Opções mínimas da tarefa de grupo: grupo de dois ou três membros é completado com vizinhos até aqui, para o último
+  // alvo não sair por eliminação.
+  opcoesMinimasDeGrupo: 4,
+  // Respostas certas guardadas por formato nas normas de latência do próprio usuário: as mais recentes, para a mediana
+  // acompanhar a melhora da pessoa.
+  janelaNormasDeLatencia: 20,
+  // Amostras mínimas de um formato antes de a mediana dele valer. Abaixo disso, acerto não é lento e o XP usa os minutos
+  // por questão.
+  amostrasMinimasDeLatencia: 8,
+  // Minutos-base do XP, que vale um minuto de trabalho focado (The Math Academy Way, p. 310): a lição completa, a lição
+  // acelerada pela sondagem e cada questão de revisão, de grupo, de quiz ou de remediação, cerca de 10 segundos.
+  minutosLicao: 1.5,
+  minutosLicaoAcelerada: 0.5,
+  minutosPorQuestao: 0.17,
+  // Folga somada à mediana própria do formato quando ela substitui os minutos por questão: o tempo de ler o feedback.
+  folgaSobreMedianaMs: 3000,
+  // Multiplicadores do XP pelo desempenho na tarefa (p. 312): bônus no desempenho perfeito, XP cheio a partir da
+  // primeira fração de acertos, parte do XP a partir da segunda, e o multiplicador de baixo abaixo dela, porque é
+  // preciso passar de uma barra para ganhar algum XP.
+  multiplicadorXpPerfeita: 1.2,
+  acertoMinimoXpCheio: 0.8,
+  multiplicadorXpCheio: 1,
+  acertoMinimoXpParcial: 0.5,
+  multiplicadorXpParcial: 0.5,
+  multiplicadorXpInsuficiente: 0,
+  // Multiplicador da tarefa com chute sistemático (p. 313-314): XP negativo, para o jeito mais barato de ganhar XP ser
+  // tentar de verdade.
+  multiplicadorXpChute: -0.5,
+  // Chute sistemático: tantos chutes na mesma tarefa, ou tantos entre as últimas respostas da janela.
+  chutesNaTarefaSistematico: 2,
+  chutesNasUltimasSistematico: 3,
+  janelaChuteSistematico: 10,
+  // Hora local em que o dia vira, para a sessão de quem estuda depois da meia-noite contar no dia anterior.
+  horaViradaDoDia: 4,
 })
 
 type Escalar = { [K in keyof Parametros]: Parametros[K] extends number ? K : never }[keyof Parametros]
@@ -189,13 +253,22 @@ const INTEIRO_NAO_NEGATIVO: Faixa = {
   aceita: (x) => Number.isInteger(x) && x >= 0,
 }
 const NEGATIVO_ATE_MENOS_UM: Faixa = { descricao: 'menor que 0 e no mínimo -1', aceita: (x) => x < 0 && x >= -1 }
+const NAO_POSITIVO: Faixa = { descricao: 'menor ou igual a zero', aceita: (x) => x <= 0 }
+const inteiroPeloMenos = (minimo: number): Faixa => ({
+  descricao: `inteiro maior ou igual a ${String(minimo)}`,
+  aceita: (x) => Number.isInteger(x) && x >= minimo,
+})
+const HORA_DO_DIA: Faixa = { descricao: 'maior ou igual a 0 e menor que 24', aceita: (x) => x >= 0 && x < 24 }
 
 /**
  * Faixa aceita por parâmetro. O tipo obriga a tabela a cobrir todo caminho de `Parametros`. As faixas que não são só
  * "positivo" existem porque uma fórmula depende delas: o limiar fica acima de 0 porque `devidoEm` toma o logaritmo da
  * memória sobre ele; o crescimento é pelo menos 1 para o intervalo nunca encolher com mais repetições; o decay nunca
  * fica abaixo de 1; e o rawDelta de acerto fica em (0, 1] e o de erro em [-1, 0), porque uma repetição perfeita vale uma
- * repetição inteira, e o limite do reteste depende disso. O que o limiar e o teto exigem um do outro está em `RELACOES`.
+ * repetição inteira, e o limite do reteste depende disso. A múltipla escolha tem ao menos um distrator e a tarefa de grupo
+ * ao menos três opções, porque cada alvo deixa duas opções de fora da eliminação; a hora da virada do dia fica dentro de
+ * um dia; e o multiplicador do chute sistemático não passa de zero, porque é penalidade. O que o limiar e o teto exigem um
+ * do outro está em `RELACOES`.
  */
 const FAIXAS: Readonly<Record<CaminhoDeParametro, Faixa>> = {
   intervaloBaseDias: POSITIVO,
@@ -245,6 +318,27 @@ const FAIXAS: Readonly<Record<CaminhoDeParametro, Faixa>> = {
   acuraciaMinimaCronometrada: ATE_UM,
   limiteCronometradoMinMs: POSITIVO,
   fatorLimiteCronometrado: POSITIVO,
+  opcoesMultiplaEscolha: inteiroPeloMenos(2),
+  usosMaximosComoDistrator: INTEIRO_POSITIVO,
+  tentativasDeOpcoesNovas: INTEIRO_POSITIVO,
+  opcoesMinimasDeGrupo: inteiroPeloMenos(3),
+  janelaNormasDeLatencia: INTEIRO_POSITIVO,
+  amostrasMinimasDeLatencia: INTEIRO_POSITIVO,
+  minutosLicao: POSITIVO,
+  minutosLicaoAcelerada: NAO_NEGATIVO,
+  minutosPorQuestao: POSITIVO,
+  folgaSobreMedianaMs: NAO_NEGATIVO,
+  multiplicadorXpPerfeita: NAO_NEGATIVO,
+  acertoMinimoXpCheio: ATE_UM,
+  multiplicadorXpCheio: NAO_NEGATIVO,
+  acertoMinimoXpParcial: ATE_UM,
+  multiplicadorXpParcial: NAO_NEGATIVO,
+  multiplicadorXpInsuficiente: NAO_NEGATIVO,
+  multiplicadorXpChute: NAO_POSITIVO,
+  chutesNaTarefaSistematico: INTEIRO_POSITIVO,
+  chutesNasUltimasSistematico: INTEIRO_POSITIVO,
+  janelaChuteSistematico: INTEIRO_POSITIVO,
+  horaViradaDoDia: HORA_DO_DIA,
 }
 
 /**
@@ -252,7 +346,9 @@ const FAIXAS: Readonly<Record<CaminhoDeParametro, Faixa>> = {
  * `limitar` sem sentido. O teto de memória fica acima do limiar porque a memória decai do teto ao limiar e
  * `fatorPrecocidade` divide por teto - limiar; com o teto no limiar ou abaixo, todo tópico venceria logo depois de um
  * acerto. E fica no máximo um rawDelta perfeito acima do limiar, senão nem o acerto perfeito no dia devido devolveria a
- * memória ao teto, e o espaçamento real ficaria abaixo do intervalo ideal em toda repetição.
+ * memória ao teto, e o espaçamento real ficaria abaixo do intervalo ideal em toda repetição. As normas de latência
+ * precisam guardar ao menos as amostras que a mediana exige, senão ela nunca valeria. Nas faixas e nos multiplicadores
+ * do XP, desempenho melhor nunca rende menos XP; e o limiar do chute nas últimas respostas cabe na janela delas.
  */
 const RELACOES: readonly { descricao: string; vale: (p: Parametros) => boolean }[] = [
   { descricao: 'intervaloBaseDias <= intervaloMaximoDias', vale: (p) => p.intervaloBaseDias <= p.intervaloMaximoDias },
@@ -266,6 +362,27 @@ const RELACOES: readonly { descricao: string; vale: (p: Parametros) => boolean }
   {
     descricao: 'numRepeticoesSaiDoAprendizado <= numRepeticoesDominado',
     vale: (p) => p.numRepeticoesSaiDoAprendizado <= p.numRepeticoesDominado,
+  },
+  {
+    descricao: 'amostrasMinimasDeLatencia <= janelaNormasDeLatencia',
+    vale: (p) => p.amostrasMinimasDeLatencia <= p.janelaNormasDeLatencia,
+  },
+  { descricao: 'minutosLicaoAcelerada <= minutosLicao', vale: (p) => p.minutosLicaoAcelerada <= p.minutosLicao },
+  {
+    descricao: 'acertoMinimoXpParcial <= acertoMinimoXpCheio',
+    vale: (p) => p.acertoMinimoXpParcial <= p.acertoMinimoXpCheio,
+  },
+  {
+    descricao:
+      'multiplicadorXpInsuficiente <= multiplicadorXpParcial <= multiplicadorXpCheio <= multiplicadorXpPerfeita',
+    vale: (p) =>
+      p.multiplicadorXpInsuficiente <= p.multiplicadorXpParcial &&
+      p.multiplicadorXpParcial <= p.multiplicadorXpCheio &&
+      p.multiplicadorXpCheio <= p.multiplicadorXpPerfeita,
+  },
+  {
+    descricao: 'chutesNasUltimasSistematico <= janelaChuteSistematico',
+    vale: (p) => p.chutesNasUltimasSistematico <= p.janelaChuteSistematico,
   },
 ]
 

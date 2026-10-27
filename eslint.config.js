@@ -108,6 +108,28 @@ export default defineConfig(
     },
   },
 
+  // Costura do modelo de memória: fora de memoria/, fire/ e do construtor de estado dos testes, nenhum código do núcleo,
+  // teste incluído, lê ou escreve campo de EstadoMemoria. O dependency-cruiser só vê o import, e o tipo chega pelo índice
+  // de memoria/ sem acusar nada; esta regra vê o acesso. Os campos estão em memoria/estado-memoria.ts. Fica de fora só
+  // `acuracia`, nome de uso geral que o núcleo usa em outros objetos, como o pedido do construtor.
+  {
+    files: ['packages/nucleo/src/**/*.ts'],
+    ignores: [
+      'packages/nucleo/src/memoria/**',
+      'packages/nucleo/src/fire/**',
+      'packages/nucleo/src/apoio-a-testes/estado-de-teste.ts',
+    ],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        ...['Property[key.name', 'MemberExpression[property.name'].map((no) => ({
+          selector: `${no}=/^(numRepeticoes|memoriaBase|ultimaRepEm|ultimaTentativaEm|nAvaliacoes|acuraciaPorDirecao|condicional)$/]`,
+          message: 'Campo de EstadoMemoria: use as funções de memoria/ e, em teste, apoio-a-testes/estado-de-teste.ts.',
+        })),
+      ],
+    },
+  },
+
   // Domínio: em src/, só o próprio pacote e o núcleo. Os scripts/ ficam fora da regra: rodam no Node com svgo, sharp e
   // resvg.
   {

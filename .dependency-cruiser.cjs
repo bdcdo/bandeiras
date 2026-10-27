@@ -64,7 +64,7 @@ module.exports = {
       name: 'so-memoria-e-fire-tocam-estado-memoria',
       severity: 'error',
       comment:
-        'Os campos de EstadoMemoria são mexidos só em memoria/ e fire/; o resto importa o tipo pelo índice de memoria/. É a costura estreita que mantém o modelo de memória trocável.',
+        'Os campos de EstadoMemoria são mexidos só em memoria/ e fire/, e nos testes por apoio-a-testes/estado-de-teste.ts; o resto importa o tipo pelo índice de memoria/. É a costura estreita que mantém o modelo de memória trocável. Esta regra só vê o import; o acesso aos campos fica com o no-restricted-syntax do eslint.config.js.',
       from: { path: '^packages/nucleo/src/', pathNot: '^packages/nucleo/src/(memoria|fire)/' },
       to: { path: '^packages/nucleo/src/memoria/estado-memoria\\.ts$' },
     },

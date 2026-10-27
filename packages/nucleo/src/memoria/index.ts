@@ -1,4 +1,5 @@
 export * from './acuracia'
+export * from './consultas'
 export * from './estado-memoria'
 export * from './modelo'
 export * from './parametros'
