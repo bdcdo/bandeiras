@@ -4,8 +4,10 @@ import { desembrulhar } from '../base/resultado'
 import { somarDias, type Dias, type Instante } from '../base/tempo'
 import { carregarCatalogo } from '../catalogo/carregar-catalogo'
 import { TECNICAS_TODAS_LIGADAS } from '../catalogo/tecnicas'
-import type { DadosDeCatalogo, IdItem, ItemBruto } from '../catalogo/tipos'
-import { topicoDeItem, type IdTopico } from '../grafo/topico'
+import type { DadosDeCatalogo, Direcao, IdGrupo, IdItem, ItemBruto } from '../catalogo/tipos'
+import { aplicarRespostaIsolada } from '../fire/resposta-isolada'
+import { construirGrafo } from '../grafo/grafo'
+import { topicoDeGrupo, topicoDeItem, type IdTopico } from '../grafo/topico'
 import { acuraciaInicial, atualizarAcuracia } from './acuracia'
 import { prontoParaCronometrar } from './consultas'
 import { estadoMemoriaInicial, type EstadoMemoria } from './estado-memoria'
@@ -19,7 +21,7 @@ import {
   memoriaEm,
   reagendar,
 } from './modelo'
-import { PARAMETROS_PADRAO as P, type CaminhoDeParametro } from './parametros'
+import { PARAMETROS_PADRAO as P, type CaminhoDeParametro, type Dificuldade, type Parametros } from './parametros'
 import { ehTopicoLento, velocidade } from './velocidade'
 
 // A régua das fórmulas da camada `memoria`; o que ela confere e o que não pega está em
@@ -99,6 +101,51 @@ const DA_VELOCIDADE = [
   'velocidadeMin',
   'velocidadeMax',
 ] as const satisfies readonly CaminhoDeParametro[]
+
+// A resposta isolada da camada fire, que compõe repetição explícita, acurácia e propagação. Ela fica nesta régua porque
+// lê os parâmetros da memória por todas essas fórmulas, e um parâmetro lido no lugar de outro de mesmo padrão passaria
+// em todo caso fixo que rodasse com os padrões. No grafo do catálogo acima, grupo-1 encompassa a e b. A dificuldade varia
+// por tópico para cada entrada de `desaceleracaoPorDificuldade` ser lida.
+const grafo = desembrulhar(construirGrafo(catalogo, LIGADA))
+const GRUPO = topicoDeGrupo('grupo-1' as IdGrupo).id
+const DIFICULDADES: ReadonlyMap<IdTopico, Dificuldade> = new Map([
+  [topico('a'), 3],
+  [topico('b'), 1],
+  [GRUPO, 2],
+])
+const comRepeticoes = (acuracia: number, numRepeticoes: number): EstadoMemoria => ({
+  ...repetido(numRepeticoes, 1),
+  ...com(acuracia),
+  numRepeticoes,
+  memoriaBase: 1,
+  ultimaRepEm: T0,
+})
+const respostaIsolada = (
+  p: Parametros,
+  memorias: ReadonlyMap<IdTopico, EstadoMemoria>,
+  alvo: IdTopico,
+  deltaBruto: number,
+  direcao: Direcao,
+  dias: number,
+) => [
+  ...aplicarRespostaIsolada(
+    { grafo, parametros: p, tecnicas: LIGADA, agora: em(dias), dificuldade: (t) => DIFICULDADES.get(t) ?? 2 },
+    memorias,
+    { alvo, deltaBruto, direcao, elegiveis: new Set([GRUPO]) },
+  ).memorias,
+]
+// a com acurácia 1 e dificuldade 3, e b com acurácia 0,84 e dificuldade 1: as velocidades ficam perto dos limites e do
+// limiar de tópico lento, onde os parâmetros deles agem.
+const EXTREMOS: ReadonlyMap<IdTopico, EstadoMemoria> = new Map([
+  [GRUPO, comRepeticoes(0, 3)],
+  [topico('a'), comRepeticoes(1, 2)],
+  [topico('b'), comRepeticoes(0.84, 2)],
+])
+const MEDIOS: ReadonlyMap<IdTopico, EstadoMemoria> = new Map([
+  [GRUPO, comRepeticoes(0.95, 50)],
+  [topico('a'), comRepeticoes(0.2, 3)],
+  [topico('b'), comRepeticoes(0.97, 2)],
+])
 
 // O cenário com 50 repetições existe porque o intervalo máximo só age com o intervalo ideal no teto.
 const FORMULAS: readonly Formula[] = [
@@ -196,6 +243,27 @@ const FORMULAS: readonly Formula[] = [
     cenarios: [
       (p) => prontoParaCronometrar({ ...com(0.9), numRepeticoes: 3 }, p),
       (p) => prontoParaCronometrar({ ...com(0.8), numRepeticoes: 5 }, p),
+    ],
+  },
+  {
+    nome: 'aplicarRespostaIsolada',
+    dependeDe: [
+      ...DA_MEMORIA,
+      ...DA_VELOCIDADE,
+      'kDecaimentoPorAtraso',
+      'tetoDecaimentoPorAtraso',
+      'alfaAcuracia',
+      'fatorMultiplaEscolha',
+      'forcaAcuraciaImplicita',
+      'limiarTopicoLento',
+    ],
+    cenarios: [
+      // Acerto de múltipla escolha no grupo: o crédito desce a a e b, e o de b, lento ou não, depende do limiar.
+      (p) => respostaIsolada(p, EXTREMOS, GRUPO, 1, 'reconhecer', 4),
+      (p) => respostaIsolada(p, MEDIOS, GRUPO, 1, 'produzir', 100),
+      // Erro digitado em a muito depois do vencimento: o decay multiplica o recuo, e a penalidade sobe ao grupo.
+      (p) => respostaIsolada(p, EXTREMOS, topico('a'), -1, 'recordar', 20),
+      (p) => respostaIsolada(p, MEDIOS, topico('a'), -1, 'reconhecer', 3),
     ],
   },
 ]

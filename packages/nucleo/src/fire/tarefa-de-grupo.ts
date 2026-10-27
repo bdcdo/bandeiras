@@ -3,9 +3,7 @@ import type { Direcao } from '../catalogo/tipos'
 import { preRequisitos } from '../grafo/consultas'
 import type { IdTopico } from '../grafo/topico'
 import { atualizarAcuracia } from '../memoria/acuracia'
-import type { EstadoMemoria } from '../memoria/estado-memoria'
-import { aplicarRepeticao } from '../memoria/modelo'
-import { velocidade } from '../memoria/velocidade'
+import { deltaExplicito, repeticaoExplicita } from './explicita'
 import {
   aplicarPenalidades,
   planejarPenalidade,
@@ -77,18 +75,7 @@ export function aplicarTarefaDeGrupo(
 ): Resultado<ResultadoDePenalidade, ErroDeTarefaDeGrupo> {
   const achados = problemas(ctx, memorias, tarefa)
   if (achados.length > 0) return erro({ codigo: 'TAREFA_DE_GRUPO_INVALIDA', detalhe: achados.join('; ') })
-  const { parametros, tecnicas, agora } = ctx
-  const explicita = (e: EstadoMemoria, topico: IdTopico, deltaBruto: number): EstadoMemoria =>
-    aplicarRepeticao(
-      e,
-      {
-        deltaBruto,
-        agora,
-        velocidade: velocidade(e, ctx.dificuldade(topico), parametros, tecnicas),
-        origem: 'explicita',
-      },
-      parametros,
-    )
+  const { parametros } = ctx
 
   // Passo 1: a repetição explícita de cada alvo, e a penalidade que o erro dele levaria a cada ascendente.
   const depoisDosAlvos = new Map(memorias)
@@ -96,8 +83,8 @@ export function aplicarTarefaDeGrupo(
   for (const r of tarefa.respostas) {
     const e = memorias.get(r.alvo)
     if (e === undefined) continue
-    const deltaBruto = r.deltaBruto * (r.direcao === 'recordar' ? 1 : parametros.fatorMultiplaEscolha)
-    const repetido = explicita(e, r.alvo, deltaBruto)
+    const deltaBruto = deltaExplicito(r.deltaBruto, r.direcao, parametros)
+    const repetido = repeticaoExplicita(ctx, e, r.alvo, deltaBruto)
     depoisDosAlvos.set(r.alvo, atualizarAcuracia(repetido, r.deltaBruto > 0, 1, parametros, r.direcao))
     const planejadas = planejarPenalidade(ctx, memorias, {
       origem: r.alvo,
@@ -124,7 +111,7 @@ export function aplicarTarefaDeGrupo(
   const depoisDoGrupo = new Map(penalizado.memorias)
   const eGrupo = penalizado.memorias.get(tarefa.grupo)
   if (eGrupo !== undefined) {
-    const repetido = explicita(eGrupo, tarefa.grupo, deltaDoGrupo)
+    const repetido = repeticaoExplicita(ctx, eGrupo, tarefa.grupo, deltaDoGrupo)
     depoisDoGrupo.set(tarefa.grupo, atualizarAcuracia(repetido, acertos / tarefa.respostas.length, 1, parametros))
   }
 
