@@ -127,7 +127,7 @@ export const CASOS_DO_CONTRATO_DE_ARMAZENAMENTO: readonly CasoDoContratoDeArmaze
         tipo: 'resposta-registrada',
         fusoMinutos: -330,
         questao: { formato: { linhas: [['a', 'b'], ['c']] }, limiteMs: 4500 },
-        resposta: { texto: 'São Tomé 👍', rotulo: null, ligacoes: [] },
+        resposta: { texto: 'Ação Ç 👍', rotulo: null, ligacoes: [] },
         acelerada: false,
         xp: 0.17,
       })
