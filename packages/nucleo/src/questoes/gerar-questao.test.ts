@@ -14,10 +14,15 @@ const catalogo = catalogoFixo()
 const ids = (texto: string): IdItem[] => texto.split('') as IdItem[]
 const [A, B, C] = ids('abc') as [IdItem, IdItem, IdItem]
 const VAZIO = contextoDeSessao({})
-// Cinco opções, e não as quatro do padrão, para o tamanho da questão vir do parâmetro e não de um número escrito no código.
-const CINCO = desembrulhar(resolverParametros({ opcoesMultiplaEscolha: 5 }))
+// Seis opções, e não as quatro do padrão, para o tamanho da questão vir do parâmetro e não de um número escrito no
+// código; e não cinco, que é o padrão de tentativasDeOpcoesNovas, que gerarQuestao também lê.
+const SEIS = desembrulhar(resolverParametros({ opcoesMultiplaEscolha: 6 }))
 
-const gerar = (pedido: PedidoDeQuestao, limiteMs?: number, parametros = CINCO, semente = 'questao'): Questao =>
+/** As seis opções possíveis de a entre parecidos, ordenadas: a, c, d, e, g e um de i e k. */
+const PARECIDOS_DE_A = [ids('acdegi'), ids('acdegk')]
+const ordenadas = (opcoes: readonly IdItem[]): IdItem[] => [...opcoes].sort()
+
+const gerar = (pedido: PedidoDeQuestao, limiteMs?: number, parametros = SEIS, semente = 'questao'): Questao =>
   desembrulhar(
     gerarQuestao(pedido, catalogo, VAZIO, sorteioComSemente(semente), parametros, limiteMs as Milis | undefined),
   )
@@ -26,8 +31,8 @@ describe('gerarQuestao', () => {
   it('na lição, reconhece e produz entre dissimilares e depois recorda', () => {
     const kp1 = gerar({ tipo: 'licao', item: C, kp: 1 })
     expect(kp1.formato.tipo).toBe('estimulo-para-rotulo')
-    // Com cinco opções, c recebe quatro dos sete dissimilares: e, i e k da outra categoria e um de f, h, j e l.
-    expect(opcoesDe(kp1.formato)).toHaveLength(5)
+    // Com seis opções, c recebe cinco dos sete dissimilares: e, i e k da outra categoria e dois de f, h, j e l.
+    expect(opcoesDe(kp1.formato)).toHaveLength(6)
     expect(opcoesDe(kp1.formato)).toEqual(expect.arrayContaining(ids('ceik')))
     expect(gerar({ tipo: 'licao', item: C, kp: 2 }).formato.tipo).toBe('rotulo-para-estimulo')
     expect(gerar({ tipo: 'licao', item: C, kp: 3 }).formato).toEqual({ tipo: 'rotulo-digitado' })
@@ -37,14 +42,14 @@ describe('gerarQuestao', () => {
     expect(gerar({ tipo: 'sondagem', item: A, etapa: 'recordar' }).formato).toEqual({ tipo: 'rotulo-digitado' })
     const confirmacao = gerar({ tipo: 'sondagem', item: A, etapa: 'confirmar' })
     expect(confirmacao.formato.tipo).toBe('rotulo-para-estimulo')
-    // Parecidos de a, sem o parceiro b: c, d, e e g.
-    expect(new Set(opcoesDe(confirmacao.formato))).toEqual(new Set(ids('acdeg')))
+    // Parecidos de a, sem o parceiro b: c e d do grupo, o vizinho e, g da classe e um de i e k, da categoria.
+    expect(PARECIDOS_DE_A).toContainEqual(ordenadas(opcoesDe(confirmacao.formato)))
   })
 
   it('na discriminação, reconhece entre parecidos', () => {
     const q = gerar({ tipo: 'discriminacao', item: A })
     expect(q.formato.tipo).toBe('estimulo-para-rotulo')
-    expect(new Set(opcoesDe(q.formato))).toEqual(new Set(ids('acdeg')))
+    expect(PARECIDOS_DE_A).toContainEqual(ordenadas(opcoesDe(q.formato)))
   })
 
   it('na revisão, na remediação e no quiz, recorda, com o limite que vier de quem chama', () => {
@@ -97,14 +102,14 @@ describe('gerarQuestao', () => {
   })
 
   it('dá o mesmo id ao mesmo conteúdo e ids diferentes a conteúdos diferentes', () => {
-    const q1 = gerar({ tipo: 'licao', item: A, kp: 1 }, undefined, CINCO, 'semente-1')
-    const q2 = gerar({ tipo: 'licao', item: A, kp: 1 }, undefined, CINCO, 'semente-1')
+    const q1 = gerar({ tipo: 'licao', item: A, kp: 1 }, undefined, SEIS, 'semente-1')
+    const q2 = gerar({ tipo: 'licao', item: A, kp: 1 }, undefined, SEIS, 'semente-1')
     expect(q2).toEqual(q1)
     const ids = new Set(
       [
         q1,
-        gerar({ tipo: 'licao', item: A, kp: 1 }, undefined, CINCO, 'semente-2'),
-        gerar({ tipo: 'licao', item: A, kp: 2 }, undefined, CINCO, 'semente-1'),
+        gerar({ tipo: 'licao', item: A, kp: 1 }, undefined, SEIS, 'semente-2'),
+        gerar({ tipo: 'licao', item: A, kp: 2 }, undefined, SEIS, 'semente-1'),
         gerar({ tipo: 'revisao', item: A }),
         gerar({ tipo: 'revisao', item: A }, 3000),
         gerar({ tipo: 'revisao', item: B }),

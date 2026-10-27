@@ -11,9 +11,11 @@ import { xpDaTarefa, type TarefaParaXp } from './xp'
 
 // Parâmetros ajustados para nenhum número do XP coincidir com outro nem com o padrão: no padrão, a faixa de 50%, o
 // multiplicador dela e os minutos da lição acelerada valem todos 0,5, e trocar um pelo outro não mudaria nenhum caso.
+// Os limiares do chute sistemático e as amostras mínimas, também lidos pelo XP, ficam no padrão (2, 3, 10 e 8), e
+// nenhum valor ajustado repete um deles.
 const AJUSTADOS = desembrulhar(
   resolverParametros({
-    minutosLicao: 2,
+    minutosLicao: 2.4,
     minutosLicaoAcelerada: 0.3,
     minutosPorQuestao: 0.2,
     folgaSobreMedianaMs: 2000,
@@ -48,10 +50,10 @@ const tarefa = (tipo: TipoDeTarefa, n: number, acelerada?: boolean): TarefaParaX
 
 describe('xpDaTarefa: casos fixos', () => {
   it('lição perfeita vale os minutos da lição vezes o bônus, e a acelerada, os minutos dela', () => {
-    // 2 minutos x 1,3 = 2,6; acelerada, 0,3 x 1,3 = 0,39. O número de questões não conta na lição.
-    expect(xp(tarefa('licao', 3), av('ccc'))).toBeCloseTo(2.6, 10)
+    // 2,4 minutos x 1,3 = 3,12; acelerada, 0,3 x 1,3 = 0,39. O número de questões não conta na lição.
+    expect(xp(tarefa('licao', 3), av('ccc'))).toBeCloseTo(3.12, 10)
     expect(xp(tarefa('licao', 3, true), av('ccc'))).toBeCloseTo(0.39, 10)
-    expect(xp(tarefa('licao', 6), av('cccccc'))).toBeCloseTo(2.6, 10)
+    expect(xp(tarefa('licao', 6), av('cccccc'))).toBeCloseTo(3.12, 10)
   })
 
   it('revisão com 80% de acerto vale o XP cheio dos minutos por questão', () => {
@@ -125,7 +127,7 @@ describe('interruptor gamificacao', () => {
 
   it('ligada, cada tarefa rende o XP do desempenho', () => {
     const [licao, revisao, quiz] = cenario(TECNICAS_TODAS_LIGADAS)
-    expect(licao).toBeCloseTo(2.6, 10)
+    expect(licao).toBeCloseTo(3.12, 10)
     expect(revisao).toBeCloseTo(0.9, 10)
     expect(quiz).toBeCloseTo(-0.56, 10)
   })
