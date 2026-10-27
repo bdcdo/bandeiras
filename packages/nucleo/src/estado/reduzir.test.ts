@@ -252,6 +252,19 @@ describe('XP', () => {
     expect(xp).toBeCloseTo(XP_DA_LICAO, 9)
   })
 
+  it('o fuso do dia é o gravado no evento, e não um fixo: 01:10 UTC em UTC+3 já passou da virada do dia 10', () => {
+    // Em UTC+3 (fuso -180), 01:10 UTC é 04:10, depois da virada das 4h; em UTC (fuso 0) e em UTC-3 (fuso 180), ainda é o
+    // dia 9. No caso de cima o fuso 0 e o -180 caem no mesmo dia, e um fuso fixo passaria por ele.
+    const c = novaCena(ctx, { agora: Date.UTC(2025, 9, 10, 1, 10), fusoMinutos: -180 })
+    abrirSessaoNaCena(c, [I('k')])
+    licaoDeItem(c, I('k'))
+    const { em } = ultimo(c, 'licao-concluida')
+    expect([diaLocal(em, 0, P), diaLocal(em, 180, P)]).toStrictEqual(['2025-10-09', '2025-10-09'])
+    const [[dia, xp] = ['', 0], ...outros] = somenteXp(c.estado)
+    expect([dia, outros]).toStrictEqual(['2025-10-10', []])
+    expect(xp).toBeCloseTo(XP_DA_LICAO, 9)
+  })
+
   it('o chute sistemático lê as qualidades de antes da tarefa, e não a janela do fechamento', () => {
     // Com janela 3: [perfeita x3] da lição, dois chutes avulsos, a tarefa abre com [perfeita, chute, chute], uma
     // resposta avulsa perfeita entra no meio, e a tarefa fecha com um chute. Antes da tarefa mais ela dá três chutes na
