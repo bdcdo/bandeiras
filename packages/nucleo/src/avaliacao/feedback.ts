@@ -1,21 +1,31 @@
 import { erro, ok, type Resultado } from '../base/resultado'
 import type { Catalogo, IdItem, Item } from '../catalogo/tipos'
-import type { Questao } from '../questoes'
+import { parceirosIndiscerniveis, type Questao } from '../questoes'
 import type { Avaliacao, ErroDeAvaliacao } from './tipos'
+
+/** Um item revelado pelo feedback, com o rótulo oficial e a descrição. */
+export type ItemRevelado = Readonly<{ item: IdItem; rotulo: string; descricao: string }>
 
 /**
  * O que a casca mostra depois da resposta, como dado. Revela a resposta certa e, no erro, o item confundido, e nada
- * mais: as outras opções seguem sem rótulo, para a próxima questão que as use não chegar com a resposta dada. O parceiro
- * indiscernível também fica de fora, embora valha como acerto, porque nomeá-lo seria ensinar um item que a questão não
- * pediu.
+ * mais: as outras opções seguem sem rótulo, para a próxima questão que as use não chegar com a resposta dada.
+ *
+ * O parceiro indiscernível do alvo fica de fora onde a pergunta é só sobre o alvo, embora valha como acerto, porque
+ * nomeá-lo ali seria ensinar um item que a questão não pediu. Em `grupo-membros` é o contrário: a resposta certa é o
+ * alvo junto dos parceiros, e eles vêm em `tambemCertas`. Sem eles, quem marcasse só o alvo veria como resposta certa o
+ * que marcou, sem saber o que faltou, e quem marcasse só o parceiro leria que ele estava errado.
  */
 export type Feedback = Readonly<{
   correta: boolean
   respostaCerta: Readonly<{ item: IdItem; rotulo: string; aliases: readonly string[]; descricao: string }>
+  /** Só em `grupo-membros`: os parceiros indiscerníveis do alvo, que a resposta certa também marca. */
+  tambemCertas?: readonly ItemRevelado[]
   /** O que separa o alvo dos parecidos, quando a questão tem com quem compará-lo. */
   tracoDistintivo?: string
-  confundidaCom?: Readonly<{ item: IdItem; rotulo: string; descricao: string }>
+  confundidaCom?: ItemRevelado
 }>
+
+const revelado = (item: Item): ItemRevelado => ({ item: item.id, rotulo: item.rotulo, descricao: item.descricao })
 
 /**
  * O traço distintivo que cabe na questão: o do grupo, na tarefa de grupo; na questão isolada com confusão, o do
@@ -47,13 +57,21 @@ export function feedbackDe(
   if (idConfundida !== undefined && confundida === undefined) {
     return erro({ codigo: 'ITEM_INEXISTENTE', detalhe: `item que não existe: '${idConfundida}'` })
   }
+  // O `flatMap` só atende ao tipo do `get`: num catálogo carregado todo parceiro é item, porque o par só aceita membros
+  // do grupo.
+  const tambemCertas =
+    questao.formato.tipo === 'grupo-membros'
+      ? [...parceirosIndiscerniveis(alvo.id, catalogo)].flatMap((id) => {
+          const parceiro = catalogo.itens.get(id)
+          return parceiro === undefined ? [] : [revelado(parceiro)]
+        })
+      : []
   const traco = tracoDaQuestao(questao, alvo, confundida, catalogo)
   return ok({
     correta: avaliacao.correta,
     respostaCerta: { item: alvo.id, rotulo: alvo.rotulo, aliases: alvo.aliases, descricao: alvo.descricao },
+    ...(tambemCertas.length === 0 ? {} : { tambemCertas }),
     ...(traco === undefined ? {} : { tracoDistintivo: traco }),
-    ...(confundida === undefined
-      ? {}
-      : { confundidaCom: { item: confundida.id, rotulo: confundida.rotulo, descricao: confundida.descricao } }),
+    ...(confundida === undefined ? {} : { confundidaCom: revelado(confundida) }),
   })
 }

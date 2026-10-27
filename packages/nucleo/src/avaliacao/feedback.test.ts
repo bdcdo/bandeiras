@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { catalogoFixo } from '../apoio-a-testes/catalogo-de-teste'
 import { desembrulhar } from '../base/resultado'
+import type { Milis } from '../base/tempo'
 import type { IdGrupo, IdItem } from '../catalogo/tipos'
+import { PARAMETROS_PADRAO as P } from '../memoria/parametros'
 import { criarQuestao, type ContextoDeQuestao, type Questao } from '../questoes/questao'
+import { avaliarResposta } from './avaliar-resposta'
 import { feedbackDe } from './feedback'
+import { NORMAS_DE_LATENCIA_VAZIAS } from './normas-de-latencia'
 import type { Avaliacao } from './tipos'
 
 const catalogo = catalogoFixo()
@@ -56,6 +60,42 @@ describe('feedbackDe', () => {
   it('não revela nenhuma outra opção nem o parceiro indiscernível', () => {
     const texto = JSON.stringify(desembrulhar(feedbackDe(questao('a', ISOLADA, 'abci'), confundida('c'), catalogo)))
     for (const outro of ['Item B', 'Item I', 'Apelido B']) expect(texto).not.toContain(outro)
+  })
+
+  describe('em grupo-membros, a resposta certa é o alvo com o parceiro', () => {
+    // a e b são o par do grupo-1: a destacado na fileira, b entre os rótulos. A avaliação é a de avaliarResposta.
+    const grupo: ContextoDeQuestao = { tipo: 'grupo', grupo: 'grupo-1' as IdGrupo, exibidos: ids('acdg') }
+    const membros = criarQuestao('a' as IdItem, { tipo: 'grupo-membros', opcoes: ids('abcdg') }, grupo)
+    const feedbackDaEscolha = (marcadas: string) => {
+      const resposta = { tipo: 'escolha', escolhidas: ids(marcadas), latencia: 2000 as Milis } as const
+      const avaliacao = desembrulhar(avaliarResposta(membros, resposta, catalogo, NORMAS_DE_LATENCIA_VAZIAS, P))
+      return desembrulhar(feedbackDe(membros, avaliacao, catalogo))
+    }
+    const parceiro = [{ item: 'b', rotulo: 'Item B', descricao: 'Descrição de b' }]
+
+    it('marcando só o parceiro, o feedback diz que ele também é certo', () => {
+      expect(feedbackDaEscolha('b')).toMatchObject({
+        correta: false,
+        respostaCerta: { item: 'a' },
+        tambemCertas: parceiro,
+      })
+    })
+
+    it('marcando só o alvo, o feedback diz o que faltou', () => {
+      expect(feedbackDaEscolha('a')).toMatchObject({
+        correta: false,
+        respostaCerta: { item: 'a' },
+        tambemCertas: parceiro,
+      })
+    })
+
+    it('marcando o par, o feedback confirma os dois', () => {
+      expect(feedbackDaEscolha('ab')).toMatchObject({
+        correta: true,
+        respostaCerta: { item: 'a' },
+        tambemCertas: parceiro,
+      })
+    })
   })
 
   it('devolve erro para item fora do catálogo', () => {
