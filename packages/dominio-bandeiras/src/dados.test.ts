@@ -27,7 +27,7 @@ import revisoes from '../gerado/commons-revisoes.json'
 import hashes from '../gerado/hashes.json'
 import licencas from '../gerado/licencas.json'
 import vizinhosGerados from '../gerado/vizinhos.json'
-import type { Inscricao, RegioesM49 } from '../scripts/comum.ts'
+import type { CaixaNaImagem, Inscricao, RegioesM49 } from '../scripts/comum.ts'
 import { fraseDaModificacao } from '../scripts/inscricoes.ts'
 import { MEMBROS_ONU } from '../scripts/membros.ts'
 import { PADROES_VISUAIS } from './classes'
@@ -174,7 +174,7 @@ describe('licenças', () => {
 describe('inscrições com o nome do país', () => {
   // A anotação dá ao JSON o tipo que o gerador lê; o teste confere o conteúdo campo a campo.
   const inscricoes: Inscricao[] = inscricoesJson as Inscricao[]
-  const dentroDaImagem = (r: { x0: number; y0: number; x1: number; y1: number }): boolean =>
+  const dentroDaImagem = (r: CaixaNaImagem): boolean =>
     r.x0 >= 0 && r.y0 >= 0 && r.x1 <= 1 && r.y1 <= 1 && r.x0 < r.x1 && r.y0 < r.y1
 
   it('inscricoes.json tem exatamente as oito bandeiras que escrevem o nome do país', () => {

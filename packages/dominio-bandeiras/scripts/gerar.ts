@@ -228,8 +228,8 @@ type Processada = {
   imagem: Imagem
   arquivos: Map<string, Buffer>
   gate: Gate
-  /** Pixels que a remoção da inscrição mudou, na largura do gate dela; ausente nas bandeiras sem inscrição. */
-  remocao?: number
+  /** Pixels que a remoção da inscrição mudou, na largura do gate dela; undefined nas bandeiras sem inscrição. */
+  remocao: number | undefined
 }
 
 /** O derivado sem a inscrição; uma operação que não acha o que declarou encerra a geração com a mensagem dela. */
@@ -280,11 +280,9 @@ async function processar(codigo: string, inscricao: Inscricao | undefined): Prom
 
   const proporcao = proporcaoDaBandeira(codigo, otimizado)
   const bytes = Buffer.from(otimizado)
-  // Spread condicional por causa de exactOptionalPropertyTypes: campo opcional aceita ausência, nunca undefined.
-  const daRemocao = remocao === undefined ? {} : { remocao }
   if (bytes.length <= LIMITE_DO_SVG_BYTES) {
     const arquivos = new Map([[`${codigo}.svg`, bytes]])
-    return { codigo, proporcao, imagem: { formato: 'svg' }, arquivos, gate, ...daRemocao }
+    return { codigo, proporcao, imagem: { formato: 'svg' }, arquivos, gate, remocao }
   }
   // O raster sai do resvg e o sharp só codifica: o WebP mostra o que o gate do resvg conferiu. Um código isento desse
   // gate não pode virar WebP, porque o resvg não desenha o original dele por inteiro.
@@ -298,14 +296,7 @@ async function processar(codigo: string, inscricao: Inscricao | undefined): Prom
       .asPng()
     arquivos.set(`${codigo}-${String(largura)}.webp`, await sharp(png).webp(OPCOES_DO_WEBP).toBuffer())
   }
-  return {
-    codigo,
-    proporcao,
-    imagem: { formato: 'webp', larguras: [...LARGURAS_DO_WEBP] },
-    arquivos,
-    gate,
-    ...daRemocao,
-  }
+  return { codigo, proporcao, imagem: { formato: 'webp', larguras: [...LARGURAS_DO_WEBP] }, arquivos, gate, remocao }
 }
 
 /**

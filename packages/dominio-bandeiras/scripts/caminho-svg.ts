@@ -231,7 +231,7 @@ export function lerSubcaminhos(d: string): Subcaminho[] {
   return subcaminhos
 }
 
-function caixaDe(pontos: Ponto[]): Retangulo {
+export function caixaDe(pontos: Ponto[]): Retangulo {
   const xs = pontos.map((p) => p.x)
   const ys = pontos.map((p) => p.y)
   return { x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys) }

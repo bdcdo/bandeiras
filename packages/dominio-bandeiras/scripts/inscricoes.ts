@@ -42,7 +42,7 @@
  * derivado e prova que só a região da inscrição mudou.
  */
 import { optimize, type XastChild, type XastElement, type XastParent } from 'svgo'
-import { cabeEm, lerSubcaminhos, semSubcaminhos, type Retangulo } from './caminho-svg.ts'
+import { cabeEm, caixaDe, lerSubcaminhos, semSubcaminhos, type Retangulo } from './caminho-svg.ts'
 import type { Inscricao, OperacaoDeInscricao } from './comum.ts'
 
 /** Elementos cujo conteúdo não é desenhado onde está, mas usado por referência (molde, recorte, preenchimento). */
@@ -75,7 +75,6 @@ export function lerTransformacao(texto: string): Matriz {
     /(matrix|translate|scale|rotate|skewX|skewY)\s*\(([^)]*)\)/g,
     (_, nome: string, args: string) => {
       const n = args
-        .trim()
         .split(/[\s,]+/)
         .filter((v) => v !== '')
         .map(Number)
@@ -112,9 +111,7 @@ function transformar(m: Matriz, r: Retangulo): Retangulo {
     [r.x0, r.y1],
     [r.x1, r.y1],
   ].map(([x = 0, y = 0]) => ({ x: a * x + c * y + e, y: b * x + d * y + f }))
-  const xs = cantos.map((p) => p.x)
-  const ys = cantos.map((p) => p.y)
-  return { x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys) }
+  return caixaDe(cantos)
 }
 
 /**
