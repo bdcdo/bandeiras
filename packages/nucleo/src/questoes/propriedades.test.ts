@@ -117,10 +117,7 @@ function simular(s: Sessao): Simulacao {
   const memorias = new Map<IdTopico, EstadoMemoria>(
     itens.map((id, k) => {
       const [reconhecer, produzir, recordar] = s.direcoes[k] ?? [0.85, 0.85, 0.85]
-      return [
-        topicoDeItem(id).id,
-        estadoDeTeste({ porDirecao: { reconhecer, produzir, recordar } }),
-      ]
+      return [topicoDeItem(id).id, estadoDeTeste({ porDirecao: { reconhecer, produzir, recordar } })]
     }),
   )
   const sorteio = sorteioComSemente(s.semente)
