@@ -184,6 +184,53 @@ describe('escolherDistratores com um item em pares de dois grupos', () => {
       },
     })
   })
+
+  it('com todo candidato em dois pares ou mais, conta o maior conjunto sem par, e não o que pôr o primeiro deixa', () => {
+    // b com c, d e e; c com d e e. Nenhum candidato tem um parceiro só, e a conta precisa comparar pôr b, que barra os
+    // outros três e rende um, com deixá-lo de fora: aí d e e, que não são par entre si, rendem dois.
+    const losango = catalogoDe({
+      classes: [1, 2, 2, 2, 2],
+      categorias: [1, 2, 2, 2, 2],
+      aliases: [],
+      vizinhos: [],
+      grupos: [
+        { membros: [1, 2], par: true },
+        { membros: [1, 3], par: true },
+        { membros: [1, 4], par: true },
+        { membros: [2, 3], par: true },
+        { membros: [2, 4], par: true },
+      ],
+      vizinhancas: [],
+    })
+    for (const semente of sementes) {
+      const r = escolherDistratores(A, 'dissimilares', 2, losango, VAZIO, sorteioComSemente(semente), P)
+      expect(conjunto(r), semente).toEqual(new Set(ids('de')))
+    }
+  })
+
+  it('chega a n quando o sorteio vê o item de dois pares antes dos parceiros dele, com um barrado ainda por ver', () => {
+    // b com c, d com e e d com f. O maior conjunto sem par tem três: b ou c, mais e e f. As camadas fixam a ordem: b, que
+    // já tem lição, vem sozinho na primeira; d, de outra categoria, na segunda; c, e e f, da categoria do alvo, na
+    // última. b entra e barra c. Pôr d barraria e e f, e a conta que decide se d entra precisa deixar de fora c, barrado
+    // embora ainda não visto: contando c como livre, d entraria e a lista ficaria em b e d.
+    const estrela = catalogoDe({
+      classes: [1, 2, 2, 2, 2, 2],
+      categorias: [1, 2, 1, 2, 1, 1],
+      aliases: [],
+      vizinhos: [],
+      grupos: [
+        { membros: [1, 2], par: true },
+        { membros: [3, 4], par: true },
+        { membros: [3, 5], par: true },
+      ],
+      vizinhancas: [],
+    })
+    const comB = contextoDeSessao({ aprendidos: [B] })
+    for (const semente of sementes) {
+      const r = escolherDistratores(A, 'dissimilares', 3, estrela, comB, sorteioComSemente(semente), P)
+      expect(conjunto(r), semente).toEqual(new Set(ids('bef')))
+    }
+  })
 })
 
 describe('escolherDistratores fora do contrato', () => {
