@@ -358,6 +358,66 @@ describe('distratores com um item em pares de dois grupos', () => {
   })
 })
 
+describe('distratores contra o maior conjunto sem par, contado por força bruta', () => {
+  // O alvo é o item 0; os candidatos 1 a m, de outra classe e de outra categoria, são todos dissimilares dele e caem numa
+  // camada só, e os pares saem de todos os pares possíveis entre eles. Os geradores de cima quase nunca chegam aos dois
+  // casos em que a conta do sorteio é delicada: o grafo em que nenhum candidato tem um parceiro só, que obriga
+  // `cabemJuntos` a ramificar, e o candidato barrado que o sorteio ainda não viu, que a conferência antes de cada escolha
+  // não pode contar como livre. Com até oito candidatos, a força bruta passa por no máximo 256 subconjuntos.
+  const paresPossiveis = (m: number): [number, number][] =>
+    Array.from({ length: m }, (_, x) => x + 1).flatMap((x) =>
+      Array.from({ length: m - x }, (_, k): [number, number] => [x, x + 1 + k]),
+    )
+  const grafo = fc
+    .integer({ min: 1, max: 8 })
+    .chain((m) => fc.record({ m: fc.constant(m), pares: fc.subarray(paresPossiveis(m)) }))
+
+  function maiorSemPar(candidatos: readonly IdItem[], catalogo: Catalogo): number {
+    let maior = 0
+    for (let mascara = 0; mascara < 2 ** candidatos.length; mascara++) {
+      const sub = candidatos.filter((_, k) => Math.floor(mascara / 2 ** k) % 2 === 1)
+      if (paresDentro(catalogo, sub).length === 0) maior = Math.max(maior, sub.length)
+    }
+    return maior
+  }
+
+  it('aceita n se e só se o maior conjunto sem par chega a n, e devolve n itens sem par, com o conjunto já mostrado ou não', () => {
+    let semParceiroUnico = 0
+    fc.assert(
+      fc.property(grafo, fc.string({ maxLength: 8 }), fc.string({ maxLength: 8 }), ({ m, pares }, semente, outra) => {
+        const catalogo = catalogoDe({
+          classes: [1, ...Array.from({ length: m }, () => 2)],
+          categorias: [1, ...Array.from({ length: m }, () => 2)],
+          aliases: [],
+          vizinhos: [],
+          grupos: pares.map((membros) => ({ membros, par: true })),
+          vizinhancas: [],
+        })
+        const [alvo, ...candidatos] = [...catalogo.itens.keys()] as [IdItem, ...IdItem[]]
+        const graus = candidatos.map((c) => parceirosIndiscerniveis(c, catalogo).size)
+        if (graus.some((g) => g >= 2) && !graus.includes(1)) semParceiroUnico++
+        const maior = maiorSemPar(candidatos, catalogo)
+        const parametros = desembrulhar(resolverParametros({}))
+        const vazio = contextoDeSessao({})
+        for (let n = 0; n <= m; n++) {
+          const escolher = (ctx: ContextoDeSessao, s: string) =>
+            escolherDistratores(alvo, 'dissimilares', n, catalogo, ctx, sorteioComSemente(s), parametros)
+          const uma = escolher(vazio, semente)
+          expect(uma.ok, `n = ${String(n)}, maior conjunto sem par = ${String(maior)}`).toBe(n <= maior)
+          if (!uma.ok) continue
+          const usado = { ...vazio, conjuntosUsados: new Set([chaveDeOpcoes([alvo, ...uma.valor])]) }
+          for (const valor of [uma.valor, desembrulhar(escolher(usado, outra))]) {
+            expect(valor).toHaveLength(n)
+            expect(paresDentro(catalogo, valor)).toEqual([])
+          }
+        }
+      }),
+      { numRuns: 400 },
+    )
+    expect(semParceiroUnico).toBeGreaterThan(25)
+  })
+})
+
 describe('determinismo da geração', () => {
   it('o mesmo pedido, com o mesmo contexto e a mesma semente, dá a mesma questão e o mesmo id', () => {
     fc.assert(
