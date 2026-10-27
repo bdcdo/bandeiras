@@ -135,6 +135,25 @@ describe('imagens', () => {
     expect(sha256(ler('bo-960.webp'))).toBe('c39a5206775d84b8dfb7c03dfd67083526104a4ee7a6c62e60a2dae8fe3076aa')
   })
 
+  it('o arquivo processado das outras seis bandeiras sem inscrição está fixado', () => {
+    // Afeganistão e Bolívia estão fixados no teste acima. O gate da remoção, em gerar.ts, prova que nada mudou fora da
+    // caixa de cada bandeira, mas não distingue duas remoções que ocupam a mesma região: tirar a legenda de ni junto com
+    // o contorno do triângulo, que ela cerca, passa por ele. hashes.json não pega isso, porque a regeneração o reescreve
+    // junto com a imagem. Uma mudança no que sai de qualquer uma destas reprova aqui, e o hash novo só entra depois de
+    // alguém comparar à mão o original e o derivado.
+    const fixados = {
+      'bn.svg': '242bd1fba5fb1fa6ade4467aa6120b65dc18adf7002de752790543fd5c41c849',
+      'do-480.webp': 'd7c3c81e90a77d5a74d4acfec0d8475164306a12097ec91784598e62ca3f73b0',
+      'do-960.webp': 'a3ca0d3e29ed62ad5542e82f6807612bffa135106aa39c967611e98cfe743497',
+      'eg.svg': '9414733ba309b9ade13c82c329e7c73552cb89df39370243d96f65ecb753ad96',
+      'ni.svg': '729d20706bf5527de2223a7d17c7c499d16683b6d229b26a21df6cd5e5e6789d',
+      'py.svg': '7ecdd8037fec52de6092b253a997dbcf9ba80d0e01b41d13d1042e641a1d76ed',
+      'sv-480.webp': '0d73a2c59257f7a4c1d6a06b88ae1e6ef0d08847c679e36231f7aec55bff9e89',
+      'sv-960.webp': '25d767eef82ba04d9e7cb0da996e350cde0aa9687229275d8a4b1800a357166b',
+    }
+    for (const [nome, hash] of Object.entries(fixados)) expect(sha256(ler(nome)), nome).toBe(hash)
+  })
+
   it('nenhum SVG traz o nome do país em <title>, <desc> ou texto "Flag of"', () => {
     // A imagem é o estímulo da pergunta "que país é este?". O título do SVG aparece como título da aba quando a imagem é
     // aberta sozinha e em toda renderização fora de <img>; a casca não consegue tirá-lo de dentro do arquivo.
