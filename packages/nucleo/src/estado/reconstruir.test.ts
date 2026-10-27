@@ -18,6 +18,7 @@ import type { IdItem } from '../catalogo/tipos'
 import { criarEvento, VERSAO_MODELO, type Evento } from '../eventos'
 import { topicoDeItem } from '../grafo'
 import { PARAMETROS_PADRAO } from '../memoria'
+import { chaveDePar } from './confusoes'
 import { conferirInvariantes } from './invariantes'
 import { reconstruir } from './reconstruir'
 import { estadoDoPerfil, reduzir } from './reduzir'
@@ -73,7 +74,7 @@ describe('reconstruir sobre o log de referência', () => {
       ['item:i', { status: 'adiada', liberadoEm: 1760087795000, tentativas: 1, kpDaFalha: 1 }],
     ])
     expect([...estado.memorias.keys()]).toStrictEqual(['item:g', 'item:h'])
-    expect([...estado.confusoes]).toStrictEqual([['f\u001fh', 1]])
+    expect([...estado.confusoes]).toStrictEqual([[chaveDePar(I('f'), I('h')), 1]])
     expect([...estado.metaPorDia]).toStrictEqual([['2025-10-09', 20]])
     expect([...estado.xpPorDia.keys()]).toStrictEqual(['2025-10-09'])
     expect(estado.xpPorDia.get('2025-10-09' as never)).toBeCloseTo(1.962, 9)

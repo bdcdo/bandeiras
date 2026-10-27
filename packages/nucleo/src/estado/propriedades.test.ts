@@ -44,7 +44,13 @@ const escolhas = fc.array(fc.nat(), { minLength: 400, maxLength: 800, size: 'max
 const escolhasDoLivre = (maxLength: number) => fc.array(fc.nat(), { maxLength, size: 'max' })
 const DIA = 86_400_000
 
-const CASOS_DO_ROTEIRO = ['parte livre', 'chute', 'não sei ou tempo esgotado', 'relógio parado, fracionário ou atrás']
+const CASOS_DO_ROTEIRO = [
+  'parte livre',
+  'chute',
+  'não sei ou tempo esgotado',
+  'relógio parado, fracionário ou atrás',
+  'remediação de par confundido na parte livre',
+]
 const CASOS_DO_LIVRE = ['em igual entre aparelhos', 'perfil no meio do log', 'mais de dez eventos']
 
 /** Os casos de `CASOS_DO_ROTEIRO` a que o roteiro chega. */
@@ -63,6 +69,11 @@ function casosDoRoteiro(roteiro: Roteiro): string[] {
     qualidades.has('chute') ? 'chute' : '',
     qualidades.has('nao-sei') || qualidades.has('tempo-esgotado') ? 'não sei ou tempo esgotado' : '',
     anomalo ? 'relógio parado, fracionário ou atrás' : '',
+    roteiro.passos
+      .slice(roteiro.inicioDaParteLivre)
+      .some((p) => p.corpos.some((c) => c.tipo === 'remediacao-concluida' && c.motivo === 'confusao'))
+      ? 'remediação de par confundido na parte livre'
+      : '',
   ].filter((caso) => caso !== '')
 }
 

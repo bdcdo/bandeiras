@@ -1,3 +1,4 @@
+export * from './chave-de-conjunto'
 export * from './hash'
 export * from './ids-sequenciais'
 export type * from './marca'

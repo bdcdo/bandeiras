@@ -37,6 +37,7 @@ import {
   type TarefaRegistrada,
 } from '../eventos'
 import {
+  chaveDePar,
   criarContextoDeReducao,
   emitir,
   iniciarPerfil,
@@ -782,9 +783,13 @@ function acaoLivre(r: Roteirista): void {
       return
     }
     case 7: {
-      const par = [...r.estado.confusoes].find(([k, n]) => n > (r.estado.confusoesRemediadas.get(k) ?? 0))?.[0]
-      const [x, y] = (par?.split('\u001f') ?? []) as IdItem[]
-      if (x !== undefined && y !== undefined && concluido(r, x) && concluido(r, y)) remediacao(r, x, y)
+      // O primeiro par de itens aprendidos com confusão ainda não remediada; a chave do par se consulta, não se desmonta.
+      const pendente = (x: IdItem, y: IdItem): boolean => {
+        const chave = chaveDePar(x, y)
+        return (r.estado.confusoes.get(chave) ?? 0) > (r.estado.confusoesRemediadas.get(chave) ?? 0)
+      }
+      const par = sabidos.flatMap((x, k) => sabidos.slice(k + 1).map((y) => [x, y] as const)).find(([x, y]) => pendente(x, y))
+      if (par !== undefined) remediacao(r, par[0], par[1])
       return
     }
     case 8:

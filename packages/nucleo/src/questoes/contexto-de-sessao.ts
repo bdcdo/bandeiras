@@ -1,3 +1,4 @@
+import { chaveDeConjunto } from '../base/chave-de-conjunto'
 import type { IdItem } from '../catalogo/tipos'
 import type { Questao } from './questao'
 
@@ -39,13 +40,9 @@ export function contextoDeSessao(campos: {
   }
 }
 
-/**
- * Chave de um conjunto de opções: os ids em ordem de unidade de código, para a mesma escolha em outra ordem dar a mesma
- * chave. O separador é um caractere de controle, que nenhum id de catálogo tem, para `['a|b', 'c']` e `['a', 'b|c']` não
- * se confundirem.
- */
+/** Chave de um conjunto de opções, pelo formato de `chaveDeConjunto`: a mesma escolha em outra ordem dá a mesma chave. */
 export function chaveDeOpcoes(opcoes: readonly IdItem[]): string {
-  return [...opcoes].sort().join('\u001f')
+  return chaveDeConjunto(opcoes)
 }
 
 /**

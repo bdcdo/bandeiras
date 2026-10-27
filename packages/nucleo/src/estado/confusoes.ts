@@ -1,14 +1,14 @@
+import { chaveDeConjunto } from '../base/chave-de-conjunto'
 import type { IdItem } from '../catalogo/tipos'
 import type { UsoDeQuestao } from '../questoes'
 import type { Avaliacao } from '../avaliacao'
 
 /**
- * Chave de um par de itens no mapa de confusões: os dois ids em ordem de unidade de código, para `a` confundido com `b`
- * e `b` com `a` caírem na mesma chave. O separador é o mesmo caractere de controle de `chaveDeOpcoes`, que nenhum id de
- * catálogo tem, para `('a|b', 'c')` e `('a', 'b|c')` não colidirem.
+ * Chave de um par de itens no mapa de confusões, pelo formato de `chaveDeConjunto`: `a` confundido com `b` e `b` com `a`
+ * caem na mesma chave. A chave não se desmonta; quem percorre pares parte dos itens e consulta a chave de cada par.
  */
 export function chaveDePar(x: IdItem, y: IdItem): string {
-  return [x, y].sort().join('\u001f')
+  return chaveDeConjunto([x, y])
 }
 
 // Usos cuja resposta errada conta como confusão: os que perguntam um item já aprendido, fora da lição.

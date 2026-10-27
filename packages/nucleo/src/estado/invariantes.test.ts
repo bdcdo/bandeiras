@@ -110,8 +110,8 @@ const VIOLACOES: readonly (readonly [string, Partial<EstadoMotor>, string | read
   ],
   [
     'par remediado sem confusão',
-    { confusoesRemediadas: new Map([['x\u001fy', 1]]) },
-    "par remediado além das confusões: 'x\u001fy'",
+    { confusoesRemediadas: new Map([[chaveDePar(I('x'), I('y')), 1]]) },
+    `par remediado além das confusões: '${chaveDePar(I('x'), I('y'))}'`,
   ],
   ['XP negativo', { xpPorDia: new Map([[dia, -1]]) }, `XP inválido no dia ${dia}: -1`],
   ['XP não finito', { xpPorDia: new Map([[dia, Number.NaN]]) }, `XP inválido no dia ${dia}: NaN`],
