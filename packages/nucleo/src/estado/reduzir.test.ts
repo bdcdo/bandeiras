@@ -21,10 +21,10 @@ import {
 } from '../apoio-a-testes/cena-do-estado'
 import { instantaneoDoEstado } from '../apoio-a-testes/instantaneo-do-estado'
 import { desembrulhar } from '../base/resultado'
-import type { Instante } from '../base/tempo'
+import type { Instante, Milis } from '../base/tempo'
 import { TECNICAS_TODAS_LIGADAS } from '../catalogo/tecnicas'
 import type { Direcao, IdGrupo, IdItem } from '../catalogo/tipos'
-import type { Evento, EventoDoTipo, TipoDeEvento } from '../eventos'
+import type { CorpoDeResposta, Evento, EventoDoTipo, TipoDeEvento } from '../eventos'
 import { aplicarRespostaIsolada, aplicarTarefaDeGrupo, type Memorias } from '../fire'
 import { diaLocal } from '../gamificacao'
 import { topicoDeGrupo, topicoDeItem, type IdTopico } from '../grafo'
@@ -380,6 +380,120 @@ describe('XP', () => {
     it('com acertos, não ganha nada', () => {
       expect(quizInterrompido((j) => respostaCerta(j))).toBeCloseTo(XP_DA_LICAO, 9)
     })
+
+    // A lição adiada é tarefa que não se conclui, pela mesma escolha. Antes dela, a lição concluída de l põe XP no dia,
+    // porque o XP do dia não desce abaixo de zero. Com acerto parcial, concluída ela renderia minutosLicao vezes
+    // multiplicadorXpParcial; adiada, não rende nada.
+    function licaoAdiada(respostas: readonly ('certa' | 'errada' | 'chute')[]): [string, number][] {
+      const c = novaCena(ctx)
+      abrirSessaoNaCena(c, [I('l'), I('k')])
+      licaoDeItem(c, I('l'))
+      const licao = tarefaRegistrada('licao', [T('k')])
+      emitirNaCena(
+        c,
+        { tipo: 'tarefa-iniciada', tarefa: licao },
+        { tipo: 'apresentacao-vista', tarefaId: licao.id, itens: [I('k')] },
+      )
+      const questao = questaoDigitada(I('k'))
+      let kp: 1 | 2 | 3 = 1
+      respostas.forEach((resposta, passo) => {
+        const j = { tarefaId: licao.id, passo, uso: { tipo: 'licao', kp } as const, questao }
+        emitirUm(c, resposta === 'certa' ? respostaCerta(j) : respostaErrada(j, resposta))
+        if (resposta === 'certa' && kp < 3) kp = (kp + 1) as 2 | 3
+      })
+      emitirUm(c, { tipo: 'licao-adiada', tarefaId: licao.id, topico: T('k'), kp })
+      expect(c.estado.tarefa).toBeUndefined()
+      return somenteXp(c.estado)
+    }
+
+    it('a lição adiada com dois chutes tira minutosLicao vezes o multiplicador do chute, 1,7 × -0,6', () => {
+      const [[, xp] = ['', 0], ...outros] = licaoAdiada(['chute', 'chute'])
+      expect(outros).toStrictEqual([])
+      expect(P.minutosLicao * P.multiplicadorXpChute).toBeCloseTo(-1.02, 9)
+      expect(xp).toBeCloseTo(XP_DA_LICAO - 1.02, 9)
+    })
+
+    it('a lição adiada sem chute, com metade dos KPs certos, não soma nada', () => {
+      const [[, xp] = ['', 0], ...outros] = licaoAdiada(['certa', 'certa', 'errada', 'errada'])
+      expect(outros).toStrictEqual([])
+      expect(xp).toBeCloseTo(XP_DA_LICAO, 9)
+    })
+  })
+
+  // Na lição adaptativa concluída contam só as respostas de uso licao na normal e só as de sondagem na acelerada: a
+  // sondagem fracassada antes de uma lição limpa não tira XP dela.
+  it('a lição com a sondagem errada e os três KPs certos rende a lição perfeita', () => {
+    const c = novaCena(ctx)
+    abrirSessaoNaCena(c, [I('k')])
+    const licao = tarefaRegistrada('licao', [T('k')])
+    const questao = questaoDigitada(I('k'))
+    emitirUm(c, { tipo: 'tarefa-iniciada', tarefa: licao })
+    emitirUm(c, respostaErrada({ tarefaId: licao.id, passo: 0, uso: { tipo: 'sondagem', etapa: 'recordar' }, questao }))
+    emitirUm(c, { tipo: 'apresentacao-vista', tarefaId: licao.id, itens: [I('k')] })
+    for (const kp of [1, 2, 3] as const) {
+      const corpo = respostaCerta({ tarefaId: licao.id, passo: kp, uso: { tipo: 'licao', kp }, questao })
+      if (kp < 3) emitirUm(c, corpo)
+      else emitirNaCena(c, corpo, { tipo: 'licao-concluida', tarefaId: licao.id, topico: T('k'), acelerada: false })
+    }
+    const [[, xp] = ['', 0], ...outros] = somenteXp(c.estado)
+    expect(outros).toStrictEqual([])
+    expect(xp).toBeCloseTo(XP_DA_LICAO, 9)
+  })
+
+  it('a lição acelerada com as sondagens certas rende minutosLicaoAcelerada vezes o multiplicador da perfeita', () => {
+    const c = novaCena(ctx)
+    abrirSessaoNaCena(c, [I('k')])
+    const licao = tarefaRegistrada('licao', [T('k')])
+    emitirUm(c, { tipo: 'tarefa-iniciada', tarefa: licao })
+    const etapas = [
+      ['recordar', questaoDigitada(I('k'))],
+      ['confirmar', questaoDeEscolha(I('k'), [I('l'), I('g'), I('h')])],
+    ] as const
+    etapas.forEach(([etapa, questao], passo) => {
+      const corpo = respostaCerta({ tarefaId: licao.id, passo, uso: { tipo: 'sondagem', etapa }, questao })
+      if (passo === 0) emitirUm(c, corpo)
+      else emitirNaCena(c, corpo, { tipo: 'licao-concluida', tarefaId: licao.id, topico: T('k'), acelerada: true })
+    })
+    const [[, xp] = ['', 0], ...outros] = somenteXp(c.estado)
+    expect(outros).toStrictEqual([])
+    expect(xp).toBeCloseTo(P.minutosLicaoAcelerada * P.multiplicadorXpPerfeita, 9)
+  })
+
+  it('com a gamificação desligada, nenhuma tarefa rende XP', () => {
+    const semGamificacao = contextoDosCasos({ tecnicas: { ...TECNICAS_TODAS_LIGADAS, gamificacao: false } })
+    const c = novaCena(semGamificacao)
+    abrirSessaoNaCena(c, [I('k')])
+    licaoDeItem(c, I('k'))
+    const questao = questaoDigitada(I('k'))
+    const revisao = tarefaRegistrada('revisao', [T('k')], [passoDe(questao, REVISAO)])
+    emitirUm(c, { tipo: 'tarefa-iniciada', tarefa: revisao })
+    emitirUm(c, respostaCerta({ tarefaId: revisao.id, passo: 0, uso: REVISAO, questao }))
+    expect(c.estado.tarefa).toBeUndefined()
+    expect(statusDaLicao(c.estado, T('k')).status).toBe('concluida')
+    expect(somenteXp(c.estado)).toStrictEqual([])
+  })
+
+  it('os minutos da questão saem das normas de antes da tarefa, e não das do fechamento', () => {
+    // Oito respostas digitadas antes da tarefa, quatro de 2 s e quatro de 4 s, dão a mediana de 3 s. A resposta da
+    // revisão, de 20 s, entra nas normas antes do fechamento e levaria a mediana a 4 s.
+    const comLatencia = (corpo: CorpoDeResposta, latencia: number): CorpoDeResposta =>
+      corpo.resposta.tipo === 'texto'
+        ? ({ ...corpo, resposta: { ...corpo.resposta, latencia: latencia as Milis } } as CorpoDeResposta)
+        : corpo
+    const c = novaCena(ctx)
+    abrirSessaoNaCena(c)
+    const avulsa = { tarefaId: 'avulsa', passo: 0, uso: REVISAO, questao: questaoDigitada(I('l')) }
+    for (const latencia of [2000, 4000, 2000, 4000, 2000, 4000, 2000, 4000]) {
+      emitirUm(c, comLatencia(respostaCerta(avulsa), latencia))
+    }
+    expect(P.amostrasMinimasDeLatencia).toBe(8)
+    const questao = questaoDigitada(I('k'))
+    const revisao = tarefaRegistrada('revisao', [T('k')], [passoDe(questao, REVISAO)])
+    emitirUm(c, { tipo: 'tarefa-iniciada', tarefa: revisao })
+    emitirUm(c, comLatencia(respostaCerta({ tarefaId: revisao.id, passo: 0, uso: REVISAO, questao }), 20_000))
+    const [[, xp] = ['', 0], ...outros] = somenteXp(c.estado)
+    expect(outros).toStrictEqual([])
+    expect(xp).toBeCloseTo(((3000 + P.folgaSobreMedianaMs) / MINUTO) * P.multiplicadorXpPerfeita, 9)
   })
 })
 
