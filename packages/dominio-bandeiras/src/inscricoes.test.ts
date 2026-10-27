@@ -172,6 +172,41 @@ describe('derivação', () => {
     expect(svg).toContain('M0 0h5v5H0z')
   })
 
+  it('o fill do <svg> raiz conta como o de um ancestral', () => {
+    // O path sem fill dentro de <svg fill="#fc0"> é amarelo: casa com '#fc0' e não com null.
+    const original =
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50" fill="#fc0">${FUNDO}` +
+      '<path d="M40 20h20v10H40z"/></svg>'
+    const amarelo: OperacaoDeInscricao = {
+      descricao: 'o amarelo',
+      remover: 'elementos',
+      atributos: { fill: '#fc0' },
+      esperados: 1,
+    }
+    expect(derivar(inscricao([amarelo]), original).svg).not.toContain('M40 20')
+    expect(() => derivar(inscricao([{ ...amarelo, atributos: { fill: null } }]), original)).toThrow(
+      'achou 0 elementos',
+    )
+  })
+
+  it('a operação por fill recusa o original que pinta fill por CSS, e a por class segue valendo', () => {
+    // O path amarelo por CSS não tem atributo fill e passaria por preto.
+    const cabeca = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50">'
+    const porFolha = `${cabeca}<style><![CDATA[.a{fill:#fc0}]]></style>${FUNDO}<path class="a" d="M40 20h20v10H40z"/></svg>`
+    const porStyle = `${cabeca}${FUNDO}<path style="fill:#fc0" d="M40 20h20v10H40z"/></svg>`
+    const preto: OperacaoDeInscricao = { descricao: 'o preto', remover: 'elementos', atributos: { fill: null }, esperados: 1 }
+    for (const original of [porFolha, porStyle]) {
+      expect(() => derivar(inscricao([preto]), original)).toThrow(
+        'xx: operação 1 (elementos): a operação identifica por fill, e o original pinta fill por CSS',
+      )
+    }
+    const porClasse = { ...preto, atributos: { class: 'a' } }
+    expect(derivar(inscricao([porClasse]), porFolha).svg).not.toContain('M40 20')
+    // fill-rule não é fill: o style= abaixo não pinta, e a busca por fill segue valendo.
+    const comRegra = `${cabeca}${FUNDO}<path style="fill-rule:evenodd" d="M40 20h20v10H40z"/></svg>`
+    expect(derivar(inscricao([preto]), comRegra).svg).not.toContain('M40 20')
+  })
+
   it('remove só os subcaminhos dentro da região, com a transformação do grupo aplicada', () => {
     // O grupo desloca tudo 10 para a direita: os quadrados ficam em x 10, 30 e 50 de uma imagem de 100.
     const corpo = (d: string): string =>

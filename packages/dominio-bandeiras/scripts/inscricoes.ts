@@ -10,8 +10,11 @@
  * Como a identificação funciona. Cada operação nomeia um traço do próprio SVG e diz quanto espera achar:
  *
  * - `atributos`: valor de atributo como o elemento o herda, o dele ou, se ele não tiver, o do ancestral mais próximo que
- *   tiver; `null` quer dizer ausente no elemento e em todos os ancestrais. É o que o SVG faz com `fill`: um path sem
- *   `fill` dentro de `<g fill="#fffffd">` é pintado de #fffffd, e um path sem `fill` em lugar nenhum é preto.
+ *   tiver, até o <svg> raiz; `null` quer dizer ausente no elemento e em todos os ancestrais. É o que o SVG faz com
+ *   `fill`: um path sem `fill` dentro de `<g fill="#fffffd">` é pintado de #fffffd, e um path sem `fill` em lugar
+ *   nenhum é preto. A busca lê o atributo escrito, e não a cor calculada: um `fill` que venha de CSS (folha <style> ou
+ *   atributo style=) não aparece em atributo nenhum, e um path pintado assim pareceria sem cor. Por isso uma operação
+ *   que identifica por `fill` lança quando o original pinta fill por CSS; nesse original, identifique por class ou id.
  * - `subcaminhos`: quantos subcaminhos o path tem no total, o que separa dois paths da mesma cor.
  * - `dentroDe`: uma lista de retângulos em frações da imagem (0 a 1, a partir do canto de cima à esquerda do viewBox),
  *   já com as transformações do elemento e dos ancestrais aplicadas. A forma tem de caber inteira num deles. Mais de um
@@ -161,8 +164,25 @@ function pathsDesenhados(raiz: XastElement): Desenhado[] {
       andar(filho, sua, seus)
     }
   }
-  andar(raiz, matrizDaRaiz(raiz), {})
+  // A herança começa nos atributos do próprio <svg>, que é ancestral de todo elemento: um fill escrito nele pinta os
+  // paths que não têm fill.
+  andar(raiz, matrizDaRaiz(raiz), { ...raiz.attributes })
   return encontrados
+}
+
+/** Declaração da propriedade fill numa folha CSS ou num style=; `fill-rule` e `fill-opacity` não contam. */
+const FILL_EM_CSS = /(?:^|[{;\s])fill\s*:/
+
+/** Se o elemento ou algum descendente pinta fill por CSS: atributo style= com fill, ou folha <style> com fill. */
+function pintaFillPorCss(elemento: XastElement): boolean {
+  if (FILL_EM_CSS.test(elemento.attributes['style'] ?? '')) return true
+  return elemento.children.some(
+    (filho) =>
+      filho.type === 'element' &&
+      ((filho.name === 'style' &&
+        filho.children.some((t) => (t.type === 'text' || t.type === 'cdata') && FILL_EM_CSS.test(t.value))) ||
+        pintaFillPorCss(filho)),
+  )
 }
 
 function temOsAtributos(desenhado: Desenhado, atributos: Record<string, string | null>): boolean {
@@ -176,6 +196,12 @@ export type Remocao = { operacao: number; elementos: number; subcaminhos: number
 
 function aplicar(raiz: XastElement, operacao: OperacaoDeInscricao): Omit<Remocao, 'operacao'> {
   const { dentroDe } = operacao
+  if ('fill' in operacao.atributos && pintaFillPorCss(raiz)) {
+    throw new Error(
+      'a operação identifica por fill, e o original pinta fill por CSS (<style> ou style=), que o atributo não ' +
+        'mostra; identifique por class ou id',
+    )
+  }
   // A forma cabe na região quando cabe inteira em algum dos retângulos.
   const cabe = (matriz: Matriz, caixa: Retangulo): boolean =>
     dentroDe !== undefined && dentroDe.some((r) => cabeEm(transformar(matriz, caixa), r))
