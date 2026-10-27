@@ -165,8 +165,24 @@ function paresDentro(catalogo: Catalogo, lista: readonly IdItem[]): string[] {
     .map(([a, b]) => `${a}|${b}`)
 }
 
+/** As questões de cada tarefa de grupo da sessão, na ordem em que a tarefa as devolveu. */
+function tarefasDeGrupo(registros: readonly Registro[]): Questao[][] {
+  const porTarefa = new Map<number, Questao[]>()
+  for (const { questao, passo } of registros) {
+    if (questao.contexto.tipo === 'grupo') porTarefa.set(passo, [...(porTarefa.get(passo) ?? []), questao])
+  }
+  return [...porTarefa.values()]
+}
+
 // Contagens fora das propriedades, para a suíte reprovar se o gerador parar de produzir os casos que elas conferem.
-const vistos = { multiplaIsolada: 0, deParecidos: 0, deGrupo: 0, grupoMembros: 0, comPendentes: 0 }
+const vistos = {
+  multiplaIsolada: 0,
+  deParecidos: 0,
+  deGrupo: 0,
+  grupoMembros: 0,
+  comPendentes: 0,
+  digitadoComOpcoes: 0,
+}
 
 describe('propriedades das questões numa sessão sorteada', () => {
   it('nenhuma questão de múltipla escolha, isolada ou de grupo, tem os dois itens de um par como opções', () => {
@@ -229,11 +245,7 @@ describe('propriedades das questões numa sessão sorteada', () => {
     fc.assert(
       fc.property(sessao, (s) => {
         const { catalogo, parametros, registros } = simular(s)
-        const porTarefa = new Map<number, Questao[]>()
-        for (const { questao, passo } of registros) {
-          if (questao.contexto.tipo === 'grupo') porTarefa.set(passo, [...(porTarefa.get(passo) ?? []), questao])
-        }
-        for (const questoes of porTarefa.values()) {
+        for (const questoes of tarefasDeGrupo(registros)) {
           const exibidos = exibidosDe(questoes[0] as Questao)
           expect(exibidos.length).toBeGreaterThanOrEqual(parametros.opcoesMinimasDeGrupo)
           const alvos = new Set(questoes.map((q) => q.itemAlvo))
@@ -255,15 +267,34 @@ describe('propriedades das questões numa sessão sorteada', () => {
     )
   })
 
+  it('na tarefa de grupo, nenhum rótulo digitado vem depois de uma questão cujas opções contêm o alvo dele', () => {
+    fc.assert(
+      fc.property(sessao, (s) => {
+        for (const questoes of tarefasDeGrupo(simular(s).registros)) {
+          const formatos = new Set(questoes.map((q) => q.formato.tipo))
+          if (formatos.has('rotulo-digitado') && formatos.size > 1) vistos.digitadoComOpcoes++
+          const mostradas = new Set<IdItem>()
+          for (const q of questoes) {
+            if (q.formato.tipo === 'rotulo-digitado') expect(mostradas.has(q.itemAlvo)).toBe(false)
+            for (const o of opcoesDe(q.formato)) mostradas.add(o)
+          }
+        }
+      }),
+    )
+  })
+
   it('o gerador produz os casos que as propriedades conferem', () => {
     // Roda depois das propriedades acima, no mesmo arquivo: o Vitest executa os testes de um arquivo em ordem. Os pisos
     // ficam perto de um terço do que três rodadas de 100 sessões mediram (de 83 a 95 múltiplas escolhas isoladas, de 48
-    // a 66 questões de parecidos, de 49 a 84 de grupo, de 12 a 16 de grupo-membros e de 208 a 226 com pendentes).
+    // a 66 questões de parecidos, de 49 a 84 de grupo, de 12 a 16 de grupo-membros e de 208 a 226 com pendentes). As
+    // tarefas de grupo com um rótulo digitado e uma questão de outro formato, que a ordem da tarefa protege, mediram de 9
+    // a 17.
     expect(vistos.multiplaIsolada).toBeGreaterThan(40)
     expect(vistos.deParecidos).toBeGreaterThan(20)
     expect(vistos.deGrupo).toBeGreaterThan(20)
     expect(vistos.grupoMembros).toBeGreaterThan(3)
     expect(vistos.comPendentes).toBeGreaterThan(100)
+    expect(vistos.digitadoComOpcoes).toBeGreaterThan(3)
   })
 })
 

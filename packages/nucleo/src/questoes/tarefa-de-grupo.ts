@@ -11,11 +11,24 @@ import {
   type ErroDeQuestao,
   type FormatoDeQuestao,
   type Questao,
+  type TipoDeFormato,
 } from './questao'
 
 // Ordem de desempate entre direções de mesma acurácia: recordar primeiro, porque é a evidência mais forte e a única que
 // não se acerta ao acaso.
 const ORDEM_DE_DESEMPATE: readonly Direcao[] = ['recordar', 'reconhecer', 'produzir']
+
+// Ordem das questões na tarefa, por formato. O `rotulo-digitado` vem primeiro porque é a recordação, a única questão que
+// dá crédito explícito cheio: depois de uma questão que listou os rótulos dos exibidos, digitar o de outro alvo viraria
+// reconhecimento entre rótulos que acabaram de aparecer na tela. O `rotulo-para-estimulo` mostra só o rótulo do próprio
+// alvo. O `grupo-membros` vem antes do `estimulo-para-rotulo`, que lista só os rótulos dos exibidos: antes dele, essa
+// lista diria quais rótulos do `grupo-membros` não têm estímulo na fileira, sem a pessoa precisar reconhecer nenhum.
+const ORDEM_NA_TAREFA: readonly TipoDeFormato[] = [
+  'rotulo-digitado',
+  'rotulo-para-estimulo',
+  'grupo-membros',
+  'estimulo-para-rotulo',
+]
 
 function direcaoMaisFraca(e: EstadoMemoria): Direcao {
   return ORDEM_DE_DESEMPATE.reduce((fraca, d) => (acuraciaNaDirecao(e, d) < acuraciaNaDirecao(e, fraca) ? d : fraca))
@@ -100,8 +113,8 @@ function direcoes(
 }
 
 /**
- * Questões da tarefa de grupo, uma por alvo, na ordem dos alvos, todas com o mesmo contexto: os exibidos de
- * `montarExibidos`, em ordem sorteada.
+ * Questões da tarefa de grupo, uma por alvo, todas com o mesmo contexto: os exibidos de `montarExibidos`, em ordem
+ * sorteada. Saem na ordem de `ORDEM_NA_TAREFA`, e no mesmo formato, na ordem dos alvos.
  *
  * Alvo de par indiscernível recebe `grupo-membros`: o estímulo dele destacado e os rótulos dos exibidos e do parceiro
  * como opções, para marcar os dois. Os outros alvos recebem a direção de `direcoes`: `rotulo-digitado` com o alvo
@@ -156,5 +169,8 @@ export function gerarQuestoesDeGrupo(
     if (direcao === 'produzir') return { tipo: 'rotulo-para-estimulo', opcoes: sorteio.embaralhar(exibidos) }
     return { tipo: 'rotulo-digitado' }
   }
-  return ok(alvos.map((a) => criarQuestao(a, formatoDe(a), contexto)))
+  const questoes = alvos.map((a) => criarQuestao(a, formatoDe(a), contexto))
+  // O sort do JavaScript é estável: no mesmo formato, fica a ordem dos alvos.
+  const posicao = (q: Questao): number => ORDEM_NA_TAREFA.indexOf(q.formato.tipo)
+  return ok(questoes.sort((x, y) => posicao(x) - posicao(y)))
 }

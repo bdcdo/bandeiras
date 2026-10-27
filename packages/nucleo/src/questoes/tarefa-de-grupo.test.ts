@@ -121,8 +121,14 @@ describe('gerarQuestoesDeGrupo: alvos', () => {
   })
 
   it('usa a mesma lista de exibidos em toda a tarefa e a reembaralha nas opções', () => {
+    // c reconhece e d recorda. Pedidos na ordem c, d, o digitado de d sai antes: depois da múltipla escolha de c, que
+    // lista o rótulo de d, digitá-lo seria escolher entre rótulos que acabaram de aparecer.
     const m = memorias({ c: [0.2, 0.9, 0.9], d: [0.2, 0.9, 0.3] })
     const questoes = desembrulhar(gerar(GRUPO_1, 'cd', m))
+    expect(questoes.map((q) => [q.itemAlvo, q.formato.tipo])).toEqual([
+      ['d', 'rotulo-digitado'],
+      ['c', 'estimulo-para-rotulo'],
+    ])
     const listas = questoes.map((q) => (q.contexto.tipo === 'grupo' ? q.contexto.exibidos : []))
     expect(listas[0]).toEqual(listas[1])
     for (const q of questoes) {
@@ -141,8 +147,14 @@ describe('gerarQuestoesDeGrupo: direção de cada alvo', () => {
     grupos: [{ membros: [0, 1, 2, 3, 4, 5], par: false }],
     vizinhancas: [],
   })
-  const direcoes = (m: Map<IdTopico, EstadoMemoria>, alvos: string): (Direcao | 'grupo-membros')[] =>
-    desembrulhar(gerar(GRUPO_1, alvos, m, P, VAZIO, grande)).map(direcaoDe)
+  // As direções na ordem dos alvos pedidos, e não na das questões, que vêm ordenadas por formato.
+  const direcoes = (m: Map<IdTopico, EstadoMemoria>, alvos: string): (Direcao | 'grupo-membros' | undefined)[] => {
+    const porAlvo = new Map(desembrulhar(gerar(GRUPO_1, alvos, m, P, VAZIO, grande)).map((q) => [q.itemAlvo, q]))
+    return ids(alvos).map((a) => {
+      const q = porAlvo.get(a)
+      return q === undefined ? undefined : direcaoDe(q)
+    })
+  }
 
   it('pergunta na direção mais fraca de cada alvo quando metade já recorda', () => {
     const m = memorias({ a: [0.9, 0.9, 0.2], b: [0.3, 0.9, 0.8], c: [0.9, 0.4, 0.8], d: [0.9, 0.9, 0.5] })
@@ -176,6 +188,37 @@ describe('gerarQuestoesDeGrupo: direção de cada alvo', () => {
       c: 'recordar',
       d: 'recordar',
     })
+  })
+
+  it('ordena as questões pelo formato: digitado, rótulo para estímulo, grupo-membros e estímulo para rótulo', () => {
+    // Nove membros com o par a e b, e um item fora do grupo: oito exibidos, até seis alvos. c reconhece e d produz, com
+    // recordar alto; e, f e g recordam. Pedidos na ordem c, a, d, e, f, g, saem os três digitados, na ordem dos alvos,
+    // depois d, a e c.
+    const nove = catalogoDe({
+      classes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+      categorias: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      aliases: [],
+      vizinhos: [],
+      grupos: [{ membros: [0, 1, 2, 3, 4, 5, 6, 7, 8], par: true }],
+      vizinhancas: [],
+    })
+    const m = memorias({
+      a: [0.85, 0.85, 0.85],
+      c: [0.2, 0.9, 0.9],
+      d: [0.9, 0.2, 0.9],
+      e: [0.9, 0.9, 0.2],
+      f: [0.9, 0.9, 0.3],
+      g: [0.9, 0.9, 0.4],
+    })
+    const questoes = desembrulhar(gerar(GRUPO_1, 'cadefg', m, P, VAZIO, nove))
+    expect(questoes.map((q) => [q.itemAlvo, q.formato.tipo])).toEqual([
+      ['e', 'rotulo-digitado'],
+      ['f', 'rotulo-digitado'],
+      ['g', 'rotulo-digitado'],
+      ['d', 'rotulo-para-estimulo'],
+      ['a', 'grupo-membros'],
+      ['c', 'estimulo-para-rotulo'],
+    ])
   })
 
   it('no empate entre direções recorda, e no empate entre alvos vale a ordem deles', () => {
