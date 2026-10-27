@@ -86,11 +86,85 @@ describe('gerarQuestoesDeGrupo: exibidos', () => {
 })
 
 describe('gerarQuestoesDeGrupo: alvos', () => {
-  it('pergunta ao alvo de par quais itens têm o estímulo dele, com o parceiro entre as opções', () => {
-    const [q] = desembrulhar(gerar(GRUPO_1, 'a'))
+  const TRES = desembrulhar(resolverParametros({ opcoesMinimasDeGrupo: 3 }))
+  const opcoes = (q: Questao | undefined): Set<IdItem> => new Set(q === undefined ? [] : opcoesDe(q.formato))
+
+  it('pergunta ao alvo de par quais itens têm o estímulo dele, com o parceiro e um chamariz fora da fileira', () => {
+    // Com mínimo três, a fileira é a, c e d; b é o parceiro, e o chamariz é g, vizinho de c que ficou de fora.
+    const [q] = desembrulhar(gerar(GRUPO_1, 'a', undefined, TRES))
     expect(q?.formato.tipo).toBe('grupo-membros')
-    expect(exibidos(q)).toEqual(new Set(ids('acdg')))
-    expect(new Set(q === undefined ? [] : opcoesDe(q.formato))).toEqual(new Set(ids('abcdg')))
+    expect(exibidos(q)).toEqual(new Set(ids('acd')))
+    expect(opcoes(q)).toEqual(new Set(ids('abcdg')))
+  })
+
+  it('tira o chamariz do resto do catálogo quando os vizinhos estão na fileira ou não foram apresentados', () => {
+    // Com o mínimo padrão, g entra na fileira; com mínimo três e g pendente, g não pode ser opção. Nos dois casos o
+    // chamariz é um item de fora do grupo e da vizinhança dele.
+    for (const [parametros, ctx] of [
+      [P, VAZIO],
+      [TRES, contextoDeSessao({ pendentesNovas: ids('g') })],
+    ] as const) {
+      const [q] = desembrulhar(gerar(GRUPO_1, 'a', undefined, parametros, ctx))
+      const fora = [...opcoes(q)].filter((o) => !exibidos(q).has(o) && !ids('b').includes(o))
+      expect(fora).toHaveLength(1)
+      expect(ids('efhijkl')).toContain(fora[0])
+    }
+  })
+
+  it('prefere como chamariz o membro que ficou de fora por ser par de um exibido', () => {
+    // a e b formam par no grupo-1, c e d no grupo-2, e os dois pares estão no grupo-1. Com alvo a, a fileira é a, c e e;
+    // b é o parceiro, e d, barrado por c, vem antes de f e g, de fora do grupo.
+    const doisPares = catalogoDe({
+      classes: [1, 1, 1, 1, 1, 2, 2],
+      categorias: [1, 1, 1, 1, 1, 1, 1],
+      aliases: [],
+      vizinhos: [],
+      grupos: [
+        { membros: [0, 1, 2, 3, 4], par: true },
+        { membros: [2, 3], par: true },
+      ],
+      vizinhancas: [],
+    })
+    const [q] = desembrulhar(gerar(GRUPO_1, 'a', neutras('a'), TRES, VAZIO, doisPares))
+    expect(exibidos(q)).toEqual(new Set(ids('ace')))
+    expect(opcoes(q)).toEqual(new Set(ids('abcde')))
+  })
+
+  it('dá as mesmas opções a todo grupo-membros da tarefa, com um chamariz por parceiro', () => {
+    // Alvos a e c, de pares diferentes: os parceiros b e d ficam fora da fileira, e os dois chamarizes são h e i.
+    const doisPares = catalogoDe({
+      classes: [1, 1, 1, 1, 1, 1, 1, 2, 2],
+      categorias: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      aliases: [],
+      vizinhos: [],
+      grupos: [
+        { membros: [0, 1, 2, 3, 4, 5, 6], par: true },
+        { membros: [2, 3], par: true },
+      ],
+      vizinhancas: [],
+    })
+    const questoes = desembrulhar(gerar(GRUPO_1, 'ac', neutras('ac'), P, VAZIO, doisPares))
+    expect(questoes.map((q) => q.formato.tipo)).toEqual(['grupo-membros', 'grupo-membros'])
+    expect(exibidos(questoes[0])).toEqual(new Set(ids('acefg')))
+    for (const q of questoes) expect(opcoes(q)).toEqual(new Set(ids('abcdefghi')))
+  })
+
+  it('recusa o alvo de par sem rótulo errado de fora da fileira para servir de chamariz', () => {
+    const quatro = catalogoDe({
+      classes: [1, 1, 1, 1],
+      categorias: [1, 1, 1, 1],
+      aliases: [],
+      vizinhos: [],
+      grupos: [{ membros: [0, 1, 2, 3], par: true }],
+      vizinhancas: [],
+    })
+    expect(gerar(GRUPO_1, 'a', neutras('a'), TRES, VAZIO, quatro)).toEqual({
+      ok: false,
+      erro: {
+        codigo: 'DISTRATORES_INSUFICIENTES',
+        detalhe: "grupo 'grupo-1': 0 de 1 rótulos errados fora da fileira, um por parceiro de alvo",
+      },
+    })
   })
 
   it('recusa alvos com os dois itens de um par, alvo fora do grupo, repetido, sem estado ou não apresentado', () => {

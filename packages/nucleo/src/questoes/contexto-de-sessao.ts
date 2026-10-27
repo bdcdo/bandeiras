@@ -14,7 +14,8 @@ import type { Questao } from './questao'
  * - `aprendidos`: itens com lição concluída. Os distratores dissimilares os preferem.
  *
  * A tarefa de grupo não mexe em `usosComoDistrator` nem em `conjuntosUsados`: as opções dela são o próprio grupo,
- * completado com vizinhos, e não um sorteio de distratores.
+ * completado com vizinhos, mais os parceiros e os chamarizes do `grupo-membros`, e não o sorteio de distratores da
+ * questão isolada.
  *
  * O contexto é imutável; cada função abaixo devolve um contexto novo.
  */

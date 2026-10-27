@@ -93,6 +93,36 @@ function montarExibidos(
 }
 
 /**
+ * Rótulos errados de itens fora da fileira para o `grupo-membros`, `quantos` deles. O parceiro de um alvo de par nunca
+ * está na fileira; sem chamarizes, o rótulo dele seria a única opção sem estímulo na tela e sempre certa, e quem
+ * reconhece os exibidos acertaria o par por eliminação, sem saber qual é o parceiro.
+ *
+ * Vêm primeiro os vizinhos dos membros que não entraram na fileira, os mais parecidos com o grupo; depois os membros que
+ * ficaram de fora por serem par de um exibido; depois o resto do catálogo, cada camada em ordem sorteada. Ficam de fora
+ * os exibidos, os parceiros dos alvos, que são opções certas, e quem ainda não foi apresentado.
+ */
+function chamarizes(
+  membros: readonly IdItem[],
+  exibidos: readonly IdItem[],
+  parceirosDosAlvos: readonly IdItem[],
+  catalogo: Catalogo,
+  ctx: ContextoDeSessao,
+  sorteio: SorteioComSemente,
+  quantos: number,
+): IdItem[] {
+  // Começa com quem fica de fora, e cada camada acrescenta os seus, para nenhum item entrar em duas.
+  const usados = new Set<IdItem>([...exibidos, ...parceirosDosAlvos, ...ctx.pendentesNovas])
+  const camadas = [membros.flatMap((m) => catalogo.itens.get(m)?.vizinhos ?? []), membros, [...catalogo.itens.keys()]]
+  return camadas
+    .flatMap((camada) => {
+      const novos = [...new Set(camada)].filter((id) => !usados.has(id))
+      for (const id of novos) usados.add(id)
+      return sorteio.embaralhar(novos)
+    })
+    .slice(0, quantos)
+}
+
+/**
  * Direção de cada alvo que não é de par: a de menor acurácia, com pelo menos metade dos alvos da tarefa, arredondada
  * para cima, em `recordar`. Faltando, passam a recordar os alvos de menor acurácia em recordar, na ordem dos alvos no
  * empate. Alvo de par não recorda, porque a pergunta dele é `grupo-membros`; com muitos alvos de par, a metade pode não
@@ -116,14 +146,16 @@ function direcoes(
  * Questões da tarefa de grupo, uma por alvo, todas com o mesmo contexto: os exibidos de `montarExibidos`, em ordem
  * sorteada. Saem na ordem de `ORDEM_NA_TAREFA`, e no mesmo formato, na ordem dos alvos.
  *
- * Alvo de par indiscernível recebe `grupo-membros`: o estímulo dele destacado e os rótulos dos exibidos e do parceiro
- * como opções, para marcar os dois. Os outros alvos recebem a direção de `direcoes`: `rotulo-digitado` com o alvo
- * destacado entre os exibidos, ou múltipla escolha com os exibidos como opções, reembaralhados a cada questão.
+ * Alvo de par indiscernível recebe `grupo-membros`: o estímulo dele destacado e, como opções, os rótulos dos exibidos,
+ * dos parceiros de todos os alvos de par e dos `chamarizes`, para marcar o alvo e o parceiro. Os outros alvos recebem a
+ * direção de `direcoes`: `rotulo-digitado` com o alvo destacado entre os exibidos, ou múltipla escolha com os exibidos
+ * como opções, reembaralhados a cada questão. A múltipla escolha não leva o parceiro de um alvo de par, que poria os dois
+ * itens do par entre as opções; quem protege o `grupo-membros` da lista dela é a ordem da tarefa.
  *
  * Recusa com `ALVOS_INVALIDOS` alvo ausente, repetido, fora do grupo, sem estado de memória, ainda não apresentado ou par
- * de outro alvo; com `DISTRATORES_INSUFICIENTES` o grupo que nem com os vizinhos chega às opções mínimas; e com
- * `ALVOS_DEMAIS` mais alvos que exibidos menos dois, porque com uma opção só sobrando o último alvo sairia por
- * eliminação. Quais alvos entram é escolha de quem monta a tarefa.
+ * de outro alvo; com `DISTRATORES_INSUFICIENTES` o grupo que nem com os vizinhos chega às opções mínimas, ou que não
+ * tem um chamariz por parceiro; e com `ALVOS_DEMAIS` mais alvos que exibidos menos dois, porque com uma opção só
+ * sobrando o último alvo sairia por eliminação. Quais alvos entram é escolha de quem monta a tarefa.
  */
 export function gerarQuestoesDeGrupo(
   grupo: IdGrupo,
@@ -159,11 +191,24 @@ export function gerarQuestoesDeGrupo(
     return parceiros.get(alvo)?.length === 0 && estado !== undefined ? [{ alvo, estado }] : []
   })
   const direcaoDe = direcoes(semPar, alvos.length)
+
+  // Um chamariz por parceiro: entre os rótulos sem estímulo na fileira, os errados são ao menos tantos quanto os certos.
+  const doPar = [...new Set([...parceiros.values()].flat())]
+  const errados = doPar.length === 0 ? [] : chamarizes(g.membros, exibidos, doPar, catalogo, ctx, sorteio, doPar.length)
+  if (errados.length < doPar.length) {
+    return erro({
+      codigo: 'DISTRATORES_INSUFICIENTES',
+      detalhe: `grupo '${grupo}': ${String(errados.length)} de ${String(doPar.length)} rótulos errados fora da fileira, um por parceiro de alvo`,
+    })
+  }
+  // Toda questão `grupo-membros` da tarefa tem as mesmas opções, em ordem sorteada a cada uma.
+  const opcoesDeGrupoMembros = [...exibidos, ...doPar, ...errados]
   const contexto: ContextoDeQuestao = { tipo: 'grupo', grupo, exibidos: sorteio.embaralhar(exibidos) }
 
   const formatoDe = (a: IdItem): FormatoDeQuestao => {
-    const doPar = parceiros.get(a) ?? []
-    if (doPar.length > 0) return { tipo: 'grupo-membros', opcoes: sorteio.embaralhar([...exibidos, ...doPar]) }
+    if ((parceiros.get(a) ?? []).length > 0) {
+      return { tipo: 'grupo-membros', opcoes: sorteio.embaralhar(opcoesDeGrupoMembros) }
+    }
     const direcao = direcaoDe.get(a)
     if (direcao === 'reconhecer') return { tipo: 'estimulo-para-rotulo', opcoes: sorteio.embaralhar(exibidos) }
     if (direcao === 'produzir') return { tipo: 'rotulo-para-estimulo', opcoes: sorteio.embaralhar(exibidos) }

@@ -283,6 +283,26 @@ describe('propriedades das questões numa sessão sorteada', () => {
     )
   })
 
+  it('no grupo-membros, os rótulos errados fora da fileira são ao menos tantos quanto os certos, e ao menos um', () => {
+    // A ordem entre grupo-membros e estimulo-para-rotulo e as mesmas opções em todo grupo-membros da tarefa ficam com os
+    // casos fixos de tarefa-de-grupo.test.ts: com até três alvos, como aqui, a metade recordando não deixa um
+    // grupo-membros com uma estimulo-para-rotulo na mesma tarefa, e o gerador quase nunca põe dois alvos de par juntos.
+    fc.assert(
+      fc.property(sessao, (s) => {
+        const { catalogo, registros } = simular(s)
+        for (const questoes of tarefasDeGrupo(registros)) {
+          const exibidos = new Set(exibidosDe(questoes[0] as Questao))
+          for (const q of questoes.filter((x) => x.formato.tipo === 'grupo-membros')) {
+            const certos = new Set([q.itemAlvo, ...parceirosIndiscerniveis(q.itemAlvo, catalogo)])
+            const foraDaFileira = opcoesDe(q.formato).filter((o) => !exibidos.has(o))
+            const certosFora = foraDaFileira.filter((o) => certos.has(o)).length
+            expect(foraDaFileira.length - certosFora).toBeGreaterThanOrEqual(Math.max(1, certosFora))
+          }
+        }
+      }),
+    )
+  })
+
   it('o gerador produz os casos que as propriedades conferem', () => {
     // Roda depois das propriedades acima, no mesmo arquivo: o Vitest executa os testes de um arquivo em ordem. Os pisos
     // ficam perto de um terço do que três rodadas de 100 sessões mediram (de 83 a 95 múltiplas escolhas isoladas, de 48
