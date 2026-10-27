@@ -316,11 +316,14 @@ export type PassoDoRoteiro = Readonly<{ corpos: NaoVazio<CorpoDeEvento>; origem:
 
 /**
  * Um roteiro: o perfil e os passos. O estado vivo é `iniciarPerfil` com o início, seguido de `emitir` de cada passo; o
- * log é a concatenação dos eventos de cada transição.
+ * log é a concatenação dos eventos de cada transição. `inicioDaParteLivre` é o índice do primeiro passo da parte
+ * livre, igual ao número de passos quando as escolhas acabaram antes dela: é por ele que a propriedade confere que
+ * chegou ao chute, ao "não sei" e às avaliações trocadas, que só a parte livre emite.
  */
 export type Roteiro = Readonly<{
   inicio: Readonly<{ corpo: CorpoDoTipo<'perfil-criado'>; origem: Origem }>
   passos: readonly PassoDoRoteiro[]
+  inicioDaParteLivre: number
 }>
 
 type Roteirista = {
@@ -838,8 +841,9 @@ export function gerarRoteiro(catalogo: Catalogo, escolhas: readonly number[]): R
   }
   parteObrigatoria(r)
   r.livre = true
+  const inicioDaParteLivre = r.passos.length
   while (!f.acabou()) acaoLivre(r)
-  return { inicio, passos: r.passos }
+  return { inicio, passos: r.passos, inicioDaParteLivre }
 }
 
 /**

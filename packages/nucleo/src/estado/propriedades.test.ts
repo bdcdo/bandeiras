@@ -26,16 +26,56 @@ import { sorteioDoEstado } from './sorteio'
 import type { EstadoMotor, Transicao } from './tipos'
 
 // As propriedades da camada sobre os dois geradores de apoio-a-testes: o roteirizado, coerente, para a equivalência
-// entre o estado vivo e o reconstruído; o livre, incoerente de propósito, para a totalidade. As listas de escolhas são
-// curtas porque cada roteiro já traz a parte obrigatória, de umas centenas de eventos, e cada execução o reduz mais de
-// uma vez.
+// entre o estado vivo e o reconstruído; o livre, incoerente de propósito, para a totalidade.
+//
+// O tamanho das listas de escolhas é explícito. No tamanho padrão, o fast-check 4 não gera lista com mais de 10
+// elementos, qualquer que seja o maxLength: o roteiro nunca passaria da parte obrigatória, que consome umas trezentas
+// escolhas, e o log livre teria um ou dois eventos. Com `size: 'max'` o comprimento vai até o maxLength. O roteiro pede
+// ao menos 400 escolhas para toda execução chegar à parte livre, a única com chute, "não sei", tempo esgotado e avaliação
+// trocada; o teto de 800 rende umas centenas de eventos a mais e mantém cada execução abaixo de um décimo de segundo. As
+// propriedades contam, nas próprias execuções, quantas chegaram a cada caso, e reprovam se algum não aparece: um gerador
+// que deixe de chegar a eles reprova em vez de passar por vacuidade.
 
 const catalogo = catalogoFixo()
 const contexto = (cat: Catalogo = catalogo, tecnicas: Tecnicas = TECNICAS_TODAS_LIGADAS): ContextoDeReducao =>
   desembrulhar(criarContextoDeReducao({ catalogo: cat, tecnicas, parametros: PARAMETROS_PADRAO }))
 const ctx = contexto()
-const escolhas = fc.array(fc.nat(), { maxLength: 60 })
+const escolhas = fc.array(fc.nat(), { minLength: 400, maxLength: 800, size: 'max' })
+const escolhasDoLivre = (maxLength: number) => fc.array(fc.nat(), { maxLength, size: 'max' })
 const DIA = 86_400_000
+
+const CASOS_DO_ROTEIRO = ['parte livre', 'chute', 'não sei ou tempo esgotado', 'relógio parado, fracionário ou atrás']
+const CASOS_DO_LIVRE = ['em igual entre aparelhos', 'perfil no meio do log', 'mais de dez eventos']
+
+/** Os casos de `CASOS_DO_ROTEIRO` a que o roteiro chega. */
+function casosDoRoteiro(roteiro: Roteiro): string[] {
+  const qualidades = new Set(
+    roteiro.passos.flatMap((p) =>
+      p.corpos.flatMap((c) => (c.tipo === 'resposta-registrada' && c.avaliacao ? [c.avaliacao.qualidade] : [])),
+    ),
+  )
+  const anomalo = roteiro.passos.some((p, k) => {
+    const antes = roteiro.passos[k - 1]?.origem.agora
+    return antes !== undefined && (p.origem.agora <= antes || !Number.isInteger(p.origem.agora))
+  })
+  return [
+    roteiro.passos.length > roteiro.inicioDaParteLivre ? 'parte livre' : '',
+    qualidades.has('chute') ? 'chute' : '',
+    qualidades.has('nao-sei') || qualidades.has('tempo-esgotado') ? 'não sei ou tempo esgotado' : '',
+    anomalo ? 'relógio parado, fracionário ou atrás' : '',
+  ].filter((caso) => caso !== '')
+}
+
+/** Os casos de `CASOS_DO_LIVRE` a que o log livre chega. */
+function casosDoLivre(log: readonly Evento[]): string[] {
+  const aparelhosPorEm = new Map<number, Set<string>>()
+  for (const e of log) aparelhosPorEm.set(e.em, (aparelhosPorEm.get(e.em) ?? new Set()).add(e.dispositivo))
+  return [
+    [...aparelhosPorEm.values()].some((aparelhos) => aparelhos.size > 1) ? 'em igual entre aparelhos' : '',
+    log.slice(1).some((e) => e.tipo === 'perfil-criado' || e.tipo === 'perfil-reiniciado') ? 'perfil no meio do log' : '',
+    log.length > 10 ? 'mais de dez eventos' : '',
+  ].filter((caso) => caso !== '')
+}
 
 /** O log embaralhado, com cópias de um terço dos eventos e as chaves reordenadas pela ida e volta por JSON. */
 function embaralhado(eventos: readonly Evento[], semente: number): unknown[] {
@@ -72,9 +112,12 @@ const comPassos = (roteiro: Roteiro, passos: readonly PassoDoRoteiro[]): Roteiro
 
 describe('o estado vivo e o reconstruído', () => {
   it('são iguais com o log embaralhado e com cópias, e o roteiro não absorve nada', () => {
+    const vistos = new Set<string>()
     fc.assert(
       fc.property(escolhas, fc.nat(), (es, semente) => {
-        const vivo = reduzirRoteiro(ctx, gerarRoteiro(catalogo, es))
+        const roteiro = gerarRoteiro(catalogo, es)
+        for (const caso of casosDoRoteiro(roteiro)) vistos.add(caso)
+        const vivo = reduzirRoteiro(ctx, roteiro)
         const { estado, relato } = desembrulhar(reconstruir(ctx, embaralhado(vivo.eventos, semente)))
         expect(instantaneoDoEstado(estado)).toStrictEqual(instantaneoDoEstado(vivo.estado))
         const anteriores = Math.max(
@@ -95,6 +138,7 @@ describe('o estado vivo e o reconstruído', () => {
       }),
       { numRuns: 60 },
     )
+    expect([...vistos].sort()).toStrictEqual([...CASOS_DO_ROTEIRO].sort())
   })
 
   it('a união de dois aparelhos a partir de um prefixo comum reconstrói sem erro e sem perder evento', () => {
@@ -167,9 +211,11 @@ const CONTEXTOS: readonly Readonly<{ nome: string; ctx: ContextoDeReducao }>[] =
 
 describe.each(CONTEXTOS)('o redutor é total ($nome)', ({ ctx: c }) => {
   it('todo log livre reconstrói, com as invariantes valendo, e o fold vivo não falha', () => {
+    const vistos = new Set<string>()
     fc.assert(
-      fc.property(fc.array(fc.nat(), { maxLength: 400 }), (es) => {
+      fc.property(escolhasDoLivre(400), (es) => {
         const log = gerarLogLivre(catalogo, es)
+        for (const caso of casosDoLivre(log)) vistos.add(caso)
         const r = reconstruir(c, log)
         expect(r.ok).toBe(true)
         if (!r.ok) return
@@ -182,6 +228,7 @@ describe.each(CONTEXTOS)('o redutor é total ($nome)', ({ ctx: c }) => {
       }),
       { numRuns: 150 },
     )
+    expect([...vistos].sort()).toStrictEqual([...CASOS_DO_LIVRE].sort())
   })
 })
 
@@ -198,12 +245,16 @@ describe('reduzir não muda o estado que recebe', () => {
     }
   }
   it('sobre o log livre', () => {
+    const vistos = new Set<string>()
     fc.assert(
-      fc.property(fc.array(fc.nat(), { maxLength: 200 }), (es) => {
-        intacto(gerarLogLivre(catalogo, es))
+      fc.property(escolhasDoLivre(200), (es) => {
+        const log = gerarLogLivre(catalogo, es)
+        for (const caso of casosDoLivre(log)) vistos.add(caso)
+        intacto(log)
       }),
       { numRuns: 60 },
     )
+    expect([...vistos].sort()).toStrictEqual([...CASOS_DO_LIVRE].sort())
   })
   it('sobre o roteiro, e reconstruir não muda a lista que recebe', () => {
     fc.assert(
