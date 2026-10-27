@@ -11,7 +11,7 @@
  *
  * O texto dos subcaminhos que ficam é copiado como está, byte a byte. Reescrever o caminho inteiro em coordenadas
  * absolutas também funcionaria, mas cada soma em ponto flutuante pode deslocar um ponto numa casa decimal distante, e o
- * gate da remoção (gerar.ts) exige que nenhum pixel fora da inscrição mude.
+ * gate da remoção (gerar.ts) exige que nenhum pixel fora da caixa da inscrição mude.
  */
 
 /** Quantos números cada comando consome por repetição. Z não leva número. */
