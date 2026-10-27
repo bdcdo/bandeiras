@@ -9,7 +9,7 @@ import { estadoMemoriaInicial, type EstadoMemoria } from '../memoria'
 import { PARAMETROS_PADRAO as P, resolverParametros } from '../memoria/parametros'
 import { contextoDeSessao } from '../questoes/contexto-de-sessao'
 import { gerarQuestao } from '../questoes/gerar-questao'
-import { criarQuestao, type Questao } from '../questoes/questao'
+import { criarQuestao, type Questao, type TipoDeFormato } from '../questoes/questao'
 import { avaliarResposta } from './avaliar-resposta'
 import {
   limiteCronometrado,
@@ -99,6 +99,17 @@ describe('limiteCronometrado', () => {
     expect(limite(pronto(3, 0.9), normasCom(OITO))).toBe(3000)
     expect(limite(pronto(3, 0.9), normasCom(OITO.map((x) => x / 2)))).toBe(2500)
     expect(limite(pronto(3, 0.9), NORMAS_DE_LATENCIA_VAZIAS)).toBe(2500)
+  })
+
+  it('lê a mediana do formato pedido', () => {
+    // Mediana de 1500 ms na múltipla escolha e de 3000 ms no texto digitado: o fator 2 dá 3000 e 6000. O formato sem
+    // amostras fica no piso.
+    const normas = { ...normasCom(OITO.map((x) => 2 * x)), 'estimulo-para-rotulo': OITO.map(ms) }
+    const noFormato = (formato: TipoDeFormato) =>
+      limiteCronometrado(pronto(3, 0.9), normas, formato, p, TECNICAS_TODAS_LIGADAS)
+    expect(noFormato('estimulo-para-rotulo')).toBe(3000)
+    expect(noFormato('rotulo-digitado')).toBe(6000)
+    expect(noFormato('rotulo-para-estimulo')).toBe(2500)
   })
 
   it('não existe antes das repetições e da acurácia mínimas, que o tópico atinge sem tempo', () => {

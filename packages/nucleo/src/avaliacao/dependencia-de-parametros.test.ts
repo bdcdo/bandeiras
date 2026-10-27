@@ -26,10 +26,12 @@ const ids = (texto: string): IdItem[] => texto.split('') as IdItem[]
 const [A, C] = ids('ac') as [IdItem, IdItem]
 const ms = (n: number) => n as Milis
 const OITO = [1000, 1100, 1200, 1400, 1600, 1800, 1900, 2000]
+// O texto digitado leva o dobro das latências da múltipla escolha: com os mesmos números nos dois formatos, uma fórmula
+// que lesse a mediana do formato errado daria a mesma saída.
 const normasCom = (latencias: readonly number[]) => ({
   ...NORMAS_DE_LATENCIA_VAZIAS,
   'estimulo-para-rotulo': latencias.map(ms),
-  'rotulo-digitado': latencias.map(ms),
+  'rotulo-digitado': latencias.map((x) => ms(2 * x)),
 })
 const epr = (limiteMs?: number): Questao =>
   criarQuestao(
@@ -98,17 +100,10 @@ const FORMULAS: readonly Formula[] = [
       'fatorLimiteCronometrado',
       'amostrasMinimasDeLatencia',
     ],
-    // Mediana de 3000 ms, acima do piso depois do fator; sem amostras; e um tópico abaixo da acurácia mínima, que só a
-    // acurácia mínima menor deixa cronometrar.
+    // Mediana de 3000 ms no texto digitado, acima do piso depois do fator; sem amostras; e um tópico abaixo da acurácia
+    // mínima, que só a acurácia mínima menor deixa cronometrar.
     cenarios: [
-      (p) =>
-        limiteCronometrado(
-          pronto(3, 0.9),
-          normasCom(OITO.map((x) => 2 * x)),
-          'rotulo-digitado',
-          p,
-          TECNICAS_TODAS_LIGADAS,
-        ),
+      (p) => limiteCronometrado(pronto(3, 0.9), normasCom(OITO), 'rotulo-digitado', p, TECNICAS_TODAS_LIGADAS),
       (p) =>
         limiteCronometrado(pronto(3, 0.9), NORMAS_DE_LATENCIA_VAZIAS, 'rotulo-digitado', p, TECNICAS_TODAS_LIGADAS),
       (p) => limiteCronometrado(pronto(5, 0.8), normasCom(OITO), 'rotulo-digitado', p, TECNICAS_TODAS_LIGADAS),

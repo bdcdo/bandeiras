@@ -4,9 +4,9 @@ import type { Avaliacao } from '../avaliacao/tipos'
 import { desembrulhar } from '../base/resultado'
 import type { Milis } from '../base/tempo'
 import { TECNICAS_TODAS_LIGADAS, type Tecnicas } from '../catalogo/tecnicas'
-import type { IdItem } from '../catalogo/tipos'
+import type { IdGrupo, IdItem } from '../catalogo/tipos'
 import { PARAMETROS_PADRAO as P, resolverParametros, type QualidadeDeResposta } from '../memoria/parametros'
-import { criarQuestao, type Questao, type TipoDeTarefa } from '../questoes/questao'
+import { criarQuestao, type ContextoDeQuestao, type Questao, type TipoDeTarefa } from '../questoes/questao'
 import { xpDaTarefa, type TarefaParaXp } from './xp'
 
 // Parâmetros ajustados para nenhum número do XP coincidir com outro nem com o padrão: no padrão, a faixa de 50%, o
@@ -64,6 +64,23 @@ describe('xpDaTarefa: casos fixos', () => {
     // Mediana 4000 ms e folga 2000 ms: 6 s, um décimo de minuto por questão; cinco questões, 80%: 0,5 x 0,9 = 0,45.
     const normas = { ...NORMAS_DE_LATENCIA_VAZIAS, 'rotulo-digitado': Array.from({ length: 8 }, () => 4000 as Milis) }
     expect(xp(tarefa('revisao-grupo', 5), av('ccecc'), [], normas)).toBeCloseTo(0.45, 10)
+  })
+
+  it('numa revisão de grupo com formatos misturados, cada questão vale a mediana do próprio formato', () => {
+    // Medianas de 1000 ms em estimulo-para-rotulo e de 7000 ms em rotulo-digitado, com a folga de 2000 ms: 0,05 e 0,15
+    // minuto. O grupo-membros não tem amostras e vale os minutos por questão, 0,2. Quatro questões perfeitas:
+    // (0,2 + 0,05 + 2 x 0,15) x 1,3 = 0,715.
+    const oito = (latencia: number) => Array.from({ length: 8 }, () => latencia as Milis)
+    const normas = { ...NORMAS_DE_LATENCIA_VAZIAS, 'estimulo-para-rotulo': oito(1000), 'rotulo-digitado': oito(7000) }
+    const ids = (texto: string) => texto.split('') as IdItem[]
+    const grupo: ContextoDeQuestao = { tipo: 'grupo', grupo: 'grupo-1' as IdGrupo, exibidos: ids('acde') }
+    const mistas = [
+      criarQuestao('a' as IdItem, { tipo: 'grupo-membros', opcoes: ids('abcde') }, grupo),
+      criarQuestao('c' as IdItem, { tipo: 'estimulo-para-rotulo', opcoes: ids('acde') }, grupo),
+      criarQuestao('d' as IdItem, { tipo: 'rotulo-digitado' }, grupo),
+      criarQuestao('e' as IdItem, { tipo: 'rotulo-digitado' }, grupo),
+    ]
+    expect(xp({ tipo: 'revisao-grupo', questoes: mistas }, av('cccc'), [], normas)).toBeCloseTo(0.715, 10)
   })
 
   it('as faixas de 60% e abaixo dela dão o multiplicador parcial e o insuficiente', () => {
