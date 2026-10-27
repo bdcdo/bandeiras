@@ -77,17 +77,22 @@ const propagacao = (contexto: ContextoDeReducao, agora: Instante) => ({
   dificuldade: contexto.dificuldade,
 })
 
-/** A memória de `t` depois de medir cada acerto e de uma repetição perfeita em `em`, como a lição deixa. */
+/**
+ * A memória de `t` depois de medir cada acerto e de uma repetição perfeita em `em`, como a lição deixa. A direção é a de
+ * todos os acertos ou a de cada um, na ordem.
+ */
 function memoriaDaLicao(
   t: IdTopico,
   acertos: readonly boolean[],
   em: Instante,
   contexto: ContextoDeReducao = ctx,
-  direcao: Direcao = 'recordar',
+  direcao: Direcao | readonly Direcao[] = 'recordar',
 ): EstadoMemoria {
   const p = contexto.parametros
   let e = estadoMemoriaInicial(acuraciaInicial(t, contexto.catalogo, new Map(), p))
-  for (const acerto of acertos) e = atualizarAcuracia(e, acerto, 1, p, direcao)
+  acertos.forEach((acerto, k) => {
+    e = atualizarAcuracia(e, acerto, 1, p, typeof direcao === 'string' ? direcao : (direcao[k] ?? 'recordar'))
+  })
   const v = velocidade(e, contexto.dificuldade(t), p, contexto.tecnicas)
   return aplicarRepeticao(e, { deltaBruto: p.deltaBruto.perfeita, agora: em, velocidade: v, origem: 'explicita' }, p)
 }
@@ -112,6 +117,61 @@ describe('lição', () => {
       acelerada: false,
       viaDiagnostico: false,
     })
+  })
+
+  it('cada KP mede na direção do formato dele: reconhecer, produzir e recordar', () => {
+    const c = novaCena(ctx)
+    abrirSessaoNaCena(c, [I('k')])
+    const licao = tarefaRegistrada('licao', [T('k')])
+    emitirNaCena(
+      c,
+      { tipo: 'tarefa-iniciada', tarefa: licao },
+      { tipo: 'apresentacao-vista', tarefaId: licao.id, itens: [I('k')] },
+    )
+    const opcoes = [I('k'), I('l'), I('g'), I('h')]
+    const questoes = [
+      questaoDeEscolha(I('k'), opcoes),
+      criarQuestao(I('k'), { tipo: 'rotulo-para-estimulo', opcoes }, { tipo: 'isolada' }),
+      questaoDigitada(I('k')),
+    ]
+    questoes.forEach((questao, passo) => {
+      const corpo = respostaCerta({ tarefaId: licao.id, passo, uso: { tipo: 'licao', kp: (passo + 1) as 1 | 2 | 3 }, questao })
+      if (passo < 2) emitirUm(c, corpo)
+      else emitirNaCena(c, corpo, { tipo: 'licao-concluida', tarefaId: licao.id, topico: T('k'), acelerada: false })
+    })
+    const em = ultimo(c, 'licao-concluida').em
+    const direcoes: readonly Direcao[] = ['reconhecer', 'produzir', 'recordar']
+    expect(memoria(c, T('k'))).toStrictEqual(memoriaDaLicao(T('k'), [true, true, true], em, ctx, direcoes))
+    expect(memoria(c, T('k'))).not.toStrictEqual(memoriaDaLicao(T('k'), [true, true, true], em))
+  })
+
+  // A questão de recordar da sondagem é a mesma do KP3, até no id, e só o uso diz qual das duas a resposta é: a sondagem
+  // não mede, não repete e não cria memória.
+  it('na mesma questão de recordar, a sondagem não muda a memória, e o KP3 da lição muda', () => {
+    const c = novaCena(ctx)
+    abrirSessaoNaCena(c, [I('k')])
+    const licao = tarefaRegistrada('licao', [T('k')])
+    emitirNaCena(
+      c,
+      { tipo: 'tarefa-iniciada', tarefa: licao },
+      { tipo: 'apresentacao-vista', tarefaId: licao.id, itens: [I('k')] },
+    )
+    const questao = questaoDigitada(I('k'))
+    const antes = memoria(c, T('k'))
+    emitirUm(c, respostaCerta({ tarefaId: licao.id, passo: 0, uso: { tipo: 'sondagem', etapa: 'recordar' }, questao }))
+    expect(memoria(c, T('k'))).toBe(antes)
+    emitirUm(c, respostaCerta({ tarefaId: licao.id, passo: 1, uso: { tipo: 'licao', kp: 3 }, questao }))
+    expect(memoria(c, T('k'))).toStrictEqual(atualizarAcuracia(antes, true, 1, P, 'recordar'))
+  })
+
+  it('a sondagem errada, antes da apresentação e sem lição concluída, não cria memória', () => {
+    const c = novaCena(ctx)
+    abrirSessaoNaCena(c, [I('k')])
+    const licao = tarefaRegistrada('licao', [T('k')])
+    emitirUm(c, { tipo: 'tarefa-iniciada', tarefa: licao })
+    const questao = questaoDigitada(I('k'))
+    emitirUm(c, respostaErrada({ tarefaId: licao.id, passo: 0, uso: { tipo: 'sondagem', etapa: 'recordar' }, questao }))
+    expect(c.estado.memorias.has(T('k'))).toBe(false)
   })
 
   it('com o KP1 errado e refeito, as respostas da lição só medem, sem repetição', () => {
