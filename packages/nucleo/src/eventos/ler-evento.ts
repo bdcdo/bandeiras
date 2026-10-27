@@ -2,7 +2,7 @@ import type { NaoVazio } from '../base/nao-vazio'
 import { erro, ok, type Resultado } from '../base/resultado'
 import type { Instante, Milis, Minutos } from '../base/tempo'
 import { DIRECOES, type IdGrupo, type IdItem } from '../catalogo/tipos'
-import { topicoDeItem, type IdTopico } from '../grafo/topico'
+import { topicoDeGrupo, topicoDeItem, type IdTopico } from '../grafo/topico'
 import { QUALIDADES_DE_RESPOSTA, type QualidadeDeResposta } from '../memoria'
 import type {
   Avaliacao,
@@ -71,7 +71,7 @@ const VAZIO: Registro = Object.freeze({})
 // Fuso extremo da convenção de getTimezoneOffset: um dia inteiro para cada lado.
 const FUSO_MAXIMO_MINUTOS = 1440
 const ID_DE_EVENTO = /^[0-9a-f]{16}$/
-const PREFIXOS_DE_TOPICO = [topicoDeItem('' as IdItem).id, 'grupo:'] as const
+const PREFIXOS_DE_TOPICO = [topicoDeItem('' as IdItem).id, topicoDeGrupo('' as IdGrupo).id] as const
 
 // O lado de cada qualidade, conferido pelo compilador contra `QualidadeDeAcerto`: mover uma qualidade de lado em
 // avaliacao/tipos.ts sem mexer aqui não compila.
