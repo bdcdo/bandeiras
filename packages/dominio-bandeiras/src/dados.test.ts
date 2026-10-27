@@ -197,11 +197,11 @@ describe('inscrições com o nome do país', () => {
     r.x0 >= 0 && r.y0 >= 0 && r.x1 <= 1 && r.y1 <= 1 && r.x0 < r.x1 && r.y0 < r.y1
 
   it('inscricoes.json tem exatamente as oito bandeiras que escrevem o nome do país', () => {
-    // A lista vem do levantamento visual das 193 imagens em 26/10/2026, feito por dois leitores independentes que
-    // concordaram nas 193. Outras doze escrevem lema, data ou fórmula religiosa (ad, br, bz, es, gq, gt, ht, iq, ir, mt,
-    // sa, sm); não nomeiam o país e ficam como estão. Quando uma bandeira nova, ou um arquivo novo do Commons, escrever o
-    // nome do país, ela entra em curadoria/inscricoes.json com as operações que apagam a inscrição e entra aqui, no mesmo
-    // commit; `pnpm gerar:dados` confere a remoção pelo gate de gerar.ts.
+    // A lista vem do levantamento visual das 193 imagens em 26/10/2026. Outras doze escrevem lema, data ou fórmula
+    // religiosa (ad, br, bz, es, gq, gt, ht, iq, ir, mt, sa, sm); não nomeiam o país e ficam como estão. Quando uma
+    // bandeira nova, ou um arquivo novo do Commons, escrever o nome do país, ela entra em curadoria/inscricoes.json com
+    // as operações que apagam a inscrição e entra aqui, no mesmo commit, com o hash do arquivo processado no teste que
+    // fixa os derivados; `pnpm gerar:dados` confere a remoção pelo gate de gerar.ts.
     const codigos = inscricoes.map((i) => i.codigo)
     expect(new Set(codigos).size, 'código repetido').toBe(codigos.length)
     for (const codigo of codigos) expect(membros.has(codigo), codigo).toBe(true)
