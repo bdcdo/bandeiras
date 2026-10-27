@@ -42,17 +42,37 @@ describe('leitura do caminho', () => {
   })
 
   it('acompanha a caneta por todos os comandos, relativos e absolutos, até o subcaminho seguinte', () => {
-    // A mesma sequência, uma vez em relativo e uma em absoluto: c, s, q, t, a, l, h, v e o m do segundo subcaminho.
-    const relativo = 'M0 0c1 1 2 1 3 0s2-1 3 0q1 1 2 0t2 0a2 2 0 0 1 4 0l1 1h1v1z m1 1h1'
-    const absoluto = 'M0 0C1 1 2 1 3 0S5-1 6 0Q7 1 8 0T10 0A2 2 0 0 1 14 0L15 1H16V2Z M1 1H2'
-    for (const d of [relativo, absoluto]) {
-      const subcaminhos = lerSubcaminhos(d)
+    // A mesma sequência, uma vez em relativo e uma em absoluto: c, s, q, t, a, l, h, v e o m do segundo subcaminho, sem
+    // z no meio e fora da origem. Assim a partida do segundo subcaminho é a soma de tudo o que veio antes, e um erro na
+    // posição em que qualquer comando relativo deixa a caneta a desloca.
+    const relativo = 'M5 5c1 1 2 1 3 0s2-1 3 0q1 1 2 0t2 0a2 2 0 0 1 4 0l1 1h1v1m1 1h1'
+    const absoluto = 'M5 5C6 6 7 6 8 5S10 4 11 5Q12 6 13 5T15 5A2 2 0 0 1 19 5L20 6H21V7M22 8H23'
+    const [doRelativo, doAbsoluto] = [lerSubcaminhos(relativo), lerSubcaminhos(absoluto)]
+    for (const subcaminhos of [doRelativo, doAbsoluto]) {
       expect(subcaminhos.map((s) => s.partida)).toEqual([
-        { x: 0, y: 0 },
-        // Depois do z a caneta volta a (0, 0), o início do subcaminho; o m1 1 conta a partir dali.
-        { x: 1, y: 1 },
+        { x: 5, y: 5 },
+        { x: 22, y: 8 },
       ])
     }
+    expect(doRelativo.map((s) => s.caixa)).toEqual(doAbsoluto.map((s) => s.caixa))
+    // Tirar o primeiro subcaminho reescreve o m1 1 como M absoluto na posição que a caneta acumulou.
+    expect(lerSubcaminhos(semSubcaminhos(relativo, new Set([0])))[0]?.partida).toEqual({ x: 22, y: 8 })
+  })
+
+  it('depois do z, a caneta volta ao início do subcaminho', () => {
+    // O m1 1 conta a partir de (5, 5), onde o subcaminho começou, e não de (8, 5), onde a curva terminou.
+    const subcaminhos = lerSubcaminhos('M5 5c1 1 2 1 3 0z m1 1h1')
+    expect(subcaminhos.map((s) => s.partida)).toEqual([
+      { x: 5, y: 5 },
+      { x: 6, y: 6 },
+    ])
+  })
+
+  it('a caixa do subcaminho inclui o controle do q e o refletido do t', () => {
+    // q0 10 10 0 sai de (5, 5) com o controle em (5, 15) e termina em (15, 5); o t reflete esse controle em torno de
+    // (15, 5) para (25, -5) e termina em (25, 5).
+    const [s] = lerSubcaminhos('M5 5q0 10 10 0t10 0')
+    expect(s?.caixa).toEqual({ x0: 5, y0: -5, x1: 25, y1: 15 })
   })
 
   it('a caixa do subcaminho inclui o controle refletido do S, que não está escrito no texto', () => {
