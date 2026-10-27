@@ -5,7 +5,9 @@ import { DIRECOES, type Direcao } from '../catalogo/tipos'
  * Estado de memória de um tópico, no modelo de repetição espaçada do livro (The Math Academy Way, cap. 29).
  *
  * Só `memoria/` e `fire/` leem e escrevem estes campos; o resto do núcleo recebe o tipo pelo índice da camada e chama as
- * funções dela. É a costura que mantém o modelo de memória trocável sem mexer em quem o usa.
+ * funções dela, e os testes das camadas de cima montam o estado por `apoio-a-testes/estado-de-teste.ts`. É a costura
+ * que mantém o modelo de memória trocável sem mexer em quem o usa. O `eslint.config.js` recusa o acesso aos campos de
+ * nome próprio fora dela; campo novo de nome próprio entra também na lista de lá.
  *
  * O que é derivado (intervalo ideal, memória agora, vencimento e fase) nunca é guardado: sai de `modelo.ts` a cada
  * leitura, e por isso não há como o estado guardar um vencimento que discorde da memória.

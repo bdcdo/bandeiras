@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { catalogoDe, catalogoFixo } from '../apoio-a-testes/catalogo-de-teste'
+import { estadoDeTeste } from '../apoio-a-testes/estado-de-teste'
 import { desembrulhar } from '../base/resultado'
 import { sorteioComSemente } from '../base/sorteio-com-semente'
 import type { Catalogo, Direcao, IdGrupo, IdItem } from '../catalogo/tipos'
 import { topicoDeItem, type IdTopico } from '../grafo/topico'
-import { estadoMemoriaInicial, type EstadoMemoria } from '../memoria'
+import type { EstadoMemoria } from '../memoria'
 import { PARAMETROS_PADRAO as P, resolverParametros, type Parametros } from '../memoria/parametros'
 import { contextoDeSessao, type ContextoDeSessao } from './contexto-de-sessao'
 import { opcoesDe, type Questao } from './questao'
@@ -23,7 +24,7 @@ function memorias(
   return new Map(
     Object.entries(acuracias).map(([id, [reconhecer, produzir, recordar]]) => [
       topicoDeItem(id as IdItem).id,
-      { ...estadoMemoriaInicial(0.85), acuraciaPorDirecao: { reconhecer, produzir, recordar } },
+      estadoDeTeste({ porDirecao: { reconhecer, produzir, recordar } }),
     ]),
   )
 }

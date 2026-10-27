@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { catalogoFixo } from '../apoio-a-testes/catalogo-de-teste'
+import { estadoDeTeste } from '../apoio-a-testes/estado-de-teste'
 import { desembrulhar } from '../base/resultado'
 import { sorteioComSemente } from '../base/sorteio-com-semente'
 import type { Milis } from '../base/tempo'
 import { TECNICAS_TODAS_LIGADAS, type Tecnicas } from '../catalogo/tecnicas'
 import type { IdItem } from '../catalogo/tipos'
-import { estadoMemoriaInicial, type EstadoMemoria } from '../memoria'
+import type { EstadoMemoria } from '../memoria'
 import { PARAMETROS_PADRAO as P, resolverParametros } from '../memoria/parametros'
 import { contextoDeSessao } from '../questoes/contexto-de-sessao'
 import { gerarQuestao } from '../questoes/gerar-questao'
@@ -28,10 +29,7 @@ const normasCom = (latencias: readonly number[]): NormasDeLatencia => ({
   'rotulo-digitado': latencias.map(ms),
 })
 const OITO = [1000, 1100, 1200, 1400, 1600, 1800, 1900, 2000]
-const pronto = (numRepeticoes: number, acuracia: number): EstadoMemoria => ({
-  ...estadoMemoriaInicial(acuracia),
-  numRepeticoes,
-})
+const pronto = (repeticoes: number, acuracia: number): EstadoMemoria => estadoDeTeste({ repeticoes, acuracia })
 
 describe('registrarLatencia', () => {
   const questao = criarQuestao(A, { tipo: 'rotulo-digitado' }, { tipo: 'isolada' })

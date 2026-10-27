@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { catalogoFixo } from '../apoio-a-testes/catalogo-de-teste'
+import { estadoDeTeste } from '../apoio-a-testes/estado-de-teste'
 import { caminhosLidos, mudaASaida, variacoes, type Formula } from '../apoio-a-testes/regua-de-parametros'
 import type { Milis } from '../base/tempo'
 import { TECNICAS_TODAS_LIGADAS } from '../catalogo/tecnicas'
 import type { IdItem } from '../catalogo/tipos'
-import { estadoMemoriaInicial, type EstadoMemoria } from '../memoria'
+import type { EstadoMemoria } from '../memoria'
 import { QUALIDADES_DE_RESPOSTA, type CaminhoDeParametro, type QualidadeDeResposta } from '../memoria/parametros'
 import { criarQuestao, type Questao } from '../questoes/questao'
 import { avaliarResposta } from './avaliar-resposta'
@@ -45,10 +46,7 @@ const escolha = (id: IdItem, latencia: number): Resposta => ({
   escolhidas: [id],
   latencia: ms(latencia),
 })
-const pronto = (numRepeticoes: number, acuracia: number): EstadoMemoria => ({
-  ...estadoMemoriaInicial(acuracia),
-  numRepeticoes,
-})
+const pronto = (repeticoes: number, acuracia: number): EstadoMemoria => estadoDeTeste({ repeticoes, acuracia })
 /** Qualidades por letra: c é chute e p é perfeita. */
 const q = (texto: string): QualidadeDeResposta[] => texto.split('').map((l) => (l === 'c' ? 'chute' : 'perfeita'))
 
