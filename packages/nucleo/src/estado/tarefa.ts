@@ -5,7 +5,7 @@ import { diaLocal, somarXpDoDia, xpDaTarefa, type DiaLocal } from '../gamificaca
 import { direcaoDoFormato } from '../questoes'
 import type { EventoDoTipo, Evento } from '../eventos'
 import type { ContextoDeReducao } from './contexto'
-import { contextoDePropagacao, memoriaInicial, trocarMemorias } from './memoria-do-rascunho'
+import { contextoDePropagacao, devolver, memoriaInicial, submapa } from './memoria-do-rascunho'
 import { concluidos, escrever, type Absorver, type Rascunho } from './rascunho'
 import type { RespostaLigada, TarefaAberta } from './tipos'
 import { xpDeTarefaNaoConcluida } from './xp'
@@ -122,7 +122,8 @@ function somarXp(r: Rascunho, dia: DiaLocal, xp: number): void {
  * com lição concluída, a mesma regra da resposta isolada; os exibidos são os do contexto, e os elegíveis, os tópicos de
  * lição concluída. Sem resposta que entre, ou com a função recusando a tarefa, a memória fica como estava.
  *
- * O estado de F, se falta, nasce num mapa à parte, que só vira o do rascunho se a função aceitar a tarefa.
+ * A função recebe o submapa de F e dos alvos. O estado de F, se falta, nasce nele, e só entra no rascunho se a função
+ * aceitar a tarefa.
  */
 function aplicarGrupo(
   ctx: ContextoDeReducao,
@@ -156,8 +157,9 @@ function aplicarGrupo(
     absorver('tarefa-de-grupo-sem-alvo-valido')
     return
   }
-  const comGrupo = memorias.has(grupo) ? memorias : new Map(memorias).set(grupo, memoriaInicial(ctx, grupo, memorias))
-  const feita = aplicarTarefaDeGrupo(contextoDePropagacao(ctx, agora), comGrupo, {
+  const sub = submapa(ctx, memorias, [grupo, ...validas.map(({ questao }) => questao.alvo)])
+  if (!sub.has(grupo)) sub.set(grupo, memoriaInicial(ctx, grupo, memorias))
+  const feita = aplicarTarefaDeGrupo(contextoDePropagacao(ctx, agora), sub, {
     grupo,
     respostas: validas.map(({ questao, avaliacao }) => ({
       alvo: questao.alvo,
@@ -171,5 +173,5 @@ function aplicarGrupo(
     absorver('tarefa-de-grupo-recusada')
     return
   }
-  trocarMemorias(r, feita.valor.memorias)
+  devolver(r.memorias, feita.valor.memorias)
 }

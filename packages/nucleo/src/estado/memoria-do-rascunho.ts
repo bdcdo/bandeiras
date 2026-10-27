@@ -11,7 +11,7 @@ import {
   type EstadoMemoria,
 } from '../memoria'
 import type { ContextoDeReducao } from './contexto'
-import { escrever, type Rascunho } from './rascunho'
+import { escrever, type Copiavel, type Rascunho } from './rascunho'
 
 // Os efeitos de memória da redução, todos sobre o mapa do rascunho. Cada um lê o estado do tópico no rascunho, aplica uma
 // função de memoria/ ou de fire/ e grava o resultado de volta; nenhum lê ou escreve campo de EstadoMemoria, que é
@@ -70,11 +70,33 @@ export function repetirLicao(ctx: ContextoDeReducao, r: Rascunho, t: IdTopico, a
 }
 
 /**
- * Troca as memórias do rascunho pelas que uma função de fire/ devolveu. Elas são um mapa novo, que o rascunho passa a
- * ter como atual sem copiar; a primeira escrita depois disso copia, porque o mapa veio de fora e o rascunho não sabe se
- * mais alguém o guarda.
+ * As memórias que uma função de fire/ pode ler ou escrever ao partir das origens dadas: as do alcance de cada origem
+ * (`ContextoDeReducao.alcance`) que têm estado. Fora do alcance a propagação não lê nem escreve nada, e por isso a
+ * função sobre o submapa dá, em cada tópico dele, o mesmo que sobre o mapa inteiro. A diferença é o custo: cada função
+ * de fire/ copia o mapa que recebe, e copiar um item e os grupos dele a cada resposta, em vez das memórias todas, é o
+ * que separa a reconstrução de um log longo do teto de tempo dela.
  */
-export function trocarMemorias(r: Rascunho, memorias: Memorias): void {
-  if (memorias === r.memorias.atual) return
-  r.memorias = { atual: memorias, proprio: undefined }
+export function submapa(
+  ctx: ContextoDeReducao,
+  memorias: Memorias,
+  origens: readonly IdTopico[],
+): Map<IdTopico, EstadoMemoria> {
+  const sub = new Map<IdTopico, EstadoMemoria>()
+  for (const origem of origens) {
+    for (const t of ctx.alcance(origem)) {
+      const e = memorias.get(t)
+      if (e !== undefined) sub.set(t, e)
+    }
+  }
+  return sub
+}
+
+/**
+ * Grava no mapa do rascunho o que uma função de fire/ devolveu sobre um submapa, só as entradas que mudaram. Tópico que
+ * já tinha estado fica na posição dele, e o que nasceu no submapa entra no fim, como entraria se a função tivesse rodado
+ * sobre o mapa inteiro: assim a ordem do mapa, que o instantâneo do estado compara, também não muda com o submapa. Na
+ * reconstrução o rascunho é dono do mapa, e a escrita é no lugar.
+ */
+export function devolver(memorias: Copiavel<IdTopico, EstadoMemoria>, depois: Memorias): void {
+  for (const [t, e] of depois) if (memorias.atual.get(t) !== e) escrever(memorias).set(t, e)
 }

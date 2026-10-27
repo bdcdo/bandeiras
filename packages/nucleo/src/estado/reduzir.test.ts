@@ -430,27 +430,35 @@ describe('contexto da sessão', () => {
 })
 
 describe('tarefa de grupo', () => {
-  // Um grupo de seis membros sem par indiscernível, para três alvos caberem com os outros exibidos.
+  // Um grupo de seis membros sem par indiscernível, para três alvos caberem com os outros exibidos. O grupo-2, de b e g,
+  // tem lição concluída: o erro de b na tarefa do grupo-1 sobe até ele, que fica fora do grupo e dos alvos da tarefa e
+  // por isso prova que a redução passa a fire/ também os ascendentes de cada alvo.
   const ESPEC: EspecificacaoDeCatalogo = {
     classes: [1, 1, 1, 1, 1, 1, 2, 2],
     categorias: [1, 1, 2, 2, 1, 2, 1, 2],
     aliases: [],
     vizinhos: [],
-    grupos: [{ membros: [0, 1, 2, 3, 4, 5], par: false }],
+    grupos: [
+      { membros: [0, 1, 2, 3, 4, 5], par: false },
+      { membros: [1, 6], par: false },
+    ],
     vizinhancas: [],
   }
   const ctxG = contextoDosCasos({ catalogo: catalogoDe(ESPEC) })
   const GRUPO = 'grupo-1' as IdGrupo
   const F = topicoDeGrupo(GRUPO).id
+  const F2 = topicoDeGrupo('grupo-2' as IdGrupo).id
+  const CONCLUIDOS = [...['a', 'b', 'c', 'g'].map(T), F2]
   const EXIBIDOS = ['a', 'b', 'c', 'd', 'e', 'f'].map(I)
   const noGrupo = { tipo: 'grupo', grupo: GRUPO, exibidos: EXIBIDOS } as const
   const ACERTOS: Readonly<Record<string, boolean>> = { a: true, b: false, c: true }
 
-  /** A cena com as lições de a, b e c e a tarefa de grupo aberta, com os alvos na ordem dada. */
+  /** A cena com as lições de a, b, c, g e do grupo-2 e a tarefa de grupo aberta, com os alvos na ordem dada. */
   function comTarefa(ordem: readonly string[]) {
     const c = novaCena(ctxG)
-    abrirSessaoNaCena(c, [I('a'), I('b'), I('c')])
-    for (const item of ['a', 'b', 'c']) licaoDeItem(c, I(item))
+    abrirSessaoNaCena(c, [I('a'), I('b'), I('c'), I('g')])
+    for (const item of ['a', 'b', 'c', 'g']) licaoDeItem(c, I(item))
+    emitirUm(c, { tipo: 'licao-concluida', tarefaId: 'licao-do-grupo-2', topico: F2, acelerada: false })
     c.agora += DIA
     abrirSessaoNaCena(c)
     const questoes = ordem.map((i) => questaoDigitada(I(i), noGrupo))
@@ -479,7 +487,7 @@ describe('tarefa de grupo', () => {
         deltaBruto: ctxG.parametros.deltaBruto[ACERTOS[i] === true ? 'perfeita' : 'errada'],
       })),
       exibidos: new Set(EXIBIDOS.map((i) => topicoDeItem(i).id)),
-      elegiveis: new Set(['a', 'b', 'c'].map(T)),
+      elegiveis: new Set(CONCLUIDOS),
     })
     return desembrulhar(feita).memorias
   }
@@ -491,6 +499,7 @@ describe('tarefa de grupo', () => {
     expect(c.estado.memorias).toBe(antes)
     const fim = responder(2)
     expect([...c.estado.memorias]).toStrictEqual([...esperado(antes, ['a', 'b', 'c'], fim.em)])
+    expect(c.estado.memorias.get(F2)).not.toBe(antes.get(F2))
     expect(c.estado.tarefa).toBeUndefined()
   })
 

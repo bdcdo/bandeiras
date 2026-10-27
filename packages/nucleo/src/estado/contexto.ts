@@ -1,7 +1,16 @@
 import { ok, type Resultado } from '../base/resultado'
 import type { Tecnicas } from '../catalogo/tecnicas'
 import type { Catalogo } from '../catalogo/tipos'
-import { construirGrafo, topicoDeGrupo, topicoDeItem, type ErroDeGrafo, type Grafo, type IdTopico } from '../grafo'
+import {
+  construirGrafo,
+  fechoAscendente,
+  fechoDescendente,
+  topicoDeGrupo,
+  topicoDeItem,
+  type ErroDeGrafo,
+  type Grafo,
+  type IdTopico,
+} from '../grafo'
 import type { Dificuldade, Parametros } from '../memoria'
 
 /**
@@ -15,6 +24,12 @@ export type ContextoDeReducao = Readonly<{
   tecnicas: Tecnicas
   parametros: Parametros
   dificuldade: (topico: IdTopico) => Dificuldade
+  /**
+   * O tópico e os fechos ascendente e descendente dele, sem repetição: tudo o que uma função de fire/ que parte dele pode
+   * ler ou escrever, porque a propagação só anda por aresta. Uso interno da redução, que passa a fire/ só essas memórias
+   * (`submapa`); tópico fora do grafo alcança só a si mesmo.
+   */
+  alcance: (topico: IdTopico) => readonly IdTopico[]
 }>
 
 // Dificuldade de um tópico que o catálogo não conhece. Ele nunca chega à memória, porque o redutor absorve a referência,
@@ -25,7 +40,7 @@ const DIFICULDADE_NEUTRA: Dificuldade = 2
  * Monta o contexto, com o grafo do catálogo sob as técnicas. A dificuldade de um tópico de item é a a priori do item; a
  * de um tópico de grupo, que o catálogo não dá, é a do membro mais difícil, porque discriminar os membros é tão difícil
  * quanto o mais difícil deles. A tabela sai pronta daqui, uma vez por contexto, e a compressão e o planejador leem a
- * mesma função.
+ * mesma função. O alcance de cada tópico também sai daqui, uma vez, e não a cada resposta.
  */
 export function criarContextoDeReducao(
   campos: Readonly<{ catalogo: Catalogo; tecnicas: Tecnicas; parametros: Parametros }>,
@@ -39,11 +54,16 @@ export function criarContextoDeReducao(
     const dosMembros = g.membros.map((m) => catalogo.itens.get(m)?.dificuldadeAPriori ?? DIFICULDADE_NEUTRA)
     porTopico.set(topicoDeGrupo(g.id).id, Math.max(...dosMembros) as Dificuldade)
   }
+  const alcances = new Map<IdTopico, readonly IdTopico[]>()
+  for (const t of grafo.valor.topicos.keys()) {
+    alcances.set(t, [...new Set([t, ...fechoAscendente(grafo.valor, t), ...fechoDescendente(grafo.valor, t)])])
+  }
   return ok({
     catalogo,
     grafo: grafo.valor,
     tecnicas,
     parametros,
     dificuldade: (t) => porTopico.get(t) ?? DIFICULDADE_NEUTRA,
+    alcance: (t) => alcances.get(t) ?? [t],
   })
 }

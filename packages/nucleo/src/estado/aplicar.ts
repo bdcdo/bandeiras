@@ -15,7 +15,7 @@ import { diaLocal } from '../gamificacao'
 import type { Evento, EventoDoTipo } from '../eventos'
 import { chaveDePar, confusaoQueConta } from './confusoes'
 import type { ContextoDeReducao } from './contexto'
-import { contextoDePropagacao, garantirMemoria, medir, repetirLicao, trocarMemorias } from './memoria-do-rascunho'
+import { contextoDePropagacao, devolver, garantirMemoria, medir, repetirLicao, submapa } from './memoria-do-rascunho'
 import { concluidos, escrever, rascunhoDoPerfil, type Absorver, type Rascunho } from './rascunho'
 import { abrirTarefa, fecharSeCompleta, fecharTarefa, interromperTarefa, ligarResposta } from './tarefa'
 
@@ -232,13 +232,13 @@ function responderIsolada(
   direcao: ReturnType<typeof direcaoDoFormato>,
   deltaBruto: number,
 ): void {
-  const resultado = aplicarRespostaIsolada(contextoDePropagacao(ctx, agora), r.memorias.atual, {
+  const resultado = aplicarRespostaIsolada(contextoDePropagacao(ctx, agora), submapa(ctx, r.memorias.atual, [alvo]), {
     alvo,
     direcao,
     deltaBruto,
     elegiveis: concluidos(r),
   })
-  trocarMemorias(r, resultado.memorias)
+  devolver(r.memorias, resultado.memorias)
 }
 
 /**
