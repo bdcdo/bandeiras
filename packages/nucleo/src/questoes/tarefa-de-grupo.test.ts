@@ -157,6 +157,27 @@ describe('gerarQuestoesDeGrupo: direção de cada alvo', () => {
     expect(direcoes(m, 'bcd')).toEqual(['reconhecer', 'recordar', 'recordar'])
   })
 
+  it('conta a metade sobre todos os alvos, os de par inclusive', () => {
+    // Seis membros com o par a e b, e dois itens fora do grupo. a pergunta em grupo-membros; c e d, sem par, têm reconhecer
+    // como direção mais fraca. Três alvos pedem dois recordando, e como só c e d podem, os dois recordam; contar a metade
+    // só sobre os alvos sem par pediria um.
+    const comPar = catalogoDe({
+      classes: [1, 1, 1, 1, 1, 1, 2, 2],
+      categorias: [1, 1, 1, 1, 1, 1, 1, 1],
+      aliases: [],
+      vizinhos: [],
+      grupos: [{ membros: [0, 1, 2, 3, 4, 5], par: true }],
+      vizinhancas: [],
+    })
+    const m = memorias({ a: [0.85, 0.85, 0.85], c: [0.2, 0.9, 0.9], d: [0.2, 0.9, 0.9] })
+    const questoes = desembrulhar(gerar(GRUPO_1, 'acd', m, P, VAZIO, comPar))
+    expect(Object.fromEntries(questoes.map((q) => [q.itemAlvo, direcaoDe(q)]))).toEqual({
+      a: 'grupo-membros',
+      c: 'recordar',
+      d: 'recordar',
+    })
+  })
+
   it('no empate entre direções recorda, e no empate entre alvos vale a ordem deles', () => {
     expect(direcoes(neutras('abcd'), 'abcd')).toEqual(['recordar', 'recordar', 'recordar', 'recordar'])
     const m = memorias({ a: [0.5, 0.5, 0.9], b: [0.6, 0.6, 0.9] })
