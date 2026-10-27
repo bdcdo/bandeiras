@@ -24,9 +24,15 @@ export function idDeEvento(semId: EventoSemId): string {
  * campos conhecidos. Assim o id cobre exatamente o conteúdo que a leitura devolve, e o evento que sai daqui passa no
  * leitor. Devolve `EVENTO_MALFORMADO` com o motivo para o que o leitor recusa, como um instante fracionário ou um texto
  * com U+0000.
+ *
+ * Os três campos do cabeçalho entram por último e um a um: um corpo que traga `em`, `dispositivo` ou `fusoMinutos`, como
+ * um evento antigo reaproveitado, não troca o instante que `emitir` calculou, e o evento novo continua o último do log.
+ * O tipo do corpo não barra essas chaves num objeto vindo de variável, e um cabeçalho de tipo mais largo também não
+ * leva chave dele ao corpo.
  */
 export function criarEvento(cabecalho: CabecalhoDeEvento, corpo: CorpoDeEvento): Resultado<Evento, ErroDeLeitura> {
-  const lido = lerEventoSemId({ ...cabecalho, ...corpo })
+  const { em, dispositivo, fusoMinutos } = cabecalho
+  const lido = lerEventoSemId({ ...corpo, em, dispositivo, fusoMinutos })
   if (!lido.ok) return erro({ codigo: 'EVENTO_MALFORMADO', detalhe: `${lido.erro.parte}: ${lido.erro.motivo}` })
   return ok({ id: idDeEvento(lido.valor), ...lido.valor })
 }

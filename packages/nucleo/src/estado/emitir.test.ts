@@ -10,7 +10,7 @@ import { instantaneoDoEstado } from '../apoio-a-testes/instantaneo-do-estado'
 import { desembrulhar } from '../base/resultado'
 import type { Instante } from '../base/tempo'
 import type { IdItem } from '../catalogo/tipos'
-import { VERSAO_MODELO, type EventoDoTipo } from '../eventos'
+import { VERSAO_MODELO, type CorpoDeEvento, type EventoDoTipo } from '../eventos'
 import { topicoDeItem } from '../grafo'
 import { metaDoDia, statusDaLicao } from './consultas'
 import { emitir, iniciarPerfil } from './emitir'
@@ -82,6 +82,27 @@ describe('emitir', () => {
     expect(relato.absorvidos).toStrictEqual({})
     expect(instantaneoDoEstado(estado)).toStrictEqual(instantaneoDoEstado(c.estado))
     expect(statusDaLicao(estado, topicoDeItem(I('k')).id).status).toBe('concluida')
+  })
+
+  it('o corpo com chaves do envelope não troca o cabeçalho: o evento antigo reaproveitado vira um evento novo', () => {
+    // O corpo vem de variável, como o de um evento já gravado; o tipo de CorpoDeEvento não barra as chaves a mais.
+    const c = novaCena(ctx)
+    const antes = desembrulhar(
+      emitir(ctx, c.estado, [META(25), { tipo: 'meta-diaria-alterada', xp: 40 }], origem(INICIO_DA_CENA + 86_400_000)),
+    )
+    const [antigo] = antes.eventos
+    if (antigo === undefined) throw new Error('evento esperado')
+    const corpo: CorpoDeEvento = { ...antigo, xp: 30, dispositivo: 'intruso', fusoMinutos: -600 }
+    const t = desembrulhar(emitir(ctx, antes.estado, [corpo], origem(INICIO_DA_CENA)))
+    const [novo] = t.eventos
+    expect([novo?.em, novo?.dispositivo, novo?.fusoMinutos]).toStrictEqual([
+      antes.estado.ultimoEm + 1,
+      'aparelho-a',
+      180,
+    ])
+    const { estado } = desembrulhar(reconstruir(ctx, [...c.eventos, ...antes.eventos, ...t.eventos]))
+    expect(instantaneoDoEstado(estado)).toStrictEqual(instantaneoDoEstado(t.estado))
+    expect(t.estado.metaDiariaXp).toBe(30)
   })
 
   it('um corpo recusado devolve o erro, e nenhum evento da ação vale', () => {
