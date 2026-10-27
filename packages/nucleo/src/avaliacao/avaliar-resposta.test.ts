@@ -216,6 +216,15 @@ describe('avaliarResposta: não sei, tempo esgotado e respostas incompatíveis',
       'ITEM_INEXISTENTE',
     )
   })
+
+  it('recusa ligações de associação em questão de outro formato, e mantém a recusa do formato associação', () => {
+    const ligacoes: Resposta = { tipo: 'associacao', ligacoes: [{ linha: 0, rotulo: A, latencia: ms(900) }] }
+    for (const questao of [digitado(), epr(), rpe(), membros()]) {
+      expect(codigo(questao, ligacoes), questao.formato.tipo).toBe('RESPOSTA_INCOMPATIVEL')
+    }
+    const associacao = criarQuestao(A, { tipo: 'associacao', linhas: [ids('ab')], rotulos: ids('ab') }, ISOLADA)
+    expect(codigo(associacao, ligacoes)).toBe('FORMATO_NAO_SUPORTADO')
+  })
 })
 
 describe('avaliarResposta: deltaBruto de cada qualidade', () => {

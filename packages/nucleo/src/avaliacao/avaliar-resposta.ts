@@ -88,6 +88,9 @@ export function avaliarResposta(
   switch (resposta.tipo) {
     case 'continuar':
       return incompativel('continuar fecha apresentação e não responde questão')
+    case 'associacao':
+      // O formato associação já saiu acima; aqui a questão é de outro formato, e ligações não respondem a ela.
+      return incompativel(`associação em questão de ${formato.tipo}`)
     case 'nao-sei':
       return ok(falha('nao-sei', direcao, parametros))
     case 'tempo-esgotado':
