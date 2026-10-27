@@ -122,3 +122,38 @@ export function dadosDe(espec: EspecificacaoDeCatalogo): DadosDeCatalogo {
     categorias: categorias.map((c) => ({ id: c, nome: c, subcategorias: [{ id: 'subcategoria-1', nome: 'Sub 1' }] })),
   }
 }
+
+/**
+ * O catálogo fixo sem um item e sem um grupo, como o catálogo depois de uma curadoria que os tirou. Um log gravado sobre
+ * o catálogo fixo cita o que este não tem, e a reconstrução sobre ele precisa absorver as referências sem falhar. O item
+ * sai também dos grupos, das vizinhanças e dos vizinhos dos outros, e o grupo, dos grupos de cada item.
+ */
+export function catalogoFixoSem(item: IdItem, grupo: string): Catalogo {
+  const dados = dadosDe(ESPECIFICACAO_FIXA)
+  const semItem = (ids: readonly string[]): string[] => ids.filter((i) => i !== item)
+  const semChave = (r: Readonly<Record<string, string>>): Record<string, string> =>
+    Object.fromEntries(Object.entries(r).filter(([k]) => k !== item))
+  return desembrulhar(
+    carregarCatalogo({
+      ...dados,
+      itens: dados.itens
+        .filter((i) => i.id !== item)
+        .map((i) => ({ ...i, grupos: i.grupos.filter((g) => g !== grupo), vizinhos: semItem(i.vizinhos) })),
+      grupos: dados.grupos
+        .filter((g) => g.id !== grupo)
+        .map((g) => ({
+          ...g,
+          membros: semItem(g.membros),
+          tracoDistintivo: semChave(g.tracoDistintivo),
+          ...(g.paresIndiscerniveis === undefined
+            ? {}
+            : { paresIndiscerniveis: g.paresIndiscerniveis.filter((p) => !p.includes(item)) }),
+        })),
+      vizinhancas: dados.vizinhancas.map((v) => ({
+        ...v,
+        membros: semItem(v.membros),
+        tracoDistintivo: semChave(v.tracoDistintivo),
+      })),
+    }),
+  )
+}
