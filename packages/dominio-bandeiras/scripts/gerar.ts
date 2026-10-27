@@ -6,7 +6,8 @@
  * que ele deixou commitado. Imagem que mudou exige conferência à mão e o hash novo no mesmo commit.
  *
  * Por bandeira: nas que escrevem o nome do país (curadoria/inscricoes.json), apaga a inscrição (inscricoes.ts) e
- * reprova se a remoção mudou algum pixel fora da caixa da curadoria; daí em diante, tudo opera sobre esse derivado, que
+ * reprova se a remoção mudou algum pixel fora da caixa da curadoria ou não chegou perto das bordas dela (conferirRemocao,
+ * abaixo); daí em diante, tudo opera sobre esse derivado, que
  * é o que o aluno vê. Recusa SVG com <text> ou <image> (texto depende da fonte instalada para rasterizar igual em todo
  * lugar, e <image> embute bitmap que o svgo não otimiza); passa o svgo; rasteriza a entrada e o otimizado em dois
  * renderizadores e reprova se o svgo mudou a imagem em algum deles; grava o SVG otimizado ou, acima de 100 KB, um WebP
@@ -179,11 +180,25 @@ function proporcaoDaBandeira(codigo: string, svg: string): number {
 }
 
 /**
- * Gate da remoção: prova que a derivação tirou só a inscrição. Rasteriza original e derivado pelo resvg na mesma largura
- * e conta os pixels em que algum canal mudou, sem tolerância: tirar um elemento do SVG não mexe em pixel que ele não
- * cobria, e reescrever a árvore pelo svgo sem plugin de otimização não muda nada na imagem (conferido nos oito
- * originais), então qualquer diferença fora da caixa é desenho que não devia ter saído. Também reprova se nada mudou
- * dentro da caixa: a operação teria achado o que declarou sem que isso aparecesse na imagem.
+ * Folga máxima, em fração da largura ou da altura da imagem, entre cada borda da caixa declarada e o pixel mudado mais
+ * perto dela. A caixa justa é o que dá sentido à regra de não mudar nada fora dela: em ni e sv a legenda circular cerca o
+ * emblema, e uma caixa larga aceitaria uma operação que tirasse o contorno do triângulo ou um pedaço do brasão no lugar
+ * das letras. Medida a 960 px, a maior folga das oito curadorias de hoje é 0,015; tirar o contorno do triângulo de ni
+ * no lugar da legenda deixa folga de 0,034 a 0,098.
+ */
+const FOLGA_MAXIMA_DA_CAIXA = 0.02
+
+/**
+ * Gate da remoção. Rasteriza original e derivado pelo resvg na mesma largura e conta os pixels em que algum canal mudou,
+ * sem tolerância: tirar um elemento do SVG não mexe em pixel que ele não cobria, e reescrever a árvore pelo svgo sem
+ * plugin de otimização não muda nada na imagem (conferido nos oito originais). Reprova em três casos: algum pixel mudou
+ * fora da caixa, que é desenho que não devia ter saído; nenhum pixel mudou, e a operação teria achado o que declarou sem
+ * que isso aparecesse na imagem; ou a mudança fica a mais de FOLGA_MAXIMA_DA_CAIXA de alguma borda da caixa, e aí ou a
+ * caixa é larga demais para a inscrição, ou a operação tirou outra coisa, menor, lá dentro.
+ *
+ * O gate não distingue duas remoções que ocupam a mesma região: tirar a legenda de ni junto com o contorno do triângulo,
+ * que ela cerca, passa por ele. O que fecha esse caso é o hash do arquivo processado de cada uma das oito, fixado em
+ * src/dados.test.ts, que reprova no CI qualquer mudança no que sai até alguém conferir a imagem.
  */
 export function conferirRemocao(inscricao: Inscricao, original: string, derivado: string): number {
   const antes = rasterizar(original, LARGURA_DO_GATE_DA_REMOCAO)
@@ -197,12 +212,18 @@ export function conferirRemocao(inscricao: Inscricao, original: string, derivado
   const [y0, y1] = [Math.floor(caixa.y0 * antes.altura), Math.ceil(caixa.y1 * antes.altura)]
   let dentro = 0
   let fora = 0
+  // Retângulo, em pixels, que contém todos os pixels mudados.
+  let [mudouX0, mudouY0, mudouX1, mudouY1] = [Infinity, Infinity, -Infinity, -Infinity]
   for (let i = 0; i < antes.pixels.length; i += 4) {
     if (antes.pixels.readUInt32LE(i) === depois.pixels.readUInt32LE(i)) continue
     const pixel = i / 4
     const [x, y] = [pixel % antes.largura, Math.floor(pixel / antes.largura)]
     if (x >= x0 && x < x1 && y >= y0 && y < y1) dentro++
     else fora++
+    mudouX0 = Math.min(mudouX0, x)
+    mudouY0 = Math.min(mudouY0, y)
+    mudouX1 = Math.max(mudouX1, x + 1)
+    mudouY1 = Math.max(mudouY1, y + 1)
   }
   const largura = String(LARGURA_DO_GATE_DA_REMOCAO)
   if (fora > 0) {
@@ -212,6 +233,21 @@ export function conferirRemocao(inscricao: Inscricao, original: string, derivado
     )
   }
   if (dentro === 0) falhar(`${codigo}: a remoção da inscrição não mudou nenhum pixel dentro da caixa, a ${largura} px`)
+  const folgas = {
+    esquerda: mudouX0 / antes.largura - caixa.x0,
+    topo: mudouY0 / antes.altura - caixa.y0,
+    direita: caixa.x1 - mudouX1 / antes.largura,
+    base: caixa.y1 - mudouY1 / antes.altura,
+  }
+  const largas = Object.entries(folgas).filter(([, folga]) => folga > FOLGA_MAXIMA_DA_CAIXA)
+  if (largas.length > 0) {
+    falhar(
+      `${codigo}: a mudança fica longe da borda da caixa de curadoria/inscricoes.json (` +
+        largas.map(([borda, folga]) => `${borda} ${folga.toFixed(3)}`).join(', ') +
+        `; máximo ${String(FOLGA_MAXIMA_DA_CAIXA)}), a ${largura} px; ou a caixa é larga demais para a inscrição, ` +
+        'ou a operação tirou outra parte do desenho, menor, dentro dela',
+    )
+  }
   return dentro
 }
 

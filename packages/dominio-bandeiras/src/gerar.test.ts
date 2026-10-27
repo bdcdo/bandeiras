@@ -78,10 +78,34 @@ describe('gerar.ts', () => {
       caixa: { x0, y0, x1, y1 },
       operacoes: [],
     })
-    expect(conferirRemocao(comCaixa(0.35, 0.35, 0.65, 0.65), original, derivado)).toBeGreaterThan(0)
-    expect(() => conferirRemocao(comCaixa(0.45, 0.35, 0.65, 0.65), original, derivado)).toThrow('fora da caixa')
-    expect(() => conferirRemocao(comCaixa(0.35, 0.35, 0.65, 0.65), original, original)).toThrow(
+    expect(conferirRemocao(comCaixa(0.39, 0.39, 0.61, 0.61), original, derivado)).toBeGreaterThan(0)
+    expect(() => conferirRemocao(comCaixa(0.45, 0.39, 0.61, 0.61), original, derivado)).toThrow('fora da caixa')
+    expect(() => conferirRemocao(comCaixa(0.39, 0.39, 0.61, 0.61), original, original)).toThrow(
       'não mudou nenhum pixel dentro da caixa',
+    )
+    // A caixa da imagem inteira, ou uma com 5% de sobra em cada borda, não serve de régua.
+    expect(() => conferirRemocao(comCaixa(0, 0, 1, 1), original, derivado)).toThrow('longe da borda da caixa')
+    expect(() => conferirRemocao(comCaixa(0.35, 0.35, 0.65, 0.65), original, derivado)).toThrow('longe da borda')
+  })
+
+  it('o gate da remoção reprova a operação que tira outra parte do desenho dentro da caixa', () => {
+    // Como em ni e sv: uma "legenda" em anel (x e y de 30% a 70%) cerca um "emblema" no meio (de 45% a 55%), e a caixa
+    // justa na legenda contém o emblema. Tirar o emblema no lugar da legenda não muda nada fora da caixa.
+    const svg = (corpo: string): string =>
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="#00f" d="M0 0h100v100H0z"/>${corpo}</svg>`
+    const legenda = '<path fill="#fc0" fill-rule="evenodd" d="M30 30h40v40H30z M35 35v30h30V35z"/>'
+    const emblema = '<path fill="#c00" d="M45 45h10v10H45z"/>'
+    const naLegenda = {
+      codigo: 'xx',
+      texto: 'TESTE',
+      lugar: 'no teste',
+      caixa: { x0: 0.29, y0: 0.29, x1: 0.71, y1: 0.71 },
+      operacoes: [],
+    }
+    const original = svg(legenda + emblema)
+    expect(conferirRemocao(naLegenda, original, svg(emblema))).toBeGreaterThan(0)
+    expect(() => conferirRemocao(naLegenda, original, svg(legenda))).toThrow(
+      'ou a operação tirou outra parte do desenho, menor, dentro dela',
     )
   })
 

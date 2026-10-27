@@ -39,7 +39,7 @@
  *
  * A remoção passa pelo svgo só para ler e reescrever a árvore (nenhum plugin de otimização roda aqui); os elementos que
  * ficam saem com os mesmos atributos. Mesmo original, mesmos bytes. O gate da remoção, em gerar.ts, rasteriza original e
- * derivado e prova que só a região da inscrição mudou.
+ * derivado e confere que a mudança cabe na caixa da curadoria e chega perto de todas as bordas dela.
  */
 import { optimize, type XastChild, type XastElement, type XastParent } from 'svgo'
 import { cabeEm, caixaDe, lerSubcaminhos, semSubcaminhos, type Retangulo } from './caminho-svg.ts'

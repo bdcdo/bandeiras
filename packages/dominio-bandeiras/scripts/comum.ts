@@ -79,7 +79,10 @@ export type Inscricao = {
   traducao?: string
   /** Onde a inscrição fica, em palavras, para entrar numa frase depois de uma vírgula ("na fita sob o escudo"). */
   lugar: string
-  /** Região da imagem fora da qual a remoção não pode mudar nenhum pixel; o gate de gerar.ts confere. */
+  /**
+   * Região da imagem fora da qual a remoção não pode mudar nenhum pixel, justa na inscrição; o gate de gerar.ts confere
+   * as duas coisas.
+   */
   caixa: CaixaNaImagem
   operacoes: OperacaoDeInscricao[]
 }
