@@ -184,9 +184,7 @@ describe('derivação', () => {
       esperados: 1,
     }
     expect(derivar(inscricao([amarelo]), original).svg).not.toContain('M40 20')
-    expect(() => derivar(inscricao([{ ...amarelo, atributos: { fill: null } }]), original)).toThrow(
-      'achou 0 elementos',
-    )
+    expect(() => derivar(inscricao([{ ...amarelo, atributos: { fill: null } }]), original)).toThrow('achou 0 elementos')
   })
 
   it('a operação por fill recusa o original que pinta fill por CSS, e a por class segue valendo', () => {
@@ -194,7 +192,12 @@ describe('derivação', () => {
     const cabeca = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50">'
     const porFolha = `${cabeca}<style><![CDATA[.a{fill:#fc0}]]></style>${FUNDO}<path class="a" d="M40 20h20v10H40z"/></svg>`
     const porStyle = `${cabeca}${FUNDO}<path style="fill:#fc0" d="M40 20h20v10H40z"/></svg>`
-    const preto: OperacaoDeInscricao = { descricao: 'o preto', remover: 'elementos', atributos: { fill: null }, esperados: 1 }
+    const preto: OperacaoDeInscricao = {
+      descricao: 'o preto',
+      remover: 'elementos',
+      atributos: { fill: null },
+      esperados: 1,
+    }
     for (const original of [porFolha, porStyle]) {
       expect(() => derivar(inscricao([preto]), original)).toThrow(
         'xx: operação 1 (elementos): a operação identifica por fill, e o original pinta fill por CSS',
