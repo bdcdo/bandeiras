@@ -620,7 +620,9 @@ describe('contexto da sessão', () => {
 describe('tarefa de grupo', () => {
   // Um grupo de seis membros sem par indiscernível, para três alvos caberem com os outros exibidos. O grupo-2, de b e g,
   // tem lição concluída: o erro de b na tarefa do grupo-1 sobe até ele, que fica fora do grupo e dos alvos da tarefa e
-  // por isso prova que a redução passa a fire/ também os ascendentes de cada alvo.
+  // por isso prova que a redução passa a fire/ também os ascendentes de cada alvo. d tem lição concluída e é exibido sem
+  // ser alvo, e recebe o crédito de distrator; g é exibido sem ser membro do grupo-1, e não recebe nada. A questão de c é
+  // de múltipla escolha, para o fator dela agir num alvo.
   const ESPEC: EspecificacaoDeCatalogo = {
     classes: [1, 1, 1, 1, 1, 1, 2, 2],
     categorias: [1, 1, 2, 2, 1, 2, 1, 2],
@@ -632,24 +634,44 @@ describe('tarefa de grupo', () => {
     ],
     vizinhancas: [],
   }
-  const ctxG = contextoDosCasos({ catalogo: catalogoDe(ESPEC) })
+  // O deltaBruto vigente do erro difere do gravado no evento, que os casos gravam pelos parâmetros padrão: a redução lê
+  // o vigente, e o caso só passa se ela não ler o gravado.
+  const ctxG = contextoDosCasos({
+    catalogo: catalogoDe(ESPEC),
+    parametros: parametrosDosCasos({ 'deltaBruto.errada': -0.8 }),
+  })
   const GRUPO = 'grupo-1' as IdGrupo
   const F = topicoDeGrupo(GRUPO).id
-  const F2 = topicoDeGrupo('grupo-2' as IdGrupo).id
-  const CONCLUIDOS = [...['a', 'b', 'c', 'g'].map(T), F2]
-  const EXIBIDOS = ['a', 'b', 'c', 'd', 'e', 'f'].map(I)
+  const GRUPO_2 = 'grupo-2' as IdGrupo
+  const F2 = topicoDeGrupo(GRUPO_2).id
+  const APRENDIDOS = ['a', 'b', 'c', 'd', 'g']
+  const CONCLUIDOS = [...APRENDIDOS.map(T), F2]
+  const EXIBIDOS = ['a', 'b', 'c', 'd', 'e', 'f', 'g'].map(I)
   const noGrupo = { tipo: 'grupo', grupo: GRUPO, exibidos: EXIBIDOS } as const
   const ACERTOS: Readonly<Record<string, boolean>> = { a: true, b: false, c: true }
+  const questaoDoAlvo = (i: string) =>
+    i === 'c' ? questaoDeEscolha(I(i), [I('a'), I('d'), I('e')], noGrupo) : questaoDigitada(I(i), noGrupo)
+  const direcaoDoAlvo = (i: string): Direcao => (i === 'c' ? 'reconhecer' : 'recordar')
 
-  /** A cena com as lições de a, b, c, g e do grupo-2 e a tarefa de grupo aberta, com os alvos na ordem dada. */
-  function comTarefa(ordem: readonly string[]) {
+  /**
+   * A cena com as lições de a, b, c, d e g, o grupo-2 com lição concluída ou só com a memória que uma tarefa dele deixa,
+   * e a tarefa do grupo-1 aberta, com os alvos na ordem dada.
+   */
+  function comTarefa(ordem: readonly string[], grupo2: 'concluido' | 'so-memoria' = 'concluido') {
     const c = novaCena(ctxG)
-    abrirSessaoNaCena(c, [I('a'), I('b'), I('c'), I('g')])
-    for (const item of ['a', 'b', 'c', 'g']) licaoDeItem(c, I(item))
-    emitirUm(c, { tipo: 'licao-concluida', tarefaId: 'licao-do-grupo-2', topico: F2, acelerada: false })
+    abrirSessaoNaCena(c, APRENDIDOS.map(I))
+    for (const item of APRENDIDOS) licaoDeItem(c, I(item))
+    if (grupo2 === 'concluido') {
+      emitirUm(c, { tipo: 'licao-concluida', tarefaId: 'licao-do-grupo-2', topico: F2, acelerada: false })
+    } else {
+      const questao = questaoDigitada(I('g'), { tipo: 'grupo', grupo: GRUPO_2, exibidos: [I('b'), I('g')] })
+      const doGrupo2 = tarefaRegistrada('revisao-grupo', [F2], [passoDe(questao, { tipo: 'grupo' })])
+      emitirUm(c, { tipo: 'tarefa-iniciada', tarefa: doGrupo2 })
+      emitirUm(c, respostaCerta({ tarefaId: doGrupo2.id, passo: 0, uso: { tipo: 'grupo' }, questao }))
+    }
     c.agora += DIA
     abrirSessaoNaCena(c)
-    const questoes = ordem.map((i) => questaoDigitada(I(i), noGrupo))
+    const questoes = ordem.map(questaoDoAlvo)
     const tarefa = tarefaRegistrada(
       'revisao-grupo',
       [F],
@@ -665,17 +687,22 @@ describe('tarefa de grupo', () => {
     return { c, antes: c.estado.memorias, responder }
   }
 
-  function esperado(antes: Memorias, alvos: readonly string[], agora: Instante): Memorias {
+  function esperado(
+    antes: Memorias,
+    alvos: readonly string[],
+    agora: Instante,
+    elegiveis: readonly IdTopico[] = CONCLUIDOS,
+  ): Memorias {
     const comF = new Map(antes).set(F, estadoMemoriaInicial(acuraciaInicial(F, ctxG.catalogo, antes, ctxG.parametros)))
     const feita = aplicarTarefaDeGrupo(propagacao(ctxG, agora), comF, {
       grupo: F,
       respostas: alvos.map((i) => ({
         alvo: T(i),
-        direcao: 'recordar',
+        direcao: direcaoDoAlvo(i),
         deltaBruto: ctxG.parametros.deltaBruto[ACERTOS[i] === true ? 'perfeita' : 'errada'],
       })),
       exibidos: new Set(EXIBIDOS.map((i) => topicoDeItem(i).id)),
-      elegiveis: new Set(CONCLUIDOS),
+      elegiveis: new Set(elegiveis),
     })
     return desembrulhar(feita).memorias
   }
@@ -683,11 +710,15 @@ describe('tarefa de grupo', () => {
   it('o grupo recebe uma atualização por tarefa, no fechamento, com as respostas todas', () => {
     const { c, antes, responder } = comTarefa(['a', 'b', 'c'])
     responder(0)
-    responder(1)
+    const erro = responder(1)
+    if (erro.tipo !== 'resposta-registrada' || erro.avaliacao === undefined) throw new Error('avaliação esperada')
+    expect(erro.avaliacao.deltaBruto).not.toBe(ctxG.parametros.deltaBruto.errada)
     expect(c.estado.memorias).toBe(antes)
     const fim = responder(2)
     expect([...c.estado.memorias]).toStrictEqual([...esperado(antes, ['a', 'b', 'c'], fim.em)])
     expect(c.estado.memorias.get(F2)).not.toBe(antes.get(F2))
+    expect(c.estado.memorias.get(T('d'))).not.toStrictEqual(antes.get(T('d')))
+    expect(c.estado.memorias.get(T('g'))).toBe(antes.get(T('g')))
     expect(c.estado.tarefa).toBeUndefined()
   })
 
@@ -705,6 +736,50 @@ describe('tarefa de grupo', () => {
     c.agora += HORA
     emitirUm(c, { tipo: 'sessao-encerrada', motivo: 'usuario' })
     expect([...c.estado.memorias]).toStrictEqual([...esperado(antes, ['a', 'b'], segunda.em)])
+  })
+
+  it('o erro de b não penaliza o grupo-2 que tem memória e não tem lição concluída', () => {
+    const { c, antes, responder } = comTarefa(['a', 'b', 'c'], 'so-memoria')
+    expect(antes.has(F2)).toBe(true)
+    expect(statusDaLicao(c.estado, F2).status).not.toBe('concluida')
+    responder(0)
+    responder(1)
+    const fim = responder(2)
+    expect(c.estado.memorias.get(F2)).toBe(antes.get(F2))
+    expect([...c.estado.memorias]).toStrictEqual([...esperado(antes, ['a', 'b', 'c'], fim.em, APRENDIDOS.map(T))])
+  })
+
+  // b é membro do grupo-1 e do grupo-2. Depois da tarefa, o grupo-1 tem memória sem lição concluída, e o grupo-2 tem as
+  // duas: o erro isolado de b penaliza só o grupo-2.
+  it('a revisão errada de b penaliza só o grupo de lição concluída', () => {
+    const { c, responder } = comTarefa(['a', 'b', 'c'])
+    for (const passo of [0, 1, 2]) responder(passo)
+    const antes = c.estado.memorias
+    expect(antes.has(F)).toBe(true)
+    c.agora += HORA
+    const questao = questaoDigitada(I('b'))
+    const erro = emitirUm(c, respostaErrada({ tarefaId: 'avulsa', passo: 0, uso: REVISAO, questao }))
+    const isolada = aplicarRespostaIsolada(propagacao(ctxG, erro.em), antes, {
+      alvo: T('b'),
+      direcao: 'recordar',
+      deltaBruto: ctxG.parametros.deltaBruto.errada,
+      elegiveis: new Set(CONCLUIDOS),
+    })
+    expect(c.estado.memorias.get(F)).toBe(antes.get(F))
+    expect(c.estado.memorias.get(F2)).not.toStrictEqual(antes.get(F2))
+    expect([...c.estado.memorias]).toStrictEqual([...isolada.memorias])
+  })
+
+  // A tarefa de grupo já deu ao grupo a atualização dele; a lição do grupo concluída depois só grava o status.
+  it('a lição do grupo concluída depois da tarefa deixa a memória do grupo como a tarefa deixou', () => {
+    const { c, responder } = comTarefa(['a', 'b', 'c'])
+    for (const passo of [0, 1, 2]) responder(passo)
+    const depoisDaTarefa = c.estado.memorias.get(F)
+    expect(depoisDaTarefa).toBeDefined()
+    c.agora += HORA
+    emitirUm(c, { tipo: 'licao-concluida', tarefaId: 'licao-do-grupo-1', topico: F, acelerada: false })
+    expect(statusDaLicao(c.estado, F).status).toBe('concluida')
+    expect(c.estado.memorias.get(F)).toStrictEqual(depoisDaTarefa)
   })
 })
 
