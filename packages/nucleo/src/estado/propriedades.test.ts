@@ -110,6 +110,14 @@ function continuar(
 
 const comPassos = (roteiro: Roteiro, passos: readonly PassoDoRoteiro[]): Roteiro => ({ ...roteiro, passos })
 
+/** Os passos sem o reinício do perfil; o passo que só tinha o reinício some. */
+function semReinicio(passos: readonly PassoDoRoteiro[]): PassoDoRoteiro[] {
+  return passos.flatMap((p): PassoDoRoteiro[] => {
+    const [primeiro, ...resto] = p.corpos.filter((c) => c.tipo !== 'perfil-reiniciado')
+    return primeiro === undefined ? [] : [{ ...p, corpos: [primeiro, ...resto] }]
+  })
+}
+
 describe('o estado vivo e o reconstruído', () => {
   it('são iguais com o log embaralhado e com cópias, e o roteiro não absorve nada', () => {
     const vistos = new Set<string>()
@@ -150,12 +158,7 @@ describe('o estado vivo e o reconstruído', () => {
         const prefixo = reduzirRoteiro(ctx, comPassos(r1, r1.passos.slice(0, k)))
         const a = continuar(prefixo.estado, r1.passos.slice(k))
         // O outro aparelho continua com os passos de outro roteiro, sem o reinício dele, trinta dias à frente.
-        const semReinicio = r2.passos.flatMap((p): PassoDoRoteiro[] => {
-          const corpos = p.corpos.filter((c) => c.tipo !== 'perfil-reiniciado')
-          const [primeiro, ...resto] = corpos
-          return primeiro === undefined ? [] : [{ ...p, corpos: [primeiro, ...resto] }]
-        })
-        const b = continuar(prefixo.estado, semReinicio, (p) => ({
+        const b = continuar(prefixo.estado, semReinicio(r2.passos), (p) => ({
           dispositivo: 'aparelho-c',
           agora: (p.origem.agora + 30 * DIA) as Instante,
           fusoMinutos: -540,
@@ -168,6 +171,44 @@ describe('o estado vivo e o reconstruído', () => {
         expect(conferirInvariantes(ctx, r.valor.estado)).toEqual([])
       }),
       { numRuns: 40 },
+    )
+  })
+
+  it('dois aparelhos que começaram sem conta, unidos: a época abre no perfil criado mais antigo e guarda os dois', () => {
+    fc.assert(
+      fc.property(escolhas, escolhas, fc.boolean(), fc.nat(), (e1, e2, outroAntes, semente) => {
+        const r1 = gerarRoteiro(catalogo, e1)
+        const r2 = gerarRoteiro(catalogo, e2)
+        // Sem os reinícios, a época só pode abrir num dos dois perfis criados.
+        const passosA = semReinicio(r1.passos)
+        const passosB = semReinicio(r2.passos)
+        const a = reduzirRoteiro(ctx, comPassos(r1, passosA))
+        // O outro aparelho cria o próprio perfil, com outra semente, e termina um dia antes do primeiro começar ou começa
+        // um dia depois de ele terminar; os dois logs não se entremeiam, e o perfil mais antigo é sabido de antemão.
+        const fim = (inicio: number, passos: readonly PassoDoRoteiro[]): number =>
+          Math.max(inicio, ...passos.map((p) => p.origem.agora))
+        const deslocamento = outroAntes
+          ? -(fim(r2.inicio.origem.agora, passosB) - r2.inicio.origem.agora + DIA)
+          : fim(r1.inicio.origem.agora, passosA) - r1.inicio.origem.agora + DIA
+        const mover = (o: PassoDoRoteiro['origem']): PassoDoRoteiro['origem'] => ({
+          dispositivo: 'aparelho-b',
+          agora: (o.agora + deslocamento) as Instante,
+          fusoMinutos: -540,
+        })
+        const sementeDoOutro = `${r2.inicio.corpo.semente}-outro`
+        const b = reduzirRoteiro(ctx, {
+          inicio: { corpo: { ...r2.inicio.corpo, semente: sementeDoOutro }, origem: mover(r2.inicio.origem) },
+          passos: passosB.map((p) => ({ ...p, origem: mover(p.origem) })),
+          inicioDaParteLivre: r2.inicioDaParteLivre,
+        })
+        const { estado, relato } = desembrulhar(reconstruir(ctx, embaralhado([...a.eventos, ...b.eventos], semente)))
+        expect(estado.semente).toBe(outroAntes ? sementeDoOutro : r1.inicio.corpo.semente)
+        expect(estado.nEventos).toBe(a.eventos.length + b.eventos.length)
+        expect(relato.anterioresAEpoca).toBe(0)
+        expect(relato.absorvidos['perfil-criado-na-epoca']).toBe(1)
+        expect(conferirInvariantes(ctx, estado)).toEqual([])
+      }),
+      { numRuns: 30 },
     )
   })
 
