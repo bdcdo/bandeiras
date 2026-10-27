@@ -1,5 +1,4 @@
 import { erro, ok, type Resultado } from '../base/resultado'
-import { serializarCanonico } from '../base/serializacao'
 import { compararEventos, VERSAO_MODELO, type Evento, type EventoDoTipo } from '../eventos'
 import { ehTipoDeEvento, lerEnvelope, lerEventoSemId, type EnvelopeLido } from '../eventos/ler-evento'
 import { aplicarNoRascunho } from './aplicar'
@@ -26,9 +25,54 @@ function falha(
 }
 
 /**
- * Uma entrada por id. Cópias do mesmo conteúdo canônico contam como duplicadas; um id com mais de um conteúdo conta uma
- * vez em `divergentes` e fica com o de menor serialização canônica, para o resultado não depender da ordem de entrada
- * nem no caso corrompido. As duas contagens saem do conjunto de conteúdos de cada id, e por isso também não dependem da
+ * Serialização das cópias de um id, para compará-las. Como a canônica, ordena as chaves, e a cópia que voltou do
+ * servidor com as chaves em outra ordem é a mesma. Ao contrário dela, não junta valores que a leitura distingue:
+ * `undefined` numa lista ou como valor de chave, buraco de lista, NaN, ±Infinity e -0 têm marca própria, e o objeto que
+ * não é simples leva a etiqueta da classe. Pela canônica, uma cópia com `[undefined]` e outra com `[]` dão o mesmo
+ * texto, só a segunda se lê, e ficaria a que chegou primeiro: a reconstrução daria certo ou erro conforme a ordem de
+ * entrada. Esses valores não sobrevivem a JSON, mas chegam por clone estruturado do armazenamento local ou por objeto
+ * montado em memória. A canônica continua sendo a do id, que nunca vê esses valores, porque `criarEvento` calcula o id
+ * sobre a saída do leitor.
+ */
+function serializarEstrito(valor: unknown): string {
+  switch (typeof valor) {
+    case 'undefined':
+      return 'u'
+    case 'number':
+      if (Object.is(valor, -0)) return '-0'
+      return Number.isFinite(valor) ? JSON.stringify(valor) : String(valor)
+    case 'string':
+    case 'boolean':
+      return JSON.stringify(valor)
+    case 'bigint':
+      return `${String(valor)}n`
+    case 'object': {
+      if (valor === null) return 'null'
+      if (Array.isArray(valor)) {
+        const lista: readonly unknown[] = valor
+        const partes = Array.from({ length: lista.length }, (_, k) =>
+          Object.hasOwn(lista, k) ? serializarEstrito(lista[k]) : 'h',
+        )
+        return `[${partes.join(',')}]`
+      }
+      const prototipo: unknown = Object.getPrototypeOf(valor)
+      const classe = prototipo === Object.prototype || prototipo === null ? '' : Object.prototype.toString.call(valor)
+      const registro = valor as Readonly<Record<string, unknown>>
+      const partes = Object.keys(registro)
+        .sort()
+        .map((chave) => `${JSON.stringify(chave)}:${serializarEstrito(registro[chave])}`)
+      return `${classe}{${partes.join(',')}}`
+    }
+    default:
+      return `<${typeof valor}>`
+  }
+}
+
+/**
+ * Uma entrada por id. Cópias do mesmo conteúdo contam como duplicadas; um id com mais de um conteúdo conta uma vez em
+ * `divergentes` e fica com o de menor serialização, para o resultado não depender da ordem de entrada nem no caso
+ * corrompido. O conteúdo de cada cópia é o de `serializarEstrito`, e por isso duas cópias que a leitura distingue nunca
+ * caem no mesmo conteúdo. As duas contagens saem do conjunto de conteúdos de cada id, e por isso também não dependem da
  * ordem. Só os ids repetidos são serializados.
  */
 function deduplicar(
@@ -45,10 +89,10 @@ function deduplicar(
     }
     let conteudos = repetidos.get(id)
     if (conteudos === undefined) {
-      conteudos = new Map([[serializarCanonico(primeira.valor), primeira]])
+      conteudos = new Map([[serializarEstrito(primeira.valor), primeira]])
       repetidos.set(id, conteudos)
     }
-    const texto = serializarCanonico(entrada.valor)
+    const texto = serializarEstrito(entrada.valor)
     if (!conteudos.has(texto)) conteudos.set(texto, entrada)
   }
   let duplicados = entradas.length - porId.size

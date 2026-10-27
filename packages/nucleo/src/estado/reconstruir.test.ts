@@ -172,6 +172,21 @@ describe('reconstruir: deduplicação', () => {
     expect(instantaneoDoEstado(segundo.estado)).toStrictEqual(instantaneoDoEstado(primeiro.estado))
     expect(primeiro.estado.metaDiariaXp).toBe(20)
   })
+
+  it('cópias que só a leitura distingue contam como divergentes, e a que se lê vence nas duas ordens', () => {
+    // `[undefined]` e `[]` dão o mesmo texto canônico; pela canônica ficaria a cópia que chegou primeiro, e o log com a
+    // ilegível na frente daria erro. O valor chega assim por clone estruturado, que não passa por JSON.
+    const d = novaCena(ctx)
+    const sessao = abrirSessaoNaCena(d)
+    licaoDeItem(d, I('k'))
+    const ilegivel = { ...sessao, novasPrevistas: [undefined] }
+    const depois = desembrulhar(reconstruir(ctx, [...d.eventos, ilegivel]))
+    const antes = desembrulhar(reconstruir(ctx, [ilegivel, ...d.eventos]))
+    expect(antes.relato).toStrictEqual(depois.relato)
+    expect([depois.relato.duplicados, depois.relato.divergentes]).toStrictEqual([0, 1])
+    expect(instantaneoDoEstado(antes.estado)).toStrictEqual(instantaneoDoEstado(d.estado))
+    expect(instantaneoDoEstado(depois.estado)).toStrictEqual(instantaneoDoEstado(d.estado))
+  })
 })
 
 describe('reconstruir: época e união', () => {
