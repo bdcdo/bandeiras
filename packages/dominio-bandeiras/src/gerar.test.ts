@@ -88,7 +88,7 @@ describe('gerar.ts', () => {
     expect(() => conferirRemocao(comCaixa(0.35, 0.35, 0.65, 0.65), original, derivado)).toThrow('longe da borda')
   })
 
-  it('o gate da remoção reprova a operação que tira outra parte do desenho dentro da caixa', () => {
+  it('o gate da remoção reprova a operação que tira, no lugar da inscrição, uma parte menor do desenho dentro da caixa', () => {
     // Como em ni e sv: uma "legenda" em anel (x e y de 30% a 70%) cerca um "emblema" no meio (de 45% a 55%), e a caixa
     // justa na legenda contém o emblema. Tirar o emblema no lugar da legenda não muda nada fora da caixa.
     const svg = (corpo: string): string =>
