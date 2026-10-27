@@ -10,8 +10,6 @@ import type { ErroDeReconstrucao, MotivoDeAbsorcao, Reconstrucao } from './tipos
 type Entrada = Readonly<{ indice: number; envelope: EnvelopeLido; valor: unknown }>
 type Ocorrencia = ErroDeReconstrucao['ocorrencias'][number]
 
-const ehPerfil = (tipo: string): boolean => tipo === 'perfil-criado' || tipo === 'perfil-reiniciado'
-
 /** O id do valor, quando ele é um objeto com `id` de texto, para a ocorrência apontar o evento mesmo malformado. */
 function idLegivel(valor: unknown): Readonly<{ id?: string }> {
   if (typeof valor !== 'object' || valor === null) return {}
@@ -108,7 +106,7 @@ export function reconstruir(
   const futuras = epoca.flatMap(({ indice, envelope, valor }): Ocorrencia[] => {
     const { id, tipo } = envelope
     if (!ehTipoDeEvento(tipo)) return [{ indice, id, motivo: `tipo que esta versão não conhece: '${tipo}'` }]
-    if (!ehPerfil(tipo)) return []
+    if (tipo !== 'perfil-criado' && tipo !== 'perfil-reiniciado') return []
     const versao = (valor as Readonly<Record<string, unknown>>)['versaoModelo']
     return typeof versao === 'number' && versao > VERSAO_MODELO
       ? [{ indice, id, motivo: `perfil de versão ${String(versao)}, acima da ${String(VERSAO_MODELO)} desta` }]

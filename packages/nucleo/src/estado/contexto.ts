@@ -56,7 +56,7 @@ export function criarContextoDeReducao(
   }
   const alcances = new Map<IdTopico, readonly IdTopico[]>()
   for (const t of grafo.valor.topicos.keys()) {
-    alcances.set(t, [...new Set([t, ...fechoAscendente(grafo.valor, t), ...fechoDescendente(grafo.valor, t)])])
+    alcances.set(t, [t, ...fechoAscendente(grafo.valor, t), ...fechoDescendente(grafo.valor, t)])
   }
   return ok({
     catalogo,

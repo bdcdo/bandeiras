@@ -59,13 +59,13 @@ export function abrirTarefa(r: Rascunho, e: EventoDoTipo<'tarefa-iniciada'>): vo
 /** Fecha a tarefa de passos fixos que acabou de receber a resposta ao último passo de questão. */
 export function fecharSeCompleta(ctx: ContextoDeReducao, r: Rascunho, e: Evento, absorver: Absorver): void {
   const aberta = r.tarefa
-  if (aberta === undefined || aberta.tarefa.passos.length === 0 || faltaResposta(aberta)) return
+  if (aberta === undefined || faltaResposta(aberta)) return
   fecharTarefa(ctx, r, e, { concluida: true, acelerada: false }, absorver)
 }
 
 /** Interrompe a tarefa aberta, se houver: fecha sem concluir, no evento que a interrompe. */
 export function interromperTarefa(ctx: ContextoDeReducao, r: Rascunho, e: Evento, absorver: Absorver): void {
-  if (r.tarefa !== undefined) fecharTarefa(ctx, r, e, { concluida: false, acelerada: false }, absorver)
+  fecharTarefa(ctx, r, e, { concluida: false, acelerada: false }, absorver)
 }
 
 /**

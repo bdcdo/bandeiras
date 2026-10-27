@@ -583,16 +583,12 @@ const questaoIsolada = (r: Roteirista, pedido: PedidoDeTarefaFixa, limiteMs?: Mi
   uso: { tipo: pedido.tipo },
 })
 
-function revisao(r: Roteirista, item: IdItem, limiteMs?: Milis, erra = false): void {
-  tarefaFixa(
-    r,
-    {
-      tipo: 'revisao',
-      alvos: [topicoDeItem(item).id],
-      passos: [questaoIsolada(r, { tipo: 'revisao', item }, limiteMs)],
-    },
-    erra ? new Set([0]) : new Set(),
-  )
+function revisao(r: Roteirista, item: IdItem, limiteMs?: Milis): void {
+  tarefaFixa(r, {
+    tipo: 'revisao',
+    alvos: [topicoDeItem(item).id],
+    passos: [questaoIsolada(r, { tipo: 'revisao', item }, limiteMs)],
+  })
 }
 
 function quiz(r: Roteirista, itens: readonly IdItem[], erradas: ReadonlySet<number>): void {
@@ -630,10 +626,10 @@ function remediacao(r: Roteirista, x: IdItem, y: IdItem): void {
 /**
  * Uma tarefa de grupo sobre os membros aprendidos de `grupo`, com as questões de `gerarQuestoesDeGrupo`: até dois alvos,
  * sem os dois de um par. `tipo` é `licao` na lição de família, seguida da lição concluída do grupo. Interrompida, a
- * tarefa para depois da primeira resposta e a sessão se encerra. Devolve falso quando a tarefa não sai, porque o grupo
- * não rende exibidos ou alvos.
+ * tarefa para depois da primeira resposta e a sessão se encerra. A tarefa não sai quando o grupo não rende exibidos ou
+ * alvos.
  */
-function tarefaDeGrupo(r: Roteirista, grupo: IdGrupo, tipo: 'licao' | 'revisao-grupo', interromper: boolean): boolean {
+function tarefaDeGrupo(r: Roteirista, grupo: IdGrupo, tipo: 'licao' | 'revisao-grupo', interromper: boolean): void {
   const membros = r.catalogo.grupos.get(grupo)?.membros ?? []
   const alvos: IdItem[] = []
   for (const m of membros) {
@@ -642,7 +638,7 @@ function tarefaDeGrupo(r: Roteirista, grupo: IdGrupo, tipo: 'licao' | 'revisao-g
     }
   }
   const contexto = r.estado.sessao?.contexto
-  if (contexto === undefined || alvos.length === 0 || (interromper && alvos.length < 2)) return false
+  if (contexto === undefined || alvos.length === 0 || (interromper && alvos.length < 2)) return
   const questoes = gerarQuestoesDeGrupo(
     grupo,
     alvos,
@@ -652,7 +648,7 @@ function tarefaDeGrupo(r: Roteirista, grupo: IdGrupo, tipo: 'licao' | 'revisao-g
     sorteioDoEstado(r.estado, 'roteiro'),
     parametros,
   )
-  if (!questoes.ok) return false
+  if (!questoes.ok) return
   const uso = { tipo: 'grupo' } as const
   const topico = topicoDeGrupo(grupo).id
   const tarefa = registrarTarefa({
@@ -672,10 +668,9 @@ function tarefaDeGrupo(r: Roteirista, grupo: IdGrupo, tipo: 'licao' | 'revisao-g
     if (interromper) {
       proximoDia(r, false)
       abrirSessao(r)
-      return true
+      return
     }
   }
-  return true
 }
 
 /**
@@ -735,14 +730,13 @@ function parteObrigatoria(r: Roteirista): void {
   emitirPasso(r, [{ tipo: 'meta-diaria-alterada', xp: 10 }])
   if (d !== undefined) licao(r, d, 'normal')
   if (e !== undefined) licao(r, e, 'normal')
-  const [x, y, z] = [c, d, e]
-  if (x !== undefined && y !== undefined && z !== undefined) {
+  if (c !== undefined && d !== undefined && e !== undefined) {
     // O erro no primeiro passo digita o rótulo de outro aprendido: a confusão do par que a remediação trata.
-    quiz(r, [x, y, z], new Set([0]))
-    const confundido = outroAprendido(r, x)
-    if (confundido !== undefined) remediacao(r, x, confundido)
-    revisao(r, x, 8000 as Milis)
-    revisao(r, y)
+    quiz(r, [c, d, e], new Set([0]))
+    const confundido = outroAprendido(r, c)
+    if (confundido !== undefined) remediacao(r, c, confundido)
+    revisao(r, c, 8000 as Milis)
+    revisao(r, d)
   }
   proximoDia(r, false)
 

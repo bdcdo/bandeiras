@@ -124,17 +124,14 @@ type Julgamento = Readonly<{ tarefaId: string; passo: number; uso: UsoDeQuestao;
 /** O deltaBruto que `avaliarResposta` gravaria com os parâmetros padrão; o redutor lê o dos parâmetros vigentes. */
 const deltaGravado = (qualidade: QualidadeDeResposta): number => PARAMETROS_PADRAO.deltaBruto[qualidade]
 
-/** Resposta certa, com a latência dada e a qualidade escolhida pelo caso. */
-export function respostaCerta(
-  j: Julgamento,
-  qualidade: QualidadeDeAcerto = 'perfeita',
-  latencia: number = 2000,
-): CorpoDeResposta {
+/** Resposta certa, com dois segundos de latência e a qualidade escolhida pelo caso. */
+export function respostaCerta(j: Julgamento, qualidade: QualidadeDeAcerto = 'perfeita'): CorpoDeResposta {
   const { questao } = j
+  const latencia = 2000 as Milis
   const resposta =
     questao.formato.tipo === 'rotulo-digitado'
-      ? ({ tipo: 'texto', texto: questao.itemAlvo, latencia: latencia as Milis } as const)
-      : ({ tipo: 'escolha', escolhidas: [questao.itemAlvo], latencia: latencia as Milis } as const)
+      ? ({ tipo: 'texto', texto: questao.itemAlvo, latencia } as const)
+      : ({ tipo: 'escolha', escolhidas: [questao.itemAlvo], latencia } as const)
   const direcao = direcaoDoFormato(questao.formato.tipo)
   return {
     tipo: 'resposta-registrada',
