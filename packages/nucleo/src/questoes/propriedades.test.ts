@@ -364,6 +364,11 @@ describe('distratores contra o maior conjunto sem par, contado por força bruta'
   // casos em que a conta do sorteio é delicada: o grafo em que nenhum candidato tem um parceiro só, que obriga
   // `cabemJuntos` a ramificar, e o candidato barrado que o sorteio ainda não viu, que a conferência antes de cada escolha
   // não pode contar como livre. Com até oito candidatos, a força bruta passa por no máximo 256 subconjuntos.
+  //
+  // São 400 execuções, e não as 100 do padrão: tirando qualquer um dos dois guardas de `escolherDistratores`, o primeiro
+  // contraexemplo apareceu entre a 1ª e a 62ª execução em seis rodadas de cada, e com 100 a folga seria pequena. Em cinco
+  // rodadas, de 70 a 94 dos 400 grafos não tinham candidato de parceiro único; o piso da contagem fica perto de um terço
+  // do menor.
   const paresPossiveis = (m: number): [number, number][] =>
     Array.from({ length: m }, (_, x) => x + 1).flatMap((x) =>
       Array.from({ length: m - x }, (_, k): [number, number] => [x, x + 1 + k]),
