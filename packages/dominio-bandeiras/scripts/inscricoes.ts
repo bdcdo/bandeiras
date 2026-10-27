@@ -37,8 +37,8 @@
  *   está no mesmo path composto que outras formas; `esperados` é quantos subcaminhos. caminho-svg.ts reescreve o
  *   subcaminho seguinte a um trecho removido, para um `m` relativo não deslocar o resto do desenho.
  *
- * Só entram na busca os elementos desenhados: o que está dentro de defs, clipPath, mask, symbol, pattern, marker ou de um
- * gradiente é molde ou recorte, e tirar um deles mudaria outra parte da imagem.
+ * Só entram na busca os elementos desenhados: o conteúdo dos elementos de NAO_DESENHADOS é molde, recorte, preenchimento
+ * ou filtro usado por referência, e tirar um deles mudaria outra parte da imagem.
  *
  * A remoção passa pelo svgo só para ler e reescrever a árvore (nenhum plugin de otimização roda aqui); os elementos que
  * ficam saem com os mesmos atributos. Mesmo original, mesmos bytes. O gate da remoção, em gerar.ts, rasteriza original e
@@ -48,7 +48,7 @@ import { optimize, type XastChild, type XastElement, type XastParent } from 'svg
 import { cabeEm, caixaDe, lerSubcaminhos, semSubcaminhos, type Retangulo } from './caminho-svg.ts'
 import type { Inscricao, OperacaoDeInscricao } from './comum.ts'
 
-/** Elementos cujo conteúdo não é desenhado onde está, mas usado por referência (molde, recorte, preenchimento). */
+/** Elementos cujo conteúdo não é desenhado onde está, mas usado por referência (molde, recorte, preenchimento, filtro). */
 const NAO_DESENHADOS = new Set([
   'defs',
   'clipPath',
@@ -191,7 +191,7 @@ function temOsAtributos(desenhado: Desenhado, atributos: Record<string, string |
   )
 }
 
-/** O que uma operação achou e tirou, para o registro da geração e para a sonda de conferência. */
+/** O que cada operação achou e tirou; os testes conferem a contagem por aqui. */
 export type Remocao = { operacao: number; elementos: number; subcaminhos: number }
 
 function aplicar(raiz: XastElement, operacao: OperacaoDeInscricao): Omit<Remocao, 'operacao'> {
