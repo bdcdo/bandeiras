@@ -100,6 +100,13 @@ describe('xpDaTarefa: casos fixos', () => {
     expect(xp(tarefa('quiz', 4), av('cccx'))).toBeCloseTo(0.72, 10)
   })
 
+  it('tarefa perfeita depois de três chutes vale o XP perfeito: os chutes antigos não são cobrados de novo', () => {
+    // Lição: 2,4 x 1,3 = 3,12. Revisão de cinco questões: 1,0 x 1,3 = 1,3.
+    const tresChutes: QualidadeDeResposta[] = ['chute', 'chute', 'chute']
+    expect(xp(tarefa('licao', 3), av('ccc'), tresChutes)).toBeCloseTo(3.12, 10)
+    expect(xp(tarefa('revisao', 5), av('ccccc'), tresChutes)).toBeCloseTo(1.3, 10)
+  })
+
   it('diagnóstico e tarefa sem resposta valem 0, e remediação vale como revisão', () => {
     expect(xp(tarefa('diagnostico', 10), av('cccccccccc'))).toBe(0)
     expect(xp(tarefa('revisao', 1), [])).toBe(0)

@@ -21,6 +21,13 @@ describe('chuteSistematico', () => {
     expect(chuteSistematico(q('pe'), q('eeeeeeee'), P)).toBe(false)
   })
 
+  it('tarefa sem chute nenhum não é chute sistemático, por mais chutes que venham antes', () => {
+    expect(chuteSistematico(q('ppp'), q('ccc'), P)).toBe(false)
+    expect(chuteSistematico(q('pe'), q('cccccccc'), P)).toBe(false)
+    // Um chute na tarefa basta para a janela voltar a contar.
+    expect(chuteSistematico(q('pc'), q('cc'), P)).toBe(true)
+  })
+
   it('segue os limiares e a janela ajustados', () => {
     // Três na tarefa, quatro em seis, e não os dois, três e dez do padrão.
     const p = desembrulhar(
