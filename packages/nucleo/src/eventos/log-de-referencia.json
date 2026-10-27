@@ -1,0 +1,789 @@
+[
+  {
+    "id": "63bf822c8c2b0f4b",
+    "em": 1760000045000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "perfil-reiniciado",
+    "semente": "42",
+    "catalogoHash": "a30bba52f155f53d",
+    "versaoModelo": 1
+  },
+  {
+    "id": "62be7a9376aa896c",
+    "em": 1760000090000,
+    "dispositivo": "aparelho-b",
+    "fusoMinutos": -60,
+    "tipo": "perfil-criado",
+    "semente": "43",
+    "catalogoHash": "a30bba52f155f53d",
+    "versaoModelo": 1
+  },
+  {
+    "id": "25494b1e44d49ba5",
+    "em": 1760000135000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "diagnostico-iniciado"
+  },
+  {
+    "id": "74de2dec38a54ab8",
+    "em": 1760000180000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "25494b1e44d49ba5",
+    "passo": 0,
+    "uso": {
+      "tipo": "diagnostico"
+    },
+    "questao": {
+      "id": "c29511ca91ed240e",
+      "alvo": "item:a",
+      "itemAlvo": "a",
+      "formato": {
+        "tipo": "associacao",
+        "linhas": [["a", "b"], ["c"], ["d"]],
+        "rotulos": ["a", "b", "c", "d"]
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "associacao",
+      "ligacoes": [
+        {
+          "linha": 0,
+          "rotulo": "b",
+          "latencia": 2400
+        },
+        {
+          "linha": 2,
+          "rotulo": null,
+          "latencia": 1300
+        },
+        {
+          "linha": 1,
+          "rotulo": "c",
+          "latencia": 900
+        }
+      ]
+    }
+  },
+  {
+    "id": "78022abbcca49ad2",
+    "em": 1760000225000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "25494b1e44d49ba5",
+    "passo": 1,
+    "uso": {
+      "tipo": "diagnostico"
+    },
+    "questao": {
+      "id": "b6c14ef2598f3a11",
+      "alvo": "item:e",
+      "itemAlvo": "e",
+      "formato": {
+        "tipo": "rotulo-digitado"
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "texto",
+      "texto": "Item E",
+      "latencia": 3100
+    },
+    "avaliacao": {
+      "correta": true,
+      "qualidade": "perfeita",
+      "direcao": "recordar",
+      "deltaBruto": 1
+    }
+  },
+  {
+    "id": "f1f0b218c2f5afa4",
+    "em": 1760000270000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "diagnostico-encerrado",
+    "motivo": "concluido"
+  },
+  {
+    "id": "281026624ccc62a8",
+    "em": 1760000315000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "diagnostico-pulado"
+  },
+  {
+    "id": "b1560fe6daf46bd4",
+    "em": 1760000360000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "sessao-iniciada",
+    "orcamentoMin": 15,
+    "novasPrevistas": ["g", "h"]
+  },
+  {
+    "id": "76572dc974e262e0",
+    "em": 1760000405000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "tarefa-iniciada",
+    "tarefa": {
+      "id": "939d094b82418865",
+      "tipo": "licao",
+      "alvos": ["item:g"],
+      "passos": []
+    }
+  },
+  {
+    "id": "860ba683e250734a",
+    "em": 1760000450000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "apresentacao-vista",
+    "tarefaId": "939d094b82418865",
+    "itens": ["g"]
+  },
+  {
+    "id": "d7d9302a681dbca3",
+    "em": 1760000495000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "939d094b82418865",
+    "passo": 0,
+    "uso": {
+      "tipo": "licao",
+      "kp": 1
+    },
+    "questao": {
+      "id": "2647a143e6b34027",
+      "alvo": "item:g",
+      "itemAlvo": "g",
+      "formato": {
+        "tipo": "estimulo-para-rotulo",
+        "opcoes": ["e", "g", "k", "i"]
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "escolha",
+      "escolhidas": ["e"],
+      "latencia": 420
+    },
+    "avaliacao": {
+      "correta": false,
+      "qualidade": "chute",
+      "direcao": "reconhecer",
+      "deltaBruto": -1,
+      "confundidaCom": "e"
+    }
+  },
+  {
+    "id": "231d1095c42459d0",
+    "em": 1760000540000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "939d094b82418865",
+    "passo": 1,
+    "uso": {
+      "tipo": "licao",
+      "kp": 2
+    },
+    "questao": {
+      "id": "06812cbb11d84e78",
+      "alvo": "item:g",
+      "itemAlvo": "g",
+      "formato": {
+        "tipo": "rotulo-para-estimulo",
+        "opcoes": ["j", "l", "g", "f"]
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "escolha",
+      "escolhidas": ["g"],
+      "latencia": 1800
+    },
+    "avaliacao": {
+      "correta": true,
+      "qualidade": "perfeita",
+      "direcao": "produzir",
+      "deltaBruto": 1
+    }
+  },
+  {
+    "id": "cca6e188cba221c2",
+    "em": 1760000585000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "939d094b82418865",
+    "passo": 2,
+    "uso": {
+      "tipo": "licao",
+      "kp": 3
+    },
+    "questao": {
+      "id": "63635a18fa4c5e7f",
+      "alvo": "item:g",
+      "itemAlvo": "g",
+      "formato": {
+        "tipo": "rotulo-digitado"
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "texto",
+      "texto": "item g",
+      "latencia": 2600
+    },
+    "avaliacao": {
+      "correta": true,
+      "qualidade": "perfeita",
+      "direcao": "recordar",
+      "deltaBruto": 1
+    }
+  },
+  {
+    "id": "5d570d184530536c",
+    "em": 1760000630000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "licao-concluida",
+    "tarefaId": "939d094b82418865",
+    "topico": "item:g",
+    "acelerada": false
+  },
+  {
+    "id": "c1549a2ed13965bb",
+    "em": 1760000675000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "tarefa-iniciada",
+    "tarefa": {
+      "id": "2d59d11c96b685f0",
+      "tipo": "licao",
+      "alvos": ["item:h"],
+      "passos": []
+    }
+  },
+  {
+    "id": "c0b93f4a7e750943",
+    "em": 1760000720000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "2d59d11c96b685f0",
+    "passo": 0,
+    "uso": {
+      "tipo": "sondagem",
+      "etapa": "recordar"
+    },
+    "questao": {
+      "id": "cddb68dbddd57fe2",
+      "alvo": "item:h",
+      "itemAlvo": "h",
+      "formato": {
+        "tipo": "rotulo-digitado"
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "texto",
+      "texto": "Item H",
+      "latencia": 2900
+    },
+    "avaliacao": {
+      "correta": true,
+      "qualidade": "perfeita",
+      "direcao": "recordar",
+      "deltaBruto": 1
+    }
+  },
+  {
+    "id": "f0afacc01956073a",
+    "em": 1760000765000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "2d59d11c96b685f0",
+    "passo": 1,
+    "uso": {
+      "tipo": "sondagem",
+      "etapa": "confirmar"
+    },
+    "questao": {
+      "id": "d457706b14a3d90e",
+      "alvo": "item:h",
+      "itemAlvo": "h",
+      "formato": {
+        "tipo": "rotulo-para-estimulo",
+        "opcoes": ["h", "f", "l", "j"]
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "escolha",
+      "escolhidas": ["h"],
+      "latencia": 1500
+    },
+    "avaliacao": {
+      "correta": true,
+      "qualidade": "perfeita",
+      "direcao": "produzir",
+      "deltaBruto": 1
+    }
+  },
+  {
+    "id": "fca0b34a2b2ebc8d",
+    "em": 1760000810000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "licao-concluida",
+    "tarefaId": "2d59d11c96b685f0",
+    "topico": "item:h",
+    "acelerada": true
+  },
+  {
+    "id": "1268e2d05afe9a45",
+    "em": 1760000855000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "tarefa-iniciada",
+    "tarefa": {
+      "id": "d5acb8dad727e242",
+      "tipo": "revisao-grupo",
+      "alvos": ["grupo:grupo-1"],
+      "passos": [
+        {
+          "tipo": "questao",
+          "questao": {
+            "id": "8dad986e601635fa",
+            "alvo": "item:a",
+            "itemAlvo": "a",
+            "formato": {
+              "tipo": "grupo-membros",
+              "opcoes": ["a", "b", "c", "d"]
+            },
+            "contexto": {
+              "tipo": "grupo",
+              "grupo": "grupo-1",
+              "exibidos": ["a", "b", "c", "d"]
+            }
+          },
+          "uso": {
+            "tipo": "grupo"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "28f517f09eac86a9",
+    "em": 1760000900000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "d5acb8dad727e242",
+    "passo": 0,
+    "uso": {
+      "tipo": "grupo"
+    },
+    "questao": {
+      "id": "8dad986e601635fa",
+      "alvo": "item:a",
+      "itemAlvo": "a",
+      "formato": {
+        "tipo": "grupo-membros",
+        "opcoes": ["a", "b", "c", "d"]
+      },
+      "contexto": {
+        "tipo": "grupo",
+        "grupo": "grupo-1",
+        "exibidos": ["a", "b", "c", "d"]
+      }
+    },
+    "resposta": {
+      "tipo": "escolha",
+      "escolhidas": ["b", "a"],
+      "latencia": 3300
+    },
+    "avaliacao": {
+      "correta": true,
+      "qualidade": "perfeita",
+      "direcao": "reconhecer",
+      "deltaBruto": 1
+    }
+  },
+  {
+    "id": "43afdbc7ec316960",
+    "em": 1760000945000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "tarefa-iniciada",
+    "tarefa": {
+      "id": "b2347e4137d4df9b",
+      "tipo": "revisao",
+      "alvos": ["item:h"],
+      "passos": [
+        {
+          "tipo": "questao",
+          "questao": {
+            "id": "3156b461955a1238",
+            "alvo": "item:h",
+            "itemAlvo": "h",
+            "formato": {
+              "tipo": "rotulo-digitado"
+            },
+            "contexto": {
+              "tipo": "isolada"
+            },
+            "limiteMs": 4500
+          },
+          "uso": {
+            "tipo": "revisao"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "bad32e318246688c",
+    "em": 1760000990000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "b2347e4137d4df9b",
+    "passo": 0,
+    "uso": {
+      "tipo": "revisao"
+    },
+    "questao": {
+      "id": "3156b461955a1238",
+      "alvo": "item:h",
+      "itemAlvo": "h",
+      "formato": {
+        "tipo": "rotulo-digitado"
+      },
+      "contexto": {
+        "tipo": "isolada"
+      },
+      "limiteMs": 4500
+    },
+    "resposta": {
+      "tipo": "tempo-esgotado"
+    },
+    "avaliacao": {
+      "correta": false,
+      "qualidade": "tempo-esgotado",
+      "direcao": "recordar",
+      "deltaBruto": -0.5
+    }
+  },
+  {
+    "id": "4c842bb9b3aa7361",
+    "em": 1760001035000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "tarefa-iniciada",
+    "tarefa": {
+      "id": "dd63baf9d0f6f1b5",
+      "tipo": "quiz",
+      "alvos": ["item:g", "item:h"],
+      "passos": [
+        {
+          "tipo": "questao",
+          "questao": {
+            "id": "63635a18fa4c5e7f",
+            "alvo": "item:g",
+            "itemAlvo": "g",
+            "formato": {
+              "tipo": "rotulo-digitado"
+            },
+            "contexto": {
+              "tipo": "isolada"
+            }
+          },
+          "uso": {
+            "tipo": "quiz"
+          }
+        },
+        {
+          "tipo": "questao",
+          "questao": {
+            "id": "cddb68dbddd57fe2",
+            "alvo": "item:h",
+            "itemAlvo": "h",
+            "formato": {
+              "tipo": "rotulo-digitado"
+            },
+            "contexto": {
+              "tipo": "isolada"
+            }
+          },
+          "uso": {
+            "tipo": "quiz"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "911706fe91e2370e",
+    "em": 1760001080000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "dd63baf9d0f6f1b5",
+    "passo": 0,
+    "uso": {
+      "tipo": "quiz"
+    },
+    "questao": {
+      "id": "63635a18fa4c5e7f",
+      "alvo": "item:g",
+      "itemAlvo": "g",
+      "formato": {
+        "tipo": "rotulo-digitado"
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "nao-sei"
+    },
+    "avaliacao": {
+      "correta": false,
+      "qualidade": "nao-sei",
+      "direcao": "recordar",
+      "deltaBruto": -1
+    }
+  },
+  {
+    "id": "1f13bb1bffd4b167",
+    "em": 1760001125000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "dd63baf9d0f6f1b5",
+    "passo": 1,
+    "uso": {
+      "tipo": "quiz"
+    },
+    "questao": {
+      "id": "cddb68dbddd57fe2",
+      "alvo": "item:h",
+      "itemAlvo": "h",
+      "formato": {
+        "tipo": "rotulo-digitado"
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "texto",
+      "texto": "Item F",
+      "latencia": 4100
+    },
+    "avaliacao": {
+      "correta": false,
+      "qualidade": "errada",
+      "direcao": "recordar",
+      "deltaBruto": -1,
+      "confundidaCom": "f"
+    }
+  },
+  {
+    "id": "68d28a949903591e",
+    "em": 1760001170000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "tarefa-iniciada",
+    "tarefa": {
+      "id": "afcc7e613c5b265c",
+      "tipo": "remediacao",
+      "alvos": ["item:g"],
+      "passos": [
+        {
+          "tipo": "apresentacao",
+          "itens": ["g", "e"]
+        },
+        {
+          "tipo": "questao",
+          "questao": {
+            "id": "93fe22a51b7b9e67",
+            "alvo": "item:g",
+            "itemAlvo": "g",
+            "formato": {
+              "tipo": "estimulo-para-rotulo",
+              "opcoes": ["a", "g", "c", "e"]
+            },
+            "contexto": {
+              "tipo": "isolada"
+            }
+          },
+          "uso": {
+            "tipo": "discriminacao"
+          }
+        },
+        {
+          "tipo": "questao",
+          "questao": {
+            "id": "63635a18fa4c5e7f",
+            "alvo": "item:g",
+            "itemAlvo": "g",
+            "formato": {
+              "tipo": "rotulo-digitado"
+            },
+            "contexto": {
+              "tipo": "isolada"
+            }
+          },
+          "uso": {
+            "tipo": "remediacao"
+          }
+        }
+      ],
+      "motivo": "quiz"
+    }
+  },
+  {
+    "id": "ef380fa4c7e26a9f",
+    "em": 1760001215000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "afcc7e613c5b265c",
+    "passo": 1,
+    "uso": {
+      "tipo": "discriminacao"
+    },
+    "questao": {
+      "id": "93fe22a51b7b9e67",
+      "alvo": "item:g",
+      "itemAlvo": "g",
+      "formato": {
+        "tipo": "estimulo-para-rotulo",
+        "opcoes": ["a", "g", "c", "e"]
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "escolha",
+      "escolhidas": ["g"],
+      "latencia": 1700
+    },
+    "avaliacao": {
+      "correta": true,
+      "qualidade": "perfeita",
+      "direcao": "reconhecer",
+      "deltaBruto": 1
+    }
+  },
+  {
+    "id": "2dbe18365f485076",
+    "em": 1760001260000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "resposta-registrada",
+    "tarefaId": "afcc7e613c5b265c",
+    "passo": 2,
+    "uso": {
+      "tipo": "remediacao"
+    },
+    "questao": {
+      "id": "63635a18fa4c5e7f",
+      "alvo": "item:g",
+      "itemAlvo": "g",
+      "formato": {
+        "tipo": "rotulo-digitado"
+      },
+      "contexto": {
+        "tipo": "isolada"
+      }
+    },
+    "resposta": {
+      "tipo": "texto",
+      "texto": "Item G",
+      "latencia": 2200
+    },
+    "avaliacao": {
+      "correta": true,
+      "qualidade": "perfeita",
+      "direcao": "recordar",
+      "deltaBruto": 1
+    }
+  },
+  {
+    "id": "c2f0bb45316c7e28",
+    "em": 1760001305000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "remediacao-concluida",
+    "tarefaId": "afcc7e613c5b265c",
+    "motivo": "quiz",
+    "alvos": ["item:g"]
+  },
+  {
+    "id": "2c0b32c195b22fc3",
+    "em": 1760001350000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "tarefa-iniciada",
+    "tarefa": {
+      "id": "5d32382eb4aa0bcf",
+      "tipo": "licao",
+      "alvos": ["item:i"],
+      "passos": []
+    }
+  },
+  {
+    "id": "723f4f84032e29ed",
+    "em": 1760001395000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "licao-adiada",
+    "tarefaId": "5d32382eb4aa0bcf",
+    "topico": "item:i",
+    "kp": 1
+  },
+  {
+    "id": "acae5312d40c3a88",
+    "em": 1760001440000,
+    "dispositivo": "aparelho-b",
+    "fusoMinutos": -60,
+    "tipo": "meta-diaria-alterada",
+    "xp": 20
+  },
+  {
+    "id": "43e9ff6fef0122c7",
+    "em": 1760001485000,
+    "dispositivo": "aparelho-a",
+    "fusoMinutos": 180,
+    "tipo": "sessao-encerrada",
+    "motivo": "usuario"
+  }
+]

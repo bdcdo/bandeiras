@@ -45,11 +45,13 @@ function fatoresAlcancados(
   sentido: Sentido,
   passagem: (t: IdTopico) => number,
 ): Map<IdTopico, number> {
-  const ordem = sentido === 'desce' ? grafo.ordem : [...grafo.ordem].reverse()
+  const { ordem } = grafo
   const arestas = sentido === 'desce' ? grafo.arestasAbaixo : grafo.arestasAcima
   const destino = (a: ArestaEncompassing): IdTopico => (sentido === 'desce' ? a.para : a.de)
   const fatores = new Map<IdTopico, number>([[origem, 1]])
-  for (const t of ordem) {
+  // Subir é ler a ordem topológica de trás para a frente, pelo índice, sem copiar e inverter a ordem a cada chamada.
+  for (let k = 0; k < ordem.length; k++) {
+    const t = ordem[sentido === 'desce' ? k : ordem.length - 1 - k] as IdTopico
     const chegada = fatores.get(t)
     if (chegada === undefined) continue
     for (const a of arestas.get(t) ?? []) {
@@ -180,12 +182,21 @@ export function aplicarPenalidades(
     novas.set(t, aplicarImplicita(ctx, e, t, deltaBruto, fator))
   }
   const culpados = new Set([...origens, ...planejadas.keys()])
-  const foraDoGrafo = [...culpados].filter((t) => !ctx.grafo.topicos.has(t))
   return {
     memorias: novas,
-    culpa: new Set([...ctx.grafo.ordem.filter((t) => culpados.has(t)), ...foraDoGrafo]),
-    condicionaisPenalizados: ctx.grafo.ordem.filter((t) => condicionais.has(t)),
+    culpa: naOrdemDoGrafo(ctx.grafo, culpados),
+    condicionaisPenalizados: [...naOrdemDoGrafo(ctx.grafo, condicionais)],
   }
+}
+
+/**
+ * Os tópicos na ordem topológica do grafo, e os de fora dele no fim, na ordem em que vieram. Com um tópico ou nenhum, a
+ * ordem já é essa, e o caso comum, a culpa só da origem e nenhum condicional, não percorre o grafo inteiro.
+ */
+function naOrdemDoGrafo(grafo: Grafo, topicos: ReadonlySet<IdTopico>): ReadonlySet<IdTopico> {
+  if (topicos.size <= 1) return topicos
+  const foraDoGrafo = [...topicos].filter((t) => !grafo.topicos.has(t))
+  return new Set([...grafo.ordem.filter((t) => topicos.has(t)), ...foraDoGrafo])
 }
 
 /**

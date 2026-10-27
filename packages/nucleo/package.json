@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Motor pedagógico genérico ao modo Math Academy: itens, grupos, repetição espaçada hierárquica, diagnóstico e planejamento",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./apoio-a-testes": "./src/apoio-a-testes/index.ts"
   },
   "engines": {
     "node": ">=24 <25"

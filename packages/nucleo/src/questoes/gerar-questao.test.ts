@@ -7,7 +7,7 @@ import type { IdItem } from '../catalogo/tipos'
 import { topicoDeItem } from '../grafo/topico'
 import { PARAMETROS_PADRAO as P, resolverParametros } from '../memoria/parametros'
 import { contextoDeSessao } from './contexto-de-sessao'
-import { gerarQuestao, type PedidoDeQuestao } from './gerar-questao'
+import { gerarQuestao, type PedidoDeQuestao, type UsoDeQuestao } from './gerar-questao'
 import { opcoesDe, type Questao } from './questao'
 
 const catalogo = catalogoFixo()
@@ -117,5 +117,33 @@ describe('gerarQuestao', () => {
     )
     expect(ids.size).toBe(6)
     expect(q1.id).toMatch(/^[0-9a-f]{16}$/)
+  })
+})
+
+describe('UsoDeQuestao e PedidoDeQuestao', () => {
+  it('o uso de lição exige o knowledge point', () => {
+    const kp3: UsoDeQuestao = { tipo: 'licao', kp: 3 }
+    // @ts-expect-error: o uso de lição sem kp não diz qual knowledge point a resposta exercita
+    const semKp: UsoDeQuestao = { tipo: 'licao' }
+    // @ts-expect-error: kp é 1, 2 ou 3
+    const kp4: UsoDeQuestao = { tipo: 'licao', kp: 4 }
+    expect([kp3, semKp, kp4].map((u) => u.tipo)).toEqual(['licao', 'licao', 'licao'])
+  })
+
+  it('o pedido aceita os seis usos isolados, com o item, e recusa grupo e diagnóstico', () => {
+    const pedidos: PedidoDeQuestao[] = [
+      { tipo: 'licao', item: A, kp: 1 },
+      { tipo: 'sondagem', item: A, etapa: 'confirmar' },
+      { tipo: 'revisao', item: A },
+      { tipo: 'remediacao', item: A },
+      { tipo: 'quiz', item: A },
+      { tipo: 'discriminacao', item: A },
+    ]
+    // @ts-expect-error: a questão de grupo tem gerador próprio
+    const grupo: PedidoDeQuestao = { tipo: 'grupo', item: A }
+    // @ts-expect-error: o pedido nomeia o item perguntado
+    const semItem: PedidoDeQuestao = { tipo: 'revisao' }
+    expect(pedidos.map((p) => gerar(p).itemAlvo)).toEqual([A, A, A, A, A, A])
+    expect([grupo.tipo, semItem.tipo]).toEqual(['grupo', 'revisao'])
   })
 })

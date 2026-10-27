@@ -93,6 +93,14 @@ module.exports = {
       to: { path: '^(packages/dominio-bandeiras/|@bandeiras/dominio-bandeiras)' },
     },
     {
+      name: 'web-producao-nao-importa-apoio-a-testes',
+      severity: 'error',
+      comment:
+        'O núcleo exporta apoio-a-testes (as suítes de contrato, como a do armazenamento de eventos) para os testes da casca rodarem contra o IndexedDB. A produção da casca não o importa: embarcaria código de teste no app. A regra nada-de-producao-importa-apoio-a-testes só vale dentro do núcleo.',
+      from: { path: '^apps/web/src/', pathNot: [TESTE, '/teste/'] },
+      to: { path: '^(packages/nucleo/src/apoio-a-testes/|@bandeiras/nucleo/apoio-a-testes)' },
+    },
+    {
       name: 'clerk-so-em-autenticacao',
       severity: 'error',
       comment: 'O Clerk fica atrás da porta Autenticacao, em src/autenticacao/.',

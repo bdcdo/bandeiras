@@ -1,6 +1,7 @@
 import { hashFnv1a } from '../base/hash'
 import type { NaoVazio } from '../base/nao-vazio'
 import { erro, ok, type Resultado } from '../base/resultado'
+import { serializarCanonico } from '../base/serializacao'
 import { citaForma, formasNormalizadas, normalizarRotulo } from './normalizacao'
 import type {
   Catalogo,
@@ -428,23 +429,4 @@ function construirVizinhanca(v: VizinhancaBruta): Vizinhanca {
     membros: [...v.membros] as IdItem[],
     tracoDistintivo: { ...v.tracoDistintivo },
   }
-}
-
-/**
- * JSON com as chaves de todo objeto em ordem, e as listas na ordem dada: dois objetos iguais em conteúdo dão o mesmo
- * texto mesmo que as chaves tenham sido escritas em ordens diferentes, e trocar a ordem de uma lista muda o texto. A
- * ordenação é por unidade de código UTF-16 (o padrão de `sort`), e não `localeCompare`, para o hash não depender do
- * idioma do aparelho. Chave com valor `undefined` some, como no `JSON.stringify`.
- */
-function serializarCanonico(valor: unknown): string {
-  if (Array.isArray(valor)) return `[${valor.map(serializarCanonico).join(',')}]`
-  if (typeof valor === 'object' && valor !== null) {
-    const registro = valor as Readonly<Record<string, unknown>>
-    const partes = Object.keys(registro)
-      .filter((chave) => registro[chave] !== undefined)
-      .sort()
-      .map((chave) => `${JSON.stringify(chave)}:${serializarCanonico(registro[chave])}`)
-    return `{${partes.join(',')}}`
-  }
-  return JSON.stringify(valor)
 }

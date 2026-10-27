@@ -8,17 +8,27 @@ import { escolherDistratores, type ModoDeDistratores } from './distratores'
 import { criarQuestao, type ErroDeQuestao, type Questao } from './questao'
 
 /**
- * O uso da questão, que decide o formato e os distratores. Na lição, `kp` é o knowledge point: 1 reconhece, 2 produz e 3
- * recorda. A sondagem da lição acelerada recorda primeiro e, se acertar, confirma produzindo entre parecidos.
+ * Para que a questão serve, e é a fonte única desta lista. Na lição, `kp` é o knowledge point: 1 reconhece, 2 produz e 3
+ * recorda. A sondagem da lição acelerada recorda primeiro e, se acertar, confirma produzindo entre parecidos. `grupo` é a
+ * questão da tarefa de grupo e `diagnostico` a do diagnóstico; as duas têm geradores próprios.
+ *
+ * O uso vai gravado com a resposta, porque questões iguais servem a usos diferentes: a de recordar da sondagem é idêntica
+ * à do KP3, até no id, e só o uso diz se a resposta mexe na memória.
  */
-export type PedidoDeQuestao = Readonly<
-  | { tipo: 'licao'; item: IdItem; kp: 1 | 2 | 3 }
-  | { tipo: 'sondagem'; item: IdItem; etapa: 'recordar' | 'confirmar' }
-  | { tipo: 'revisao'; item: IdItem }
-  | { tipo: 'remediacao'; item: IdItem }
-  | { tipo: 'quiz'; item: IdItem }
-  | { tipo: 'discriminacao'; item: IdItem }
+export type UsoDeQuestao = Readonly<
+  | { tipo: 'licao'; kp: 1 | 2 | 3 }
+  | { tipo: 'sondagem'; etapa: 'recordar' | 'confirmar' }
+  | { tipo: 'revisao' }
+  | { tipo: 'remediacao' }
+  | { tipo: 'quiz' }
+  | { tipo: 'discriminacao' }
+  | { tipo: 'grupo' }
+  | { tipo: 'diagnostico' }
 >
+
+/** O pedido a `gerarQuestao`: um uso de questão isolada, que decide o formato e os distratores, e o item perguntado. */
+export type PedidoDeQuestao = Exclude<UsoDeQuestao, Readonly<{ tipo: 'grupo' | 'diagnostico' }>> &
+  Readonly<{ item: IdItem }>
 
 type Molde =
   { tipo: 'rotulo-digitado' } | { tipo: 'estimulo-para-rotulo' | 'rotulo-para-estimulo'; modo: ModoDeDistratores }
