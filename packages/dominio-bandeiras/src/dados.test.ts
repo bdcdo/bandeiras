@@ -110,15 +110,20 @@ describe('imagens', () => {
     for (const nome of arquivos) expect(sha256(ler(nome)), nome).toBe(registrado.get(nome))
   })
 
-  it('Síria e Afeganistão estão fixados: original do Commons e arquivo processado', () => {
-    // A Síria trocou de bandeira em 2025 e o Afeganistão tem duas em disputa; uma regeneração que mudasse qualquer um
-    // dos dois tem de reprovar aqui e passar por conferência à mão, com estes valores atualizados no mesmo commit.
+  it('Síria, Afeganistão e Bolívia estão fixados: original do Commons e arquivo processado', () => {
+    // A Síria trocou de bandeira em 2025 e o Afeganistão tem duas em disputa. A Bolívia usa a bandeira de Estado, com
+    // brasão, que é a que a ONU exibe, e não a civil, sem brasão; o arquivo de Estado no Commons já foi trocado e
+    // revertido. Uma regeneração que mudasse qualquer um dos três tem de reprovar aqui e passar por conferência à mão,
+    // com estes valores atualizados no mesmo commit.
     const sha1 = new Map(revisoes.map((r) => [r.codigo, r.sha1]))
     expect(sha1.get('sy')).toBe('ce342b675fcf2604f3cad0355397d72caf52a658')
     expect(sha1.get('af')).toBe('636a7f0a49f4793da6f75d7f503d28c9e1330f84')
+    expect(sha1.get('bo')).toBe('d74c7ea8f1319eb29f25ea88556cc3a8b6f8212b')
     expect(sha256(ler('sy.svg'))).toBe('b42626405b126101b9ae0915acfd8cd7c9a5e0e93c6122a9e23c436f7dc412a8')
     expect(sha256(ler('af-480.webp'))).toBe('0cdcdf79f6c7dbcb31d0cb34367fb027c8ef6b45902e3c30c27b1e584c44fd95')
     expect(sha256(ler('af-960.webp'))).toBe('83b2dc272fded42c2adb71a8221e9c53704978130356de1ca0a25fb5637d84d3')
+    expect(sha256(ler('bo-480.webp'))).toBe('d01a6654c5bce6205ad70e15a318406e44754f33b64e7d11a576219d956eb723')
+    expect(sha256(ler('bo-960.webp'))).toBe('67847bc3d765420190130efbd2bf8c88eb5330a10ee4a72c464569d22ded3c32')
   })
 
   it('nenhum SVG traz o nome do país em <title>, <desc> ou texto "Flag of"', () => {

@@ -1,5 +1,5 @@
 {
-  "geradoEm": "2026-10-26T15:39:23.532Z",
+  "geradoEm": "2026-10-26T23:56:36.102Z",
   "versoes": {
     "node": "24.12.0",
     "icu": "77.1",
@@ -527,8 +527,8 @@
       "descricao": "Duas faixas horizontais, vermelho em cima e verde embaixo, com uma estrela amarela de cinco pontas no centro.",
       "classe": "faixas-horizontais",
       "vizinhos": [
-        "gh",
         "bo",
+        "gh",
         "tg",
         "gw",
         "st",
@@ -680,20 +680,24 @@
         "tricolor-vermelho-amarelo-verde"
       ],
       "dificuldadeAPriori": 2,
-      "descricao": "Três faixas horizontais iguais: vermelho, amarelo e verde, sem emblema.",
+      "descricao": "Três faixas horizontais iguais, vermelho, amarelo e verde, com o brasão oval de condor e montanha no centro.",
       "classe": "faixas-horizontais",
       "vizinhos": [
         "gh",
         "bf",
         "tg",
-        "st",
         "gw",
+        "st",
         "mm"
       ],
-      "tracoVizinhanca": "faixas lisas, vermelho em cima",
+      "tracoVizinhanca": "brasão com condor no centro",
       "proporcao": 1.467,
       "imagem": {
-        "formato": "svg"
+        "formato": "webp",
+        "larguras": [
+          480,
+          960
+        ]
       }
     },
     {
@@ -812,7 +816,7 @@
         "gh",
         "mw",
         "gm",
-        "tj"
+        "bo"
       ],
       "proporcao": 2,
       "imagem": {
@@ -3363,8 +3367,8 @@
         "in",
         "bf",
         "hu",
-        "mu",
-        "bo"
+        "bo",
+        "mu"
       ],
       "proporcao": 1.167,
       "imagem": {
@@ -4427,9 +4431,9 @@
         "st",
         "gw",
         "bf",
+        "bo",
         "gh",
-        "bj",
-        "bo"
+        "bj"
       ],
       "tracoVizinhanca": "listras e cantão",
       "proporcao": 1.618,

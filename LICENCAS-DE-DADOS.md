@@ -29,7 +29,7 @@ Cada bandeira vem de um arquivo do Wikimedia Commons, processado pelo projeto (o
 | bi | [Flag of Burundi.svg](https://commons.wikimedia.org/wiki/File:Flag_of_Burundi.svg) | See File history below for details. | Public domain |
 | bj | [Flag of Benin.svg](https://commons.wikimedia.org/wiki/File:Flag_of_Benin.svg) | Drawn by User:SKopp , rewritten by User:Gabbe | Public domain |
 | bn | [Flag of Brunei.svg](https://commons.wikimedia.org/wiki/File:Flag_of_Brunei.svg) | Nightstallion | Public domain |
-| bo | [Flag of Bolivia.svg](https://commons.wikimedia.org/wiki/File:Flag_of_Bolivia.svg) | See file history' below for details. | Public domain |
+| bo | [Bandera de Bolivia (Estado).svg](https://commons.wikimedia.org/wiki/File:Bandera_de_Bolivia_(Estado).svg) | See File history , below, for details. | Public domain |
 | br | [Flag of Brazil.svg](https://commons.wikimedia.org/wiki/File:Flag_of_Brazil.svg) | Raimundo Teixeira Mendes | Public domain |
 | bs | [Flag of the Bahamas.svg](https://commons.wikimedia.org/wiki/File:Flag_of_the_Bahamas.svg) | Government of Bahamas | Public domain |
 | bt | [Flag of Bhutan.svg](https://commons.wikimedia.org/wiki/File:Flag_of_Bhutan.svg) | See File history below for details. | Public domain |
