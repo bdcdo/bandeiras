@@ -6,7 +6,10 @@
  *
  * Entrada: os originais em .cache/commons/ (baixar-commons os deixa lá) e a curadoria. A entrada é o original, e não
  * imagens/, porque este passo roda antes de gerar.ts produzir imagens/; o gate de fidelidade de gerar.ts garante que o
- * processado e o original rasterizam igual (até 0,5% dos pixels), então a medida vale para os dois. A exceção são os
+ * processado e a entrada rasterizam igual (até 0,5% dos pixels), então a medida vale para os dois. Nas bandeiras de
+ * curadoria/inscricoes.json, a entrada é o derivado sem a inscrição com o nome do país, montado em memória pela mesma
+ * função de gerar.ts: a medida tem de ser do que o aluno vê, e o anel de letras da Nicarágua, por exemplo, pesa na cor
+ * média da célula central. A exceção são os
  * códigos de GATE_SO_PELO_LIBRSVG, cujo original o resvg não desenha por inteiro (no Paquistão, a estrela): para eles a
  * medida rasteriza o otimizado, montado em memória com a mesma função de gerar.ts, que o resvg desenha completo e que o
  * gate pelo librsvg confere contra o original.
@@ -24,7 +27,7 @@
 import { readFileSync } from 'node:fs'
 import { Resvg } from '@resvg/resvg-js'
 import { CAMINHOS, falhar, gravarJson, lerCuradoria, type Familia, type Vizinhanca, type Vizinhos } from './comum.ts'
-import { GATE_SO_PELO_LIBRSVG, otimizar } from './gerar.ts'
+import { GATE_SO_PELO_LIBRSVG, otimizar, semInscricao } from './gerar.ts'
 import { MEMBROS_EM_ORDEM } from './membros.ts'
 
 /** Largura da rasterização de análise. A grade 3x3 e a orientação não precisam de detalhe; 120 px basta e é rápido. */
@@ -87,7 +90,7 @@ function somaDeVariancias(cores: Lab[]): number {
   return total
 }
 
-/** Assinatura do original do Commons; nos códigos de GATE_SO_PELO_LIBRSVG, do otimizado (ver o cabeçalho). */
+/** Assinatura do SVG de entrada; nos códigos de GATE_SO_PELO_LIBRSVG, do otimizado (ver o cabeçalho). */
 export function assinar(codigo: string, original: Buffer): Assinatura {
   const svg = GATE_SO_PELO_LIBRSVG.has(codigo) ? otimizar(codigo, original.toString('utf8')) : original
   const { largura, altura, lab } = rasterizar(svg)
@@ -136,6 +139,7 @@ function distancia(a: Assinatura, b: Assinatura): number {
 }
 
 export function assinarTodas(): Map<string, Assinatura> {
+  const inscricaoPorCodigo = new Map(lerCuradoria().inscricoes.map((i) => [i.codigo, i]))
   const assinaturas = new Map<string, Assinatura>()
   for (const codigo of MEMBROS_EM_ORDEM) {
     let svg: Buffer
@@ -144,7 +148,9 @@ export function assinarTodas(): Map<string, Assinatura> {
     } catch {
       falhar(`${codigo}: original ausente em .cache/commons/; rode baixar-commons.ts antes`)
     }
-    assinaturas.set(codigo, assinar(codigo, svg))
+    const inscricao = inscricaoPorCodigo.get(codigo)
+    const entrada = inscricao === undefined ? svg : Buffer.from(semInscricao(inscricao, svg.toString('utf8')))
+    assinaturas.set(codigo, assinar(codigo, entrada))
   }
   return assinaturas
 }

@@ -128,6 +128,7 @@ export function lerCuradoria() {
     fora: lerJson(c + 'fora.json') as Fora,
     descricoes: lerJson(c + 'descricoes.json') as Descricao[],
     dificuldade: lerJson(c + 'dificuldade.json') as OverridesDeDificuldade,
+    inscricoes: lerJson(c + 'inscricoes.json') as Inscricao[],
   }
 }
 

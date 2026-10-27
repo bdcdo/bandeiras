@@ -11,7 +11,7 @@ import { tmpdir } from 'node:os'
 import { afterAll, describe, expect, it, vi } from 'vitest'
 import type * as Comum from '../scripts/comum.ts'
 import { CAMINHOS } from '../scripts/comum.ts'
-import { GATE_SO_PELO_LIBRSVG, principal } from '../scripts/gerar.ts'
+import { conferirRemocao, GATE_SO_PELO_LIBRSVG, principal } from '../scripts/gerar.ts'
 
 vi.mock('../scripts/membros.ts', () => ({ MEMBROS_EM_ORDEM: ['br', 'zw'] }))
 vi.mock('../scripts/comum.ts', async (importOriginal) => {
@@ -62,6 +62,27 @@ describe('gerar.ts', () => {
     expect(readdirSync(CAMINHOS.imagens)).toEqual(['anterior.svg'])
     expect(readdirSync(CAMINHOS.gerado).sort()).toEqual(['licencas.json', 'vizinhos.json'])
     expect(existsSync(`${CAMINHOS.raizDoRepositorio}LICENCAS-DE-DADOS.md`)).toBe(false)
+  })
+
+  it('o gate da remoção aceita mudança só dentro da caixa e reprova mudança fora dela ou nenhuma mudança', () => {
+    // Um retângulo amarelo no centro de 100x50 (x de 40% a 60%, y de 40% a 60%) é a "inscrição" que sai.
+    const fundo = '<path fill="#00f" d="M0 0h100v50H0z"/>'
+    const svg = (corpo: string): string =>
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50">${fundo}${corpo}</svg>`
+    const original = svg('<path fill="#fc0" d="M40 20h20v10H40z"/>')
+    const derivado = svg('')
+    const comCaixa = (x0: number, y0: number, x1: number, y1: number) => ({
+      codigo: 'xx',
+      texto: 'TESTE',
+      lugar: 'no teste',
+      caixa: { x0, y0, x1, y1 },
+      operacoes: [],
+    })
+    expect(conferirRemocao(comCaixa(0.35, 0.35, 0.65, 0.65), original, derivado)).toBeGreaterThan(0)
+    expect(() => conferirRemocao(comCaixa(0.45, 0.35, 0.65, 0.65), original, derivado)).toThrow('fora da caixa')
+    expect(() => conferirRemocao(comCaixa(0.35, 0.35, 0.65, 0.65), original, original)).toThrow(
+      'não mudou nenhum pixel dentro da caixa',
+    )
   })
 
   it('só o Paquistão é isento do gate pelo resvg', () => {

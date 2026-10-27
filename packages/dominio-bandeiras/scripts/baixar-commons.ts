@@ -4,8 +4,10 @@
  * Quando rodar: à mão, como primeiro passo de `pnpm gerar:dados`, nunca no install nem no CI. Precisa de rede: até 4
  * consultas em lote à API (193 títulos, 50 por lote) e até 193 downloads do Commons.
  *
- * Entrada: curadoria/commons.json (título do arquivo por código). Saída: .cache/commons/<codigo>.svg (fora do Git),
- * gerado/commons-revisoes.json ({ codigo, titulo, sha1, timestamp, url }) e gerado/licencas.json.
+ * Entrada: curadoria/commons.json (título do arquivo por código) e curadoria/inscricoes.json (as bandeiras em que o
+ * projeto apaga a inscrição com o nome do país). Saída: .cache/commons/<codigo>.svg (fora do Git),
+ * gerado/commons-revisoes.json ({ codigo, titulo, sha1, timestamp, url }) e gerado/licencas.json, que registra também a
+ * modificação feita pelo projeto.
  *
  * Sem `--atualizar`, quem já está fixado em commons-revisoes.json com o mesmo título não é consultado na API: o script só
  * baixa o que falta no cache e confere o sha1 contra o fixado. Se o arquivo mudou no Commons, o sha1 não bate e o script
@@ -28,6 +30,7 @@ import {
   type Licenca,
   type RevisaoCommons,
 } from './comum.ts'
+import { fraseDaModificacao } from './inscricoes.ts'
 import { MEMBROS_EM_ORDEM } from './membros.ts'
 
 const API = 'https://commons.wikimedia.org/w/api.php'
@@ -193,7 +196,8 @@ function cacheConfere(revisao: RevisaoCommons): boolean {
 
 async function principal(): Promise<void> {
   const atualizar = process.argv.includes('--atualizar')
-  const { commons } = lerCuradoria()
+  const { commons, inscricoes } = lerCuradoria()
+  const inscricaoPorCodigo = new Map(inscricoes.map((i) => [i.codigo, i]))
   const codigos = commons.map((e) => e.codigo).sort()
   if (codigos.join() !== MEMBROS_EM_ORDEM.join()) {
     falhar('curadoria/commons.json não cobre exatamente os 193 membros (ou repete código)')
@@ -235,7 +239,13 @@ async function principal(): Promise<void> {
       )
     }
     revisoes.push(revisao)
-    licencas.push(licenca)
+    // A frase da modificação sai sempre da curadoria de hoje, também para a licença fixada: uma bandeira que sai de
+    // inscricoes.json perde a frase, e uma que entra ganha, sem consultar o Commons.
+    const comModificacao: Licenca = { ...licenca }
+    delete comModificacao.modificacao
+    const inscricao = inscricaoPorCodigo.get(codigo)
+    if (inscricao !== undefined) comModificacao.modificacao = fraseDaModificacao(inscricao)
+    licencas.push(comModificacao)
   }
 
   mkdirSync(CAMINHOS.cache, { recursive: true })
