@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { catalogoFixo } from '../apoio-a-testes/catalogo-de-teste'
+import { catalogoFixo, dadosDe, ESPECIFICACAO_FIXA } from '../apoio-a-testes/catalogo-de-teste'
 import { desembrulhar } from '../base/resultado'
 import type { Milis } from '../base/tempo'
+import { carregarCatalogo } from '../catalogo/carregar-catalogo'
 import type { IdGrupo, IdItem } from '../catalogo/tipos'
 import { PARAMETROS_PADRAO as P } from '../memoria/parametros'
 import { criarQuestao, type ContextoDeQuestao, type Questao } from '../questoes/questao'
@@ -60,6 +61,18 @@ describe('feedbackDe', () => {
   it('não revela nenhuma outra opção nem o parceiro indiscernível', () => {
     const texto = JSON.stringify(desembrulhar(feedbackDe(questao('a', ISOLADA, 'abci'), confundida('c'), catalogo)))
     for (const outro of ['Item B', 'Item I', 'Apelido B']) expect(texto).not.toContain(outro)
+  })
+
+  it('não chega a mostrar traço que nomeie outro item: o catálogo com um traço assim não carrega', () => {
+    // O traço de c no grupo-1 citando d, que é a resposta de outra questão da mesma tarefa de grupo.
+    const dados = dadosDe(ESPECIFICACAO_FIXA)
+    const comTraco = {
+      ...dados,
+      grupos: dados.grupos.map((g) =>
+        g.id === 'grupo-1' ? { ...g, tracoDistintivo: { ...g.tracoDistintivo, c: 'como o Item D, com borda' } } : g,
+      ),
+    }
+    expect(carregarCatalogo(comTraco)).toMatchObject({ ok: false, erro: { codigo: 'TRACO_CITA_OUTRO_ITEM' } })
   })
 
   describe('em grupo-membros, a resposta certa é o alvo com o parceiro', () => {

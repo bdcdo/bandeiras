@@ -20,7 +20,10 @@ export type Feedback = Readonly<{
   respostaCerta: Readonly<{ item: IdItem; rotulo: string; aliases: readonly string[]; descricao: string }>
   /** Só em `grupo-membros`: os parceiros indiscerníveis do alvo, que a resposta certa também marca. */
   tambemCertas?: readonly ItemRevelado[]
-  /** O que separa o alvo dos parecidos, quando a questão tem com quem compará-lo. */
+  /**
+   * O que separa o alvo dos parecidos, quando a questão tem com quem compará-lo. Não nomeia outro item, porque
+   * `carregarCatalogo` recusa traço que cite o rótulo ou um alias de outro.
+   */
   tracoDistintivo?: string
   confundidaCom?: ItemRevelado
 }>

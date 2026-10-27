@@ -1,6 +1,6 @@
 import { desembrulhar } from '../base/resultado'
 import { carregarCatalogo } from '../catalogo/carregar-catalogo'
-import type { Catalogo, GrupoBruto, IdItem, ItemBruto, VizinhancaBruta } from '../catalogo/tipos'
+import type { Catalogo, DadosDeCatalogo, GrupoBruto, IdItem, ItemBruto, VizinhancaBruta } from '../catalogo/tipos'
 
 /**
  * Descrição compacta de um catálogo genérico, por índice de item, para os testes de propriedade sortearem: o item k tem o
@@ -49,21 +49,28 @@ const unicos = (xs: readonly number[]): number[] => [...new Set(xs)]
  *
  * `a` e `b` são o par indiscernível do grupo-1; `i` e `j` dividem a vizinhanca-1.
  */
+export const ESPECIFICACAO_FIXA: EspecificacaoDeCatalogo = {
+  classes: [1, 1, 1, 1, 2, 2, 1, 2, 3, 3, 4, 4],
+  categorias: [1, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+  aliases: [1, 2],
+  vizinhos: [[], [], [6], [], [0, 6], [7, 8]],
+  grupos: [
+    { membros: [0, 1, 2, 3], par: true },
+    { membros: [4, 5], par: false },
+  ],
+  vizinhancas: [[8, 9]],
+}
+
 export function catalogoFixo(): Catalogo {
-  return catalogoDe({
-    classes: [1, 1, 1, 1, 2, 2, 1, 2, 3, 3, 4, 4],
-    categorias: [1, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
-    aliases: [1, 2],
-    vizinhos: [[], [], [6], [], [0, 6], [7, 8]],
-    grupos: [
-      { membros: [0, 1, 2, 3], par: true },
-      { membros: [4, 5], par: false },
-    ],
-    vizinhancas: [[8, 9]],
-  })
+  return catalogoDe(ESPECIFICACAO_FIXA)
 }
 
 export function catalogoDe(espec: EspecificacaoDeCatalogo): Catalogo {
+  return desembrulhar(carregarCatalogo(dadosDe(espec)))
+}
+
+/** Os dados crus do catálogo descrito, antes da carga, para o teste que quer mexer neles antes de carregar. */
+export function dadosDe(espec: EspecificacaoDeCatalogo): DadosDeCatalogo {
   const id = (k: number): string => idDeTeste(k)
   const grupos: GrupoBruto[] = espec.grupos.flatMap((g, j) => {
     const membros = unicos(g.membros)
@@ -107,13 +114,11 @@ export function catalogoDe(espec: EspecificacaoDeCatalogo): Catalogo {
       .map(id),
   }))
   const categorias = [...new Set(itens.map((i) => i.categoria))]
-  return desembrulhar(
-    carregarCatalogo({
-      itens,
-      grupos,
-      vizinhancas,
-      classes: [...new Set(itens.map((i) => i.classe))],
-      categorias: categorias.map((c) => ({ id: c, nome: c, subcategorias: [{ id: 'subcategoria-1', nome: 'Sub 1' }] })),
-    }),
-  )
+  return {
+    itens,
+    grupos,
+    vizinhancas,
+    classes: [...new Set(itens.map((i) => i.classe))],
+    categorias: categorias.map((c) => ({ id: c, nome: c, subcategorias: [{ id: 'subcategoria-1', nome: 'Sub 1' }] })),
+  }
 }

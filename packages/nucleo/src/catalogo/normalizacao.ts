@@ -41,6 +41,16 @@ export function formasNormalizadas(item: Pick<Item, 'rotulo' | 'aliases'>): stri
 }
 
 /**
+ * Verdadeiro se a forma, já normalizada, aparece no texto normalizado como palavras inteiras: "mali" está em "Verde no
+ * mastro, como o Mali", mas não em "Somália". Serve para achar o rótulo de um item citado dentro de uma frase. Os
+ * espaços nas pontas são o que exige palavra inteira, porque a normalização deixa um espaço só entre palavras e nenhum
+ * nas pontas.
+ */
+export function citaForma(texto: string, forma: string): boolean {
+  return ` ${normalizarRotulo(texto)} `.includes(` ${forma} `)
+}
+
+/**
  * Verdadeiro se o texto, normalizado, é exatamente o rótulo ou um alias normalizado do item.
  *
  * Sem casamento aproximado, de propósito. Na recordação a pessoa precisa produzir o nome inteiro; aceitar o parecido

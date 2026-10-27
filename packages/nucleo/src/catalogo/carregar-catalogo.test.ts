@@ -79,9 +79,15 @@ function dadosMinimos(): DadosDeCatalogo {
 // depois de normalizados; grupos de 2 a n - 1 membros, para sempre sobrar um item fora de cada grupo.
 type Minimos = { grupos?: number; vizinhancas?: number; categorias?: number }
 
+// Os traços gerados só têm as letras de "traço de vizinhança", algarismos e espaço, e todo rótulo e alias tem, depois de
+// normalizado, um caractere fora delas: nenhum traço cita rótulo, e o catálogo gerado passa pela regra dos traços.
+// A classe de caracteres sai do alfabeto normalizado, que só tem letras sem acento, algarismos e espaço.
+const ALFABETO_DOS_TRACOS = 'traço de vizinhança 0123456789'
+const FORA_DOS_TRACOS = new RegExp(`[^${normalizarRotulo(ALFABETO_DOS_TRACOS)}]`, 'u')
 const formaValida = fc
   .string({ unit: 'grapheme', minLength: 1, maxLength: 10 })
-  .filter((s) => normalizarRotulo(s) !== '')
+  .filter((s) => normalizarRotulo(s) !== '' && FORA_DOS_TRACOS.test(normalizarRotulo(s)))
+const tracoValido = fc.string({ unit: fc.constantFrom(...Array.from(ALFABETO_DOS_TRACOS)), maxLength: 20 })
 const descricaoValida = fc.string({ minLength: 1, maxLength: 20 }).filter((s) => s.trim() !== '')
 
 function catalogoValido(minimos: Minimos = {}): fc.Arbitrary<DadosDeCatalogo> {
@@ -107,7 +113,7 @@ function catalogoValido(minimos: Minimos = {}): fc.Arbitrary<DadosDeCatalogo> {
             classe: fc.nat(),
             dificuldade: fc.constantFrom(1, 2, 3),
             descricao: descricaoValida,
-            tracoVizinhanca: fc.option(fc.string(), { nil: undefined }),
+            tracoVizinhanca: fc.option(tracoValido, { nil: undefined }),
           }),
           { minLength: n, maxLength: n },
         ),
@@ -335,6 +341,26 @@ const VIOLACOES: Record<CodigoDeErroDeCatalogo, Violacao> = {
     const outro = seguinte(d.itens, k).id
     return { ...i, vizinhos: [outro, outro] }
   }),
+  TRACO_CITA_OUTRO_ITEM: {
+    em: 'grupos',
+    violar: (d, k) => comGrupo(d, k, (g) => citandoOSegundo(d, g)),
+  },
+}
+
+/** O rótulo do item de id dado. */
+function rotuloDe(d: DadosDeCatalogo, id: string): string {
+  const item = d.itens.find((i) => i.id === id)
+  if (item === undefined) throw new Error(`o cenário pede o item '${id}'`)
+  return item.rotulo
+}
+
+/**
+ * O conjunto com o traço do primeiro membro citando o rótulo do segundo. O "de" vem do alfabeto dos traços, que nenhum
+ * rótulo gerado tem por inteiro, e por isso o traço só cita o segundo membro.
+ */
+function citandoOSegundo<C extends GrupoBruto | VizinhancaBruta>(d: DadosDeCatalogo, c: C): C {
+  const segundo = rotuloDe(d, posicao(c.membros, 1))
+  return { ...c, tracoDistintivo: { ...c.tracoDistintivo, [primeiro(c.membros)]: `de ${segundo}` } }
 }
 
 /**
@@ -353,6 +379,16 @@ const VARIANTES: readonly { codigo: CodigoDeErroDeCatalogo; caso: string; violac
     codigo: 'ROTULO_REPETIDO',
     caso: 'alias igual ao rótulo só depois de normalizado',
     violacao: noItem((i) => ({ ...i, aliases: [...i.aliases, `${i.rotulo} .`] })),
+  },
+  {
+    codigo: 'TRACO_CITA_OUTRO_ITEM',
+    caso: 'no traço de uma vizinhança',
+    violacao: { em: 'vizinhancas', violar: (d, k) => comVizinhanca(d, k, (v) => citandoOSegundo(d, v)) },
+  },
+  {
+    codigo: 'TRACO_CITA_OUTRO_ITEM',
+    caso: 'no traço de vizinhança do item',
+    violacao: noItem((i, d, k) => ({ ...i, tracoVizinhanca: `de ${seguinte(d.itens, k).rotulo}` })),
   },
 ]
 
@@ -460,6 +496,27 @@ describe('carregarCatalogo', () => {
         codigo: 'ROTULO_AMBIGUO',
         detalhe:
           "rótulo ou alias que, normalizado, resolve mais de um item: 'item a' em 'a', 'b'; 'apelido a' em 'a', 'b'",
+      },
+    })
+  })
+
+  it('recusa traço que cita o rótulo ou um alias de outro item, e aceita o que cita o próprio', () => {
+    const comTracos = (deA: string, deB: string, deC: string, deVizinhancaDeB: string): DadosDeCatalogo => {
+      const dados = comGrupo(dadosMinimos(), 0, (g) => ({ ...g, tracoDistintivo: { a: deA, b: deB } }))
+      const comVizinhanca = {
+        ...dados,
+        vizinhancas: [{ ...primeiro(dados.vizinhancas), tracoDistintivo: { b: 'tb', c: deC } }],
+      }
+      return comItemDeId(comVizinhanca, 'b', (i) => ({ ...i, tracoVizinhanca: deVizinhancaDeB }))
+    }
+    expect(carregarCatalogo(comTracos('como o Item A', 'listrada', 'lisa', 'perto, como o Item B')).ok).toBe(true)
+    expect(carregarCatalogo(comTracos('listrada', 'como o apelido-a', 'perto do Item B', 'como o Item C'))).toEqual({
+      ok: false,
+      erro: {
+        codigo: 'TRACO_CITA_OUTRO_ITEM',
+        detalhe:
+          "traço distintivo que cita o rótulo ou um alias de outro item: grupo 'grupo-1', traço de 'b': cita 'a'; " +
+          "vizinhança 'vizinhanca-1', traço de 'c': cita 'b'; item 'b', traço de vizinhança: cita 'c'",
       },
     })
   })
