@@ -21,8 +21,10 @@ export type TipoDeFormato = (typeof FORMATOS_DE_QUESTAO)[number]
  * O formato com as opções. Opção é id de item: a casca mostra o rótulo dele em `estimulo-para-rotulo` e `grupo-membros`,
  * e o estímulo em `rotulo-para-estimulo`.
  *
- * `grupo-membros` não diz quantas opções marcar, de propósito: o que a questão testa é saber que o estímulo é de dois
- * itens, e quais. Na `associacao`, cada linha é um estímulo, e uma linha com dois ids é um par indiscernível que aceita
+ * `grupo-membros` pede para marcar todos os itens com o estímulo do alvo e não guarda quantos são: o conjunto certo é o
+ * alvo com os parceiros indiscerníveis dele no catálogo, que `avaliarResposta` e `feedbackDe` leem de lá, e um número
+ * aqui seria uma segunda cópia do tamanho desse conjunto. O formato não esconde que o alvo é de par, porque só alvo de
+ * par sai nele. Na `associacao`, cada linha é um estímulo, e uma linha com dois ids é um par indiscernível que aceita
  * qualquer dos dois rótulos.
  */
 export type FormatoDeQuestao =
