@@ -10,7 +10,7 @@ import {
 } from '../apoio-a-testes/gerador-de-log'
 import { instantaneoDoEstado } from '../apoio-a-testes/instantaneo-do-estado'
 import { desembrulhar } from '../base/resultado'
-import { sorteioComSemente } from '../base/sorteio-com-semente'
+import { sorteioComSemente, type SorteioComSemente } from '../base/sorteio-com-semente'
 import type { Instante } from '../base/tempo'
 import { TECNICAS_TODAS_DESLIGADAS, TECNICAS_TODAS_LIGADAS, type Tecnicas } from '../catalogo/tecnicas'
 import type { Catalogo, IdItem } from '../catalogo/tipos'
@@ -77,12 +77,24 @@ function casosDoLivre(log: readonly Evento[]): string[] {
   ].filter((caso) => caso !== '')
 }
 
-/** O log embaralhado, com cópias de um terço dos eventos e as chaves reordenadas pela ida e volta por JSON. */
+/**
+ * O valor com as chaves de todo objeto, em todo nível, numa ordem sorteada, e as listas na ordem dada: a cópia que volta
+ * do jsonb do servidor tem as chaves em outra ordem. A ida e volta por JSON sozinha preserva a ordem de inserção.
+ */
+function chavesReordenadas(valor: unknown, sorteio: SorteioComSemente): unknown {
+  if (Array.isArray(valor)) return valor.map((v: unknown) => chavesReordenadas(v, sorteio))
+  if (typeof valor !== 'object' || valor === null) return valor
+  const pares = sorteio.embaralhar(Object.entries(valor as Readonly<Record<string, unknown>>))
+  return Object.fromEntries(pares.map(([chave, v]) => [chave, chavesReordenadas(v, sorteio)]))
+}
+
+/** O log embaralhado, com cópias de um terço dos eventos, cada um pela ida e volta por JSON e com as chaves reordenadas. */
 function embaralhado(eventos: readonly Evento[], semente: number): unknown[] {
   const copias = eventos.filter((_, k) => k % 3 === 0)
-  return sorteioComSemente(String(semente))
+  const sorteio = sorteioComSemente(String(semente))
+  return sorteio
     .embaralhar([...eventos, ...copias])
-    .map((e) => JSON.parse(JSON.stringify(e)) as unknown)
+    .map((e) => chavesReordenadas(JSON.parse(JSON.stringify(e)), sorteio))
 }
 
 /** Quantos ids distintos tem a época do log: do último perfil reiniciado, ou do primeiro criado, até o fim. */

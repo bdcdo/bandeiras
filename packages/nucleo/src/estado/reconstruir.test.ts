@@ -163,6 +163,22 @@ describe('reconstruir: deduplicação', () => {
     expect(instantaneoDoEstado(estado)).toStrictEqual(instantaneoDoEstado(c.estado))
   })
 
+  it('a cópia com as chaves em outra ordem, em todo nível, é a mesma: conta como duplicada, não como divergente', () => {
+    // Como a cópia que volta do jsonb do servidor. A resposta tem objetos aninhados: a questão, as opções, a avaliação.
+    const invertido = (valor: unknown): unknown => {
+      if (Array.isArray(valor)) return valor.map(invertido)
+      if (typeof valor !== 'object' || valor === null) return valor
+      return Object.fromEntries(Object.entries(valor).toReversed().map(([chave, v]) => [chave, invertido(v)]))
+    }
+    const resposta = c.eventos.find((e) => e.tipo === 'resposta-registrada')
+    if (resposta === undefined) throw new Error('resposta esperada')
+    const copiaInvertida = invertido(JSON.parse(JSON.stringify(resposta)))
+    expect(JSON.stringify(copiaInvertida)).not.toBe(JSON.stringify(resposta))
+    const { estado, relato } = desembrulhar(reconstruir(ctx, [...copia(c.eventos), copiaInvertida]))
+    expect([relato.duplicados, relato.divergentes]).toStrictEqual([1, 0])
+    expect(instantaneoDoEstado(estado)).toStrictEqual(instantaneoDoEstado(c.estado))
+  })
+
   it('duas versões do mesmo id dão o mesmo estado nas duas ordens de entrada, com a menor serialização', () => {
     const outra = { ...meta, xp: 30 }
     const base = copia(c.eventos.slice(0, -1))
