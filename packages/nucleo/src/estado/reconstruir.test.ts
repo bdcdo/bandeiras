@@ -12,12 +12,14 @@ import {
   type Cena,
 } from '../apoio-a-testes/cena-do-estado'
 import { instantaneoDoEstado } from '../apoio-a-testes/instantaneo-do-estado'
+import { hashFnv1a } from '../base/hash'
 import { desembrulhar } from '../base/resultado'
+import { serializarCanonico } from '../base/serializacao'
 import type { Instante } from '../base/tempo'
 import type { IdItem } from '../catalogo/tipos'
 import { criarEvento, VERSAO_MODELO, type Evento } from '../eventos'
 import { topicoDeItem } from '../grafo'
-import { PARAMETROS_PADRAO } from '../memoria'
+import { acuraciaNaDirecao, devidoEm, fase, PARAMETROS_PADRAO } from '../memoria'
 import { chaveDePar } from './confusoes'
 import { conferirInvariantes } from './invariantes'
 import { reconstruir } from './reconstruir'
@@ -27,6 +29,16 @@ const ctx = contextoDosCasos()
 const I = (id: string): IdItem => id as IdItem
 const copia = (eventos: readonly unknown[]): unknown[] => JSON.parse(JSON.stringify(eventos)) as unknown[]
 const ID_LIVRE = 'ffffffffffffffff'
+
+/** O valor com cada número não inteiro em doze algarismos significativos, em qualquer profundidade. */
+function arredondado(valor: unknown): unknown {
+  if (typeof valor === 'number') return Number.isInteger(valor) ? valor : Number(valor.toPrecision(12))
+  if (Array.isArray(valor)) return valor.map(arredondado)
+  if (typeof valor === 'object' && valor !== null) {
+    return Object.fromEntries(Object.entries(valor).map(([k, v]) => [k, arredondado(v)]))
+  }
+  return valor
+}
 
 /** Uma cena com uma sessão, a lição de `item` e a sessão encerrada. */
 function cenaComLicao(item: string, campos: Parameters<typeof novaCena>[1] = {}): Cena {
@@ -40,7 +52,8 @@ function cenaComLicao(item: string, campos: Parameters<typeof novaCena>[1] = {})
 describe('reconstruir sobre o log de referência', () => {
   // O log de referência cobre cada tipo e cada variante, não uma história coerente: começa num perfil reiniciado, tem
   // um perfil criado dentro da época, um diagnóstico pulado depois de encerrado, uma tarefa de grupo sobre itens sem
-  // grupo e uma remediação de item sem confusão. O relato e o estado ficam presos aqui; mudar um deles muda o que um
+  // grupo e uma remediação de item sem confusão. O relato e o estado ficam presos aqui: o relato e o que o aparelho
+  // mostra de cada memória, por valor, e o estado inteiro, pelo hash do instantâneo. Mudar um deles muda o que um
   // aparelho com esse log gravado vê ao abrir o app.
   const bruto = JSON.parse(
     readFileSync(new URL('../eventos/log-de-referencia.json', import.meta.url), 'utf8'),
@@ -74,10 +87,31 @@ describe('reconstruir sobre o log de referência', () => {
       ['item:i', { status: 'adiada', liberadoEm: 1760087795000, tentativas: 1, kpDaFalha: 1 }],
     ])
     expect([...estado.memorias.keys()]).toStrictEqual(['item:g', 'item:h'])
+    // O que o aparelho mostra de cada memória: o vencimento, a fase e a acurácia, a geral e a de cada direção. O
+    // vencimento de h é o reagendamento do quiz errado, um dia depois da resposta.
+    const [g, h] = ['g', 'h'].map((i) => {
+      const m = estado.memorias.get(topicoDeItem(I(i)).id)
+      if (m === undefined) throw new Error(`sem memória de ${i}`)
+      return m
+    })
+    if (g === undefined || h === undefined) throw new Error('memórias esperadas')
+    expect(devidoEm(g, PARAMETROS_PADRAO)).toBeCloseTo(1760040554266.297, 0)
+    expect(devidoEm(h, PARAMETROS_PADRAO)).toBe(1760001125000 + 86_400_000)
+    expect([fase(g, PARAMETROS_PADRAO), fase(h, PARAMETROS_PADRAO)]).toStrictEqual(['aprendendo', 'aprendendo'])
+    const direcoes = ['reconhecer', 'produzir', 'recordar'] as const
+    const acuracias = [g, h].map((m) => [m.acuracia, ...direcoes.map((d) => acuraciaNaDirecao(m, d))])
+    expect(arredondado(acuracias)).toStrictEqual([
+      [0.78493165, 0.7165, 0.895, 0.73855],
+      [0.3927595, 0.80155, 0.80155, 0.3927595],
+    ])
     expect([...estado.confusoes]).toStrictEqual([[chaveDePar(I('f'), I('h')), 1]])
     expect([...estado.metaPorDia]).toStrictEqual([['2025-10-09', 20]])
     expect([...estado.xpPorDia.keys()]).toStrictEqual(['2025-10-09'])
     expect(estado.xpPorDia.get('2025-10-09' as never)).toBeCloseTo(1.962, 9)
+    // O resto do estado, com as normas, a janela de qualidades e cada campo das memórias, entra pelo hash. Os números
+    // não inteiros vão com doze algarismos significativos, para o último bit de uma conta não mudar o hash. Quando ele
+    // muda, o diff do instantâneo antes e depois da mudança mostra o que ela mexeu.
+    expect(hashFnv1a(serializarCanonico(arredondado(instantaneoDoEstado(estado))))).toBe('accf7c5c88f66fcd')
   })
 
   it('reconstrói o mesmo estado com o log de trás para a frente', () => {
