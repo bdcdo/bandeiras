@@ -1,7 +1,7 @@
 import type { Instante } from '../base/tempo'
 import type { Direcao } from '../catalogo/tipos'
 import type { ContextoDePropagacao, Memorias } from '../fire'
-import type { IdTopico } from '../grafo'
+import { fechoAscendente, fechoDescendente, type Grafo, type IdTopico } from '../grafo'
 import {
   acuraciaInicial,
   aplicarRepeticao,
@@ -69,12 +69,37 @@ export function repetirLicao(ctx: ContextoDeReducao, r: Rascunho, t: IdTopico, a
   escrever(r.memorias).set(t, aplicarRepeticao(e, repeticao, parametros))
 }
 
+// O alcance de cada tópico, guardado por grafo e calculado na primeira vez que se pede. A chave é o grafo, e não o
+// contexto, porque o alcance só depende dele: um contexto montado com outro grafo, por spread ou à mão, lê o alcance do
+// grafo que tem. Com o alcance num campo do contexto, o spread levaria o do grafo antigo, e a propagação perderia escrita
+// sem erro. O WeakMap solta a tabela junto com o grafo.
+const ALCANCES = new WeakMap<Grafo, Map<IdTopico, readonly IdTopico[]>>()
+
 /**
- * As memórias que uma função de fire/ pode ler ou escrever ao partir das origens dadas: as do alcance de cada origem
- * (`ContextoDeReducao.alcance`) que têm estado. Fora do alcance a propagação não lê nem escreve nada, e por isso a
- * função sobre o submapa dá, em cada tópico dele, o mesmo que sobre o mapa inteiro. A diferença é o custo: cada função
- * de fire/ copia o mapa que recebe, e copiar um item e os grupos dele a cada resposta, em vez das memórias todas, é o
- * que separa a reconstrução de um log longo do teto de tempo dela.
+ * O tópico e os fechos ascendente e descendente dele, sem repetição: tudo o que uma função de fire/ que parte dele pode
+ * ler ou escrever, porque a propagação só anda por aresta. Tópico fora do grafo alcança só a si mesmo.
+ */
+function alcance(grafo: Grafo, topico: IdTopico): readonly IdTopico[] {
+  let doGrafo = ALCANCES.get(grafo)
+  if (doGrafo === undefined) {
+    doGrafo = new Map()
+    ALCANCES.set(grafo, doGrafo)
+  }
+  const pronto = doGrafo.get(topico)
+  if (pronto !== undefined) return pronto
+  const calculado = grafo.topicos.has(topico)
+    ? [topico, ...fechoAscendente(grafo, topico), ...fechoDescendente(grafo, topico)]
+    : [topico]
+  doGrafo.set(topico, calculado)
+  return calculado
+}
+
+/**
+ * As memórias que uma função de fire/ pode ler ou escrever ao partir das origens dadas: as do alcance de cada origem no
+ * grafo do contexto que têm estado. Fora do alcance a propagação não lê nem escreve nada, e por isso a função sobre o
+ * submapa dá, em cada tópico dele, o mesmo que sobre o mapa inteiro. A diferença é o custo: cada função de fire/ copia o
+ * mapa que recebe, e copiar um item e os grupos dele a cada resposta, em vez das memórias todas, é o que separa a
+ * reconstrução de um log longo do teto de tempo dela.
  */
 export function submapa(
   ctx: ContextoDeReducao,
@@ -83,7 +108,7 @@ export function submapa(
 ): Map<IdTopico, EstadoMemoria> {
   const sub = new Map<IdTopico, EstadoMemoria>()
   for (const origem of origens) {
-    for (const t of ctx.alcance(origem)) {
+    for (const t of alcance(ctx.grafo, origem)) {
       const e = memorias.get(t)
       if (e !== undefined) sub.set(t, e)
     }

@@ -11,11 +11,14 @@ import {
   passoDe,
   questaoDigitada,
   respostaCerta,
+  respostaErrada,
   tarefaRegistrada,
 } from '../apoio-a-testes/cena-do-estado'
+import { instantaneoDoEstado } from '../apoio-a-testes/instantaneo-do-estado'
 import { desembrulhar } from '../base/resultado'
 import { carregarCatalogo } from '../catalogo/carregar-catalogo'
 import type { AjustesDeParametros } from '../catalogo/dominio'
+import { TECNICAS_TODAS_DESLIGADAS } from '../catalogo/tecnicas'
 import type { IdGrupo, IdItem } from '../catalogo/tipos'
 import type { Evento } from '../eventos'
 import { topicoDeGrupo, topicoDeItem } from '../grafo'
@@ -77,5 +80,26 @@ describe('criarContextoDeReducao', () => {
       expect(vencimento(comAjuste({ 'desaceleracaoPorDificuldade.3': 2 }))).not.toBe(doGrupo)
       expect(vencimento(comAjuste({ 'desaceleracaoPorDificuldade.1': 0.6 }))).toBe(doGrupo)
     })
+  })
+
+  it('o contexto não carrega o alcance: o montado à mão com outro grafo propaga pelo grafo que tem', () => {
+    // A penalidade do erro em a sobe ao grupo-1, que tem lição concluída. Sem grupos no grafo, o alcance de a é só a; o
+    // contexto montado por spread troca o grafo, e a propagação precisa seguir o grafo novo.
+    const comGrupos = contextoDosCasos()
+    const semGrupos = contextoDosCasos({ tecnicas: TECNICAS_TODAS_DESLIGADAS })
+    expect(Object.keys(comGrupos).sort()).toStrictEqual(['catalogo', 'dificuldade', 'grafo', 'parametros', 'tecnicas'])
+    const montado: ContextoDeReducao = { ...semGrupos, grafo: comGrupos.grafo, tecnicas: comGrupos.tecnicas }
+    const semErro = logDoGrupo(comGrupos)
+    const comErro = logDoGrupo(comGrupos, (c) =>
+      emitirUm(
+        c,
+        respostaErrada({ tarefaId: 'avulsa', passo: 0, uso: { tipo: 'revisao' }, questao: questaoDigitada(I('a')) }),
+      ),
+    )
+    const certo = desembrulhar(reconstruir(comGrupos, comErro)).estado
+    expect(certo.memorias.get(F)).not.toStrictEqual(desembrulhar(reconstruir(comGrupos, semErro)).estado.memorias.get(F))
+    expect(instantaneoDoEstado(desembrulhar(reconstruir(montado, comErro)).estado)).toStrictEqual(
+      instantaneoDoEstado(certo),
+    )
   })
 })
